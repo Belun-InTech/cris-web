@@ -1,0 +1,31 @@
+.card {
+    height: 124px;
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08), 0px 3px 4px rgba(0, 0, 0, 0.1), 0px 1px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.card-kampana {
+    border-left: 4px var(--blue-500) solid;
+    border-radius: 5px;
+}
+
+.card-molok {
+    border-left: 4px var(--orange-500) solid;
+    border-radius: 5px;
+}
+
+.card-votasaun {
+    border-left: 4px var(--cyan-500) solid;
+    border-radius: 5px;
+}
+
+.card-sura {
+    border-left: 4px var(--teal-500) solid;
+    border-radius: 5px;
+}
+
+
+::ng-deep.p-calendar,
+::ng-deep.p-dropdown {
+    width: 100%;
+}
+

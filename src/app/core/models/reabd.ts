@@ -1,0 +1,47 @@
+import { PostuAdministrativu } from "./lokal/postu";
+
+export interface Reabd {
+    id: number;
+    postuAdministrativu: PostuAdministrativu;
+    orasHahu: string;
+    orasRemata: string;
+    operadorStaeAtendimentuDiak: boolean;
+    atividadeTuirOrariu: boolean;
+    prosedimentuLegal: boolean;
+    ihaEmaEstrajeiru: boolean;
+    ihaEmaIdadeKiik16: boolean;
+    kartaunDupla: boolean;
+    deleteSimuEleitorMate: boolean;
+    kondisaunLaptop: boolean;
+    printerKondisaun: boolean;
+    cardSufisiente: boolean;
+    internetFunsiona: boolean;
+    problemaLojistika: boolean;
+    esplikasaunOperadorStaeAtendimentuDiak: string;
+    esplikasaunAtividadeTuirOrariu: string;
+    esplikasaunProsedimentuLegal: string;
+    esplikasaunIhaEmaEstrajeiru: string;
+    esplikasaunIhaEmaIdadeKiik16: string;
+    esplikasaunKartaunDupla: string;
+    esplikasaunDeleteSimuEleitorMate: string;
+    esplikasaunKondisaunLaptop: string;
+    esplikasaunPrinterKondisaun: string;
+    esplikasaunCardSufisiente: string;
+    esplikasaunInternetFunsiona: string;
+    esplikasaunProblemaLojistika: string;
+    supervizor: string;
+    eleitorFounMane: number;
+    eleitorFounFeto: number;
+    kartaunToharMane: number;
+    kartaunToharFeto: number;
+    mudaHelaFatinMane: number;
+    mudaHelaFatinFeto: number;
+    mudaTinanMane: number;
+    mudaTinanFeto: number;
+    kartaunTuanMane: number;
+    kartaunTuanFeto: number;
+    kartaunLakonMane: number;
+    kartaunLakonFeto: number;
+    createdAt: Date;
+    updatedAt: Date;
+}

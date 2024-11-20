@@ -1,0 +1,45 @@
+<div class="card">
+    <div class="grid mb-4">
+        <div class="col-12 xl:col-8 lg:col-8 md:col-8">
+            <span class="text-2xl">
+                Reports
+            </span>
+        </div>
+    </div>
+
+    <form [formGroup]="reportForm">
+        <div class="grid">
+            <div class="col-12 md:col-8">
+                <div class="p-fluid">
+                    <p-dropdown formControlName="tipu" [options]="tipuRelatoriuOpts" [showClear]="true"
+                        placeholder="Choose type" class="pb-2" [required]="true">
+                        <ng-template let-item pTemplate="selectedItem">
+                            {{ item.name }}
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            {{ item.name }}
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="grid">
+            <div class="col-12 md:col-6 lg:col-6 xl:col-6">
+                <p-calendar selectionMode="range" placeholder="Range Dates" [readonlyInput]="true" />
+            </div>
+        </div> -->
+
+        <div class="grid">
+            <div class="col-12 md:col-6">
+                <p-button (onClick)="generateReport(reportForm)" [disabled]="!reportForm.valid" label="Generate"
+                    icon="pi pi-chart-line" [raised]="true" severity="success" class="mr-2" />
+                @if (!hideClearButton) {
+                <p-button (onClick)="reportForm.reset();" label="Clear" icon="pi pi-times" size="small" [raised]="true"
+                    severity="secondary" />
+                }
+            </div>
+        </div>
+    </form>
+
+</div>

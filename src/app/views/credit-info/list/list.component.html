@@ -1,0 +1,80 @@
+<div class="card">
+    <div class="grid">
+        <div class="col-5">
+            <p-floatLabel>
+                <input pInputText id="search" class="w-full" />
+                <label for="search">Search</label>
+            </p-floatLabel>
+        </div>
+        <div class="col-3">
+            <p-menu #menu [model]="items" [popup]="true" />
+            <p-button  severity="info" (onClick)="menu.toggle($event)" icon="pi pi-file-export" label="Export" />
+        </div>
+        <div class="col-4 flex justify-content-end">
+            <p-button label="New Data" [outlined]="true" icon="pi pi-user-plus"
+                [routerLink]="['/admin/credit-informations/form']" />
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-12">
+            <p-table [value]="creditData" [tableStyle]="{'min-width': '50rem'}">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th>ID Nº</th>
+                        <th>Name of Credit Grantor</th>
+                        <th>Data Credit Disbursed</th>
+                        <th>Total Credit Disbursed</th>
+                        <th> Monthly Payment</th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p-columnFilter type="text" field="id" placeholder="Search by ID Nº"
+                                ariaLabel="Filter ID Nº" />
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="creditGrantor" placeholder="Search by Credit Grantor"
+                                ariaLabel="Filter Credit Grantor" />
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="creditDisbursed" placeholder="Search by Credit Disbursed"
+                                ariaLabel="Filter Credit Disbursed" />
+                        </th>
+                        <th>
+                            <p-columnFilter type="numeric" [minFractionDigits]="2" [maxFractionDigits]="2"
+                                field="totalCreditDisbursed" placeholder="Search by Total Credit Disbursed"
+                                ariaLabel="Filter Total Credit Disbursed" />
+                        </th>
+                        <th>
+                            <p-columnFilter type="numeric" [minFractionDigits]="2" [maxFractionDigits]="2"
+                                field="monthlyPayment" placeholder="Search by Monthly Payment"
+                                ariaLabel="Filter Monthly Payment" />
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product let-columns="columns">
+                    <tr>
+                        <td>
+                            {{product.name}}
+                        </td>
+                        <td>
+                            {{product.price | currency:'USD'}}
+                        </td>
+                        <td>
+                            {{product.category}}
+                        </td>
+                        <td>
+                            {{product.quantity}}
+                        </td>
+                        <td>
+                            <p-tag [value]="product.inventoryStatus"
+                                [severity]="getSeverity(product.inventoryStatus)" />
+                        </td>
+                        <td>
+                            <p-rating [(ngModel)]="product.rating" [readonly]="true" [cancel]="false" />
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

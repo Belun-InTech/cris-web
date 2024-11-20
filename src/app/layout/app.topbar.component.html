@@ -1,0 +1,35 @@
+<div class="layout-topbar">
+    <a class="layout-topbar-logo" routerLink="">
+        <!-- <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg"
+            alt="logo"> -->
+        <img src="assets/layout/images/bctl-logo.png" alt="logo">
+        <span class="text-xl">Credit Registry Information System</span>
+    </a>
+
+    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+        <i class="pi pi-bars"></i>
+    </button>
+    <div class="layout-topbar-menu">
+        <button (click)="menu.toggle($event)" class="p-link layout-topbar-button">
+            <i class="pi pi-user"></i>
+            <span>Profile</span>
+        </button>
+        <p-menu #menu [model]="items" [popup]="true"></p-menu>
+    </div>
+
+    <!-- <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}"> -->
+    <!-- <div #topbarmenu class="layout-topbar-menu">
+        <button class="p-link layout-topbar-button">
+            <i class="pi pi-calendar"></i>
+            <span>Calendar</span>
+        </button>
+        <button class="p-link layout-topbar-button">
+            <i class="pi pi-user"></i>
+            <span>Profile</span>
+        </button>
+        <button class="p-link layout-topbar-button">
+            <i class="pi pi-cog"></i>
+            <span>Settings</span>
+        </button>
+    </div> -->
+</div>
