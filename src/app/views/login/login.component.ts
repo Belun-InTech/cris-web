@@ -38,18 +38,23 @@ export class LoginComponent implements OnInit {
 
 
   login(form: FormGroup): void {
-    this.authService.authServer(form.value).subscribe({
-      next: response => {
-        this.router.navigate(['/admin/dashboard']).then(() => {
-          this.loginForm.reset();
-          // this.showProgressBar = false;
-        });
-      },
-      error: err => {
-        this.loginForm.reset();
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Email ka Username ka Password sala' });
-      }
+    this.authService.setLocalSession(form.value.identifier);
+    this.router.navigate(['/admin/dashboard']).then(() => {
+      this.loginForm.reset();
+      // this.showProgressBar = false;
     });
+    // this.authService.authServer(form.value).subscribe({
+    //   next: response => {
+    //     this.router.navigate(['/admin/dashboard']).then(() => {
+    //       this.loginForm.reset();
+    //       // this.showProgressBar = false;
+    //     });
+    //   },
+    //   error: err => {
+    //     this.loginForm.reset();
+    //     this.messageService.add({ severity: 'error', summary: '', detail: 'Email ka Username ka Password sala' });
+    //   }
+    // });
   }
 
 }

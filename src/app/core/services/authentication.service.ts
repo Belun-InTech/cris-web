@@ -21,6 +21,12 @@ export class AuthenticationService {
     localStorage.setItem('id_token', authResult.jwt);
   }
 
+  setLocalSession(username): void {
+    localStorage.clear();
+    localStorage.setItem('user', JSON.stringify(username));
+    // localStorage.setItem('id_token', authResult.jwt);
+  }
+
   authServer(form: User): Observable<HttpResponse<User>> {
     return this.http.post<HttpResponse<User>>(`${this.apiUrl}/auth/local`, form)
       .pipe(

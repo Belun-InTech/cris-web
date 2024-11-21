@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { FaqComponent } from './views/faq/faq.component';
 import { LoginComponent } from './views/login/login.component';
+import { authenticationCanActivate, loginGuard } from './core/security/route.guard';
 
 @NgModule({
     imports: [
@@ -10,11 +11,11 @@ import { LoginComponent } from './views/login/login.component';
             {
                 path: '',
                 component: LoginComponent,
-                // canActivate: [loginGuard],
+                canActivate: [loginGuard],
             },
             {
                 path: 'admin', component: AppLayoutComponent,
-                // canActivate: [authenticationCanActivate],
+                canActivate: [authenticationCanActivate],
                 children: [
                     { path: 'dashboard', loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'faq', component: FaqComponent },
