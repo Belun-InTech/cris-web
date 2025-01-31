@@ -39,7 +39,7 @@ export class AppTopBarComponent {
     }
 
     logOut(): void {
-        this.authService.logout();
+        this.authService.logout().subscribe();
         this.router.navigateByUrl('').then();
     }
 }

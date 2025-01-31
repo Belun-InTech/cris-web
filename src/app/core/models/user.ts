@@ -1,9 +1,13 @@
+import { Role } from "./role";
+
 export interface User {
     id: number;
-    fullName: string;
+    firstName: string;
+    lastName: string;
     username: string;
     email: string;
-    confirmed: boolean;
-    blocked: boolean;
+    isDisabled: boolean;
     password: string;
+    jwtSession: string;
+    role: Role;
 }

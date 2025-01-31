@@ -7,7 +7,8 @@
             </p-floatLabel>
         </div>
         <div class="col-7 flex justify-content-end">
-            <p-button label="New User" [outlined]="true" icon="pi pi-user-plus" />
+            <p-button label="New User" [outlined]="true" icon="pi pi-user-plus" [routerLink]="['/admin/users/form']"
+                routerLinkActive="router-link-active" />
         </div>
     </div>
     <div class="grid">
@@ -22,26 +23,27 @@
                         <th>Status</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product let-columns="columns">
+                <ng-template pTemplate="body" let-user let-columns="columns">
                     <tr>
                         <td>
-                            {{product.name}}
+                            {{user.firstName}} {{user.lastName}}
                         </td>
                         <td>
-                            {{product.price | currency:'USD'}}
+                            {{user.username}}
                         </td>
                         <td>
-                            {{product.category}}
+                            {{user.email}}
                         </td>
                         <td>
-                            {{product.quantity}}
+                            {{user.role.name.replace('ROLE_', '')}}
                         </td>
                         <td>
-                            <p-tag [value]="product.inventoryStatus"
-                                [severity]="getSeverity(product.inventoryStatus)" />
+                            <p-tag [severity]="getSeverity(user.status)" [value]="getStatusLabel(user.status)" />
                         </td>
                         <td>
-                            <p-rating [(ngModel)]="product.rating" [readonly]="true" [cancel]="false" />
+                            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
+                                severity="success" [routerLink]="['/admin/users', user.username]" />
+                            <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" /> -->
                         </td>
                     </tr>
                 </ng-template>

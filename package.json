@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration=staging",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -34,7 +34,7 @@
     "highcharts-angular": "^4.0.1",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
-    "primeng": "^17.18.12",
+    "primeng": "^17.18.15",
     "prismjs": "^1.29.0",
     "quill": "^1.3.7",
     "rxjs": "~7.8.1",

@@ -13,12 +13,12 @@
             <form [formGroup]="loginForm">
                 <div class="field p-fluid">
                     <!-- <label for="email1" class="block text-900 text-xl font-medium mb-2">Email/Username</label> -->
-                    <input formControlName="identifier" id="email1" type="text" placeholder="Email address or Username"
+                    <input formControlName="username" id="username" type="text" placeholder="Email address or Username"
                         pInputText class="mb-2">
                 </div>
                 <div class="field p-fluid">
                     <!-- <label for="password1" class="block text-900 font-medium text-xl mb-2">Password</label> -->
-                    <p-password formControlName="password" id="password1" placeholder="Password" [feedback]="false"
+                    <p-password formControlName="password" id="password" placeholder="Password" [feedback]="false"
                         [toggleMask]="true"></p-password>
                 </div>
 

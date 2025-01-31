@@ -1,1 +1,83 @@
-<p>form works!</p>
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <div class="grid">
+                <div class="col-6">
+                    @if(isNew){
+                    <h4>New User</h4>
+                    }@else{
+                    <h4>Edit User</h4>
+                    }
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-12">
+                    <p-messages />
+                </div>
+            </div>
+            <form [formGroup]="userForm">
+                <h5>Account</h5>
+                <div class="grid">
+                    <div class="col-6">
+                        <input formControlName="firstName" id="firstName" type="text" placeholder="First name"
+                            pInputText class="mb-2">
+                    </div>
+                    <div class="col-6">
+                        <input formControlName="lastName" id="lastName" type="text" placeholder="Last name" pInputText
+                            class="mb-2">
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="col-6">
+                        <input formControlName="username" id="username" type="text" placeholder="Username" pInputText
+                            class="mb-2">
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="col-6">
+                        <input formControlName="email" id="email" type="text" placeholder="Email" pInputText
+                            class="mb-2">
+                    </div>
+                </div>
+                <h5>Access</h5>
+                <div class="grid">
+                    <div class="col-6">
+                        <p-dropdown [options]="roleList" formControlName="role" optionLabel="name" class="w-full"
+                            placeholder="Select a Role" />
+                    </div>
+                </div>
+                @if(!isNew){
+                <div class="grid">
+                    <div class="col-6">
+                        <p-selectButton formControlName="status" [options]="statusOptions" optionLabel="name"
+                            optionValue="value" class="pt-3" />
+                    </div>
+                </div>
+                }
+                <h5>Password</h5>
+                <div class="grid">
+                    <div class="col-6">
+                        <input formControlName="password" id="password" type="password" placeholder="Password"
+                            pInputText class="mb-2">
+                        <input formControlName="confirmPassword" id="confirmPassword" type="password"
+                            placeholder="Confirm Password" pInputText class="mb-2">
+                    </div>
+                </div>
+                <div class="flex justify-content-start mt-3">
+                    @if(isNew){
+                    <p-button label="Save" icon="pi pi-save" [disabled]="!userForm.valid" [loading]="loading"
+                        (click)="save(userForm)" [raised]="true" severity="warning" />
+                    }@else{
+                    <p-button label="Update" icon="pi pi-sync" [disabled]="!userForm.valid" [loading]="loading"
+                        (click)="update(userForm)" [raised]="true" severity="warning" />
+                    }
+
+                    <p-button label="Cancel" [routerLink]="['/admin/users']" routerLinkActive="router-link-active"
+                        icon="pi pi-times" [raised]="true" severity="secondary" class="ml-3" />
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
