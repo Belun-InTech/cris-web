@@ -4,6 +4,7 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
 import { FaqComponent } from './views/faq/faq.component';
 import { LoginComponent } from './views/login/login.component';
 import { authenticationCanActivate, loginGuard } from './core/security/route.guard';
+import { getFaqListResolver } from './core/resolvers/data-master.resolver';
 
 @NgModule({
     imports: [
@@ -18,7 +19,13 @@ import { authenticationCanActivate, loginGuard } from './core/security/route.gua
                 canActivate: [authenticationCanActivate],
                 children: [
                     { path: 'dashboard', loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule) },
-                    { path: 'faq', component: FaqComponent },
+                    {
+                        path: 'faq',
+                        component: FaqComponent,
+                        resolve: {
+                            faqListResolve: getFaqListResolver,
+                        }
+                    },
                     { path: 'demographics', loadChildren: () => import('./views/demographic/demographic.module').then(m => m.DemographicModule) },
                     { path: 'credit-informations', loadChildren: () => import('./views/credit-info/credit-info.module').then(m => m.CreditInfoModule) },
                     { path: 'relatoriu', loadChildren: () => import('./views/reports/reports.module').then(m => m.ReportsModule) },

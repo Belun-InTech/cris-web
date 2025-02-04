@@ -1,0 +1,85 @@
+<div class="card">
+    <div class="grid">
+        <!-- <div class="col-5"> -->
+        <!-- <p-floatLabel>
+                <input pInputText id="search" class="w-full" />
+                <label for="search">Search</label>
+            </p-floatLabel> -->
+        <!-- </div> -->
+        <div class="col-7">
+            <p-button label="New" [outlined]="true" icon="pi pi-plus" (click)="openDialogNewData(type)" />
+        </div>
+    </div>
+    <p-messages />
+    <div class="grid">
+        <div class="col-12">
+            <p-table [columns]="cols" [value]="dataList" [tableStyle]="{'min-width': '50rem'}">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th>No.</th>
+                        <th *ngFor="let col of columns">{{ col.header }}</th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-columns="columns" let-rowIndex="rowIndex">
+                    <tr>
+                        <td>
+                            {{ rowIndex + 1 }}
+                        </td>
+                        @for(col of columns; track col){
+                        <td>
+                            {{item[col.field]}}
+                        </td>
+                        }
+                        <td>
+                            <p-button (click)="openDialogEditData(item, rowIndex)" icon="pi pi-pencil" class="mr-2"
+                                [rounded]="true" [outlined]="true" severity="success" />
+                            <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" /> -->
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Dialog -->
+
+@if (showDialog) {
+<p-dialog header="Edit {{type|titlecase}}" [modal]="true" [position]="'top'" [(visible)]="showDialog"
+    [style]="{ 'min-width': '30rem' }">
+    <form [formGroup]="dataForm">
+        @if (type === 'banks' || type === 'sectors' || type === 'type-collaterals' || type === 'credit-classifications')
+        {
+        <input formControlName="name" id="name" type="text" placeholder="Name" pInputText class="mb-2">
+        }
+        @if (type === 'banks') {
+        <input formControlName="code" id="code" type="text" placeholder="Code" pInputText class="mb-2">
+        }
+        @if (type === 'sectors') {
+        <textarea formControlName="description" name="description" id="description" pInputTextarea id="description"
+            placeholder="Description" rows="5" cols="30" class="flex-auto"></textarea>
+        }
+        @if (type === 'faqs') {
+        <input formControlName="question" id="question" placeholder="Question" pInputText class="mb-2">
+        <!-- <textarea formControlName="answer" name="answer" id="answer" pInputTextarea id="answer" placeholder="Answer"
+            rows="5" cols="30" class="flex-auto"></textarea> -->
+        <p-editor formControlName="answer" [style]="{ height: '120px' }" />
+        }
+        <div class="flex justify-content-end gap-2 mt-3">
+            <p-button label="Cancel" severity="secondary" (onClick)="closeDialog()" />
+            @if (isNew) {
+            <p-button label="Save" [loading]="buttonLoading" icon="pi pi-save" [disabled]="!dataForm.valid"
+                (onClick)="saveData(dataForm)" />
+            }@else {
+            <p-button label="Update" icon="pi pi-sync" [disabled]="!dataForm.valid" [loading]="buttonLoading"
+                (click)="updateData(dataForm)" [raised]="true" severity="warning" />
+            }
+        </div>
+    </form>
+
+</p-dialog>
+
+}

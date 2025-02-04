@@ -15,8 +15,6 @@ export class ListComponent {
 
   ngOnInit(): void {
     this.userService.getPagination().subscribe(data => {
-      console.log(data);
-
       this.users = data.content;
     });
   }

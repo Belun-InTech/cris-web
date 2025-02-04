@@ -12,12 +12,10 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
   providers: [MessageService]
 })
 export class LoginComponent implements OnInit {
-
   valCheck: string[] = ['remember'];
-
   password!: string;
-
-  loginForm: FormGroup
+  loginForm: FormGroup;
+  loading = false;
 
   constructor(
     public layoutService: LayoutService,
@@ -38,6 +36,7 @@ export class LoginComponent implements OnInit {
 
 
   login(form: FormGroup): void {
+    this.loading = true;
     this.authService.authServer(form.value).subscribe({
       next: () => {
         this.router.navigate(['/admin/dashboard']).then(() => {
@@ -47,7 +46,8 @@ export class LoginComponent implements OnInit {
       error: err => {
         this.loginForm.reset();
         this.messageService.add({ severity: 'error', summary: '', detail: err });
-      }
+      },
+      complete: () => this.loading = false
     });
   }
 

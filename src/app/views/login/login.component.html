@@ -26,8 +26,8 @@
                     <a class="font-medium no-underline ml-2 text-right cursor-pointer"
                         style="color: var(--primary-color)">Forgot password?</a>
                 </div> -->
-                <button (click)="login(loginForm)" [disabled]="!loginForm.valid" pButton pRipple label="Sign In"
-                    class="w-full p-3 text-lg mt-3"></button>
+                <button (click)="login(loginForm)" [disabled]="!loginForm.valid" [loading]="loading"
+                    icon="pi pi-sign-in" pButton pRipple label="Sign In" class="w-full p-3 text-lg mt-3"></button>
             </form>
         </div>
     </div>
