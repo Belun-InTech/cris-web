@@ -8,21 +8,22 @@
         </div>
         <div class="col-3">
             <p-menu #menu [model]="items" [popup]="true" />
-            <p-button  severity="info" (onClick)="menu.toggle($event)" icon="pi pi-file-export" label="Export" />
+            <p-button severity="info" (onClick)="menu.toggle($event)" icon="pi pi-file-export" label="Export" />
         </div>
         <div class="col-4 flex justify-content-end">
-            <p-button label="New Data" [outlined]="true" icon="pi pi-user-plus" [routerLink]="['/admin/demographics/form']" />
+            <p-button label="New Data" [outlined]="true" icon="pi pi-user-plus"
+                [routerLink]="['/admin/demographics/form']" />
         </div>
     </div>
     <div class="grid">
         <div class="col-12">
-            <p-table [value]="demoData" [tableStyle]="{'min-width': '50rem'}">
+            <p-table [value]="demoData">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
                         <th>Name</th>
-                        <th>Electoral Nº/Taxpayer ID</th>
+                        <th>Electoral Nº/Taxpayer ID (TIN)</th>
                         <th>Residence & Mailing Address</th>
-                        <th>City & Date of birth</th>
+                        <th>Date of birth</th>
                         <th>Telephone Nº</th>
                     </tr>
                     <tr>
@@ -40,8 +41,8 @@
                                 ariaLabel="Filter Residence & Mailing Address" />
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="city" placeholder="Search by City"
-                                ariaLabel="Filter City of birth" />
+                            <p-columnFilter type="text" field="city" placeholder="Search by Date of birth"
+                                ariaLabel="Filter Date of birth" />
                         </th>
                         <th>
                             <p-columnFilter type="text" field="phone" placeholder="Search by Phone Nº"
@@ -49,30 +50,33 @@
                         </th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product let-columns="columns">
+                <ng-template pTemplate="body" let-item let-columns="columns">
                     <tr>
                         <td>
-                            {{product.name}}
+                            {{item.fullName}}
                         </td>
                         <td>
-                            {{product.price | currency:'USD'}}
+                            {{item.idNumber}}
                         </td>
                         <td>
-                            {{product.category}}
+                            {{item.address}}
                         </td>
                         <td>
-                            {{product.quantity}}
+                            {{item.birthDate |date:'dd MMM yyyy'}}
                         </td>
                         <td>
-                            <p-tag [value]="product.inventoryStatus"
-                                [severity]="getSeverity(product.inventoryStatus)" />
+                            {{item.phoneNumber}}
                         </td>
                         <td>
-                            <p-rating [(ngModel)]="product.rating" [readonly]="true" [cancel]="false" />
+                            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
+                                severity="success" [routerLink]="['/admin/demographics', item.id]" />
+                            <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" /> -->
                         </td>
                     </tr>
                 </ng-template>
             </p-table>
+            <p-paginator (onPageChange)="onPageChange($event)" [rows]="size" [totalRecords]="totalData"
+                [rowsPerPageOptions]="[50, 150, 250]" />
         </div>
 
     </div>
