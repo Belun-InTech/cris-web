@@ -13,7 +13,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'form',
+    path: 'new',
     component: FormComponent
   }
 ];

@@ -14,6 +14,7 @@ export class ListComponent {
   page = 0;
   size = 50;
   totalData = 0;
+  showDialog = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -57,6 +58,10 @@ export class ListComponent {
         
       },
     });
+  }
+
+  openDialogNewData(): void {
+    this.showDialog = true;
   }
 
   /**

@@ -1,73 +1,62 @@
 <div class="card">
     <div class="grid">
-        <div class="col-6 pr-4">
+        <div class="col-12 pr-4">
             <h4>
                 Fill form
             </h4>
-            <form>
+            <p-messages />
+            <form [formGroup]="demographicForm">
                 <p-floatLabel>
-                    <input pInputText id="name" class="w-full" />
-                    <label for="name">Name</label>
+                    <input pInputText id="fullName" formControlName="fullName" class="w-full" />
+                    <label for="fullName">Full Name</label>
+                </p-floatLabel>
+                <p-floatLabel>
+                    <input pInputText id="idNumber" formControlName="idNumber" class="w-full" />
+                    <label for="idNumber">ID Number</label>
+                </p-floatLabel>
+                <p-floatLabel>
+                    <input pInputText id="address" formControlName="address" class="w-full" />
+                    <label for="address">Residence & Mailing Address</label>
                 </p-floatLabel>
 
                 <p-floatLabel>
-                    <input pInputText id="electoral" class="w-full" />
-                    <label for="electoral">Electoral Card/Registration Nº for Individuals/Taxpayer ID for
-                        businesses</label>
+                    <p-calendar inputId="birthDate" formControlName="birthDate" class="w-full" dateFormat="dd/mm/yy" />
+                    <label for="birthDate">Birth Date</label>
                 </p-floatLabel>
 
                 <p-floatLabel>
-                    <input pInputText id="address" class="w-full" />
-                    <label for="address">
-                        Residence & Mailing Address
-                    </label>
+                    <input pInputText id="city" formControlName="city" class="w-full" />
+                    <label for="city">Birth City</label>
                 </p-floatLabel>
 
                 <p-floatLabel>
-                    <p-calendar inputId="birth_date" class="w-full" />
-                    <label for="birth_date">Birth Date</label>
+                    <input pInputText id="maritalStatus" formControlName="maritalStatus" class="w-full" />
+                    <label for="maritalStatus">Marital Status</label>
                 </p-floatLabel>
 
                 <p-floatLabel>
-                    <input pInputText id="birthCity" class="w-full" />
-                    <label for="birthCity">
-                        Birth City
-                    </label>
+                    <input pInputText id="spouseName" formControlName="spouseName" class="w-full" />
+                    <label for="spouseName">Spouse's Name</label>
                 </p-floatLabel>
 
                 <p-floatLabel>
-                    <input pInputText id="maritalStatus" class="w-full" />
-                    <label for="maritalStatus">
-                        Marita Status
-                    </label>
+                    <input pInputText id="employmentHistory" formControlName="employmentHistory" class="w-full" />
+                    <label for="employmentHistory">Employment History</label>
                 </p-floatLabel>
 
                 <p-floatLabel>
-                    <input pInputText id="spouse" class="w-full" />
-                    <label for="spouse">
-                        Spouse's Name
-                    </label>
-                </p-floatLabel>
-
-                <p-floatLabel>
-                    <input pInputText id="employmentHistory" class="w-full" />
-                    <label for="employmentHistory">
-                        Employment History
-                    </label>
-                </p-floatLabel>
-
-                <p-floatLabel>
-                    <input pInputText id="phoneNumber" class="w-full" />
-                    <label for="phoneNumber">
-                        Telephone Number
-                    </label>
+                    <input pInputText id="phoneNumber" formControlName="phoneNumber" class="w-full" />
+                    <label for="phoneNumber">Telephone Number</label>
                 </p-floatLabel>
             </form>
             <div class="mt-5">
-                <p-button label="Submit" [raised]="true" />
+                <p-button label="Save" icon="pi pi-save" [disabled]="!demographicForm.valid" [loading]="loading"
+                (click)="save(demographicForm)" [raised]="true" severity="warning" />
+                <p-button label="Cancel" [routerLink]="['/admin/demographics']" routerLinkActive="router-link-active"
+                    icon="pi pi-times" [raised]="true" severity="secondary" class="ml-3" />
             </div>
         </div>
-        <div class="col-6 border-left-1 border-orange-300 pl-4">
+        <!-- <div class="col-6 border-left-1 border-orange-300 pl-4">
             <div class="grid">
                 <div class="col-12">
                     <h4>
@@ -148,6 +137,6 @@
 
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>

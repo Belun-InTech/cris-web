@@ -11,8 +11,7 @@
             <p-button severity="info" (onClick)="menu.toggle($event)" icon="pi pi-file-export" label="Export" />
         </div>
         <div class="col-4 flex justify-content-end">
-            <p-button label="New Data" [outlined]="true" icon="pi pi-user-plus"
-                [routerLink]="['/admin/demographics/form']" />
+            <p-button label="New Data" [outlined]="true" icon="pi pi-user-plus" (click)="openDialogNewData()" />
         </div>
     </div>
     <div class="grid">
@@ -81,3 +80,22 @@
 
     </div>
 </div>
+
+<p-dialog header="New Data" [modal]="true" [(visible)]="showDialog" [style]="{ 'min-width': '30rem', 'min-height': '15rem' }">
+    <div class="grid h-15rem">
+        <div class="col-6 flex justify-content-center align-items-center">
+            <div>
+                <button pButton [text]="true" size="large" [routerLink]="['/admin/demographics/new']">
+                    <i class="bi bi-person-add" style="font-size: 4rem"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-6 flex justify-content-center align-items-center border-left-1 border-orange-300 pl-4">
+            <div>
+                <button pButton [text]="true" size="large">
+                    <i class="bi bi-filetype-xls" style="font-size: 4rem" severity="success"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</p-dialog>

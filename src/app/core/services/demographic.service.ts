@@ -13,6 +13,19 @@ export class DemographicService {
     private http: HttpClient
   ) { }
 
+  /**
+   * Saves a demographic to the server.
+   *
+   * @param form The demographic object to be sent to the server.
+   * @returns An observable of the server response.
+   */
+  save(form: any): Observable<any> {
+    form = {
+      demographics: [],
+      demographic: form
+    }
+    return this.http.post<any>(this.apiUrl, form).pipe(take(1));
+  }
 
   /**
    * Retrieves a demographic by ID.
@@ -32,15 +45,10 @@ export class DemographicService {
    * @param size The number of items per page.
    * @returns The response from the server.
    */
-  getPagination(page?: number, size?: number): Observable<any> {
+  getPagination(page = 0, size = 50): Observable<any> {
     let params = new HttpParams();
-    
-    if (page && size) {
       params.append('page', page)
       params.append('size', size);
       return this.http.get<any>(`${this.apiUrl}?page=${page}&size=${size}`).pipe(take(1));
-    } else {
-      return this.http.get<any>(this.apiUrl, { params }).pipe(take(1));
-    }
   }
 }
