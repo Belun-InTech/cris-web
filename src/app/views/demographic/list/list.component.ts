@@ -25,6 +25,12 @@ export class ListComponent {
   }
 
   ngOnInit() {
+    // Get query parameters
+    this.route.queryParams.subscribe(params => {
+      this.page = params['page'] ? +params['page'] : this.page;
+      this.size = params['size'] ? +params['size'] : this.size;
+    });
+
     this.items = [
       {
         icon: 'pi pi-file-pdf',
@@ -55,7 +61,7 @@ export class ListComponent {
         this.totalData = response.totalElements;
       },
       error: err => {
-        
+
       },
     });
   }

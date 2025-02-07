@@ -20,15 +20,20 @@
                 <ng-template pTemplate="header" let-columns>
                     <tr>
                         <th>Name</th>
+                        <th>Gender</th>
                         <th>Electoral Nº/Taxpayer ID (TIN)</th>
-                        <th>Residence & Mailing Address</th>
+                        <th>City</th>
                         <th>Date of birth</th>
                         <th>Telephone Nº</th>
+                        <th>Actions</th>
                     </tr>
                     <tr>
                         <th>
                             <p-columnFilter type="text" field="name" placeholder="Search by name"
                                 ariaLabel="Filter Name" />
+                        <th>
+                            <p-columnFilter type="text" field="gender" placeholder="Search by gender"
+                                ariaLabel="Filter gender" />
                         <th>
                             <p-columnFilter type="text" field="electoralId"
                                 placeholder="Search by Electoral ID/Taxpayer ID"
@@ -47,6 +52,7 @@
                             <p-columnFilter type="text" field="phone" placeholder="Search by Phone Nº"
                                 ariaLabel="Filter Phone Nº" />
                         </th>
+                        <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-item let-columns="columns">
@@ -55,10 +61,13 @@
                             {{item.fullName}}
                         </td>
                         <td>
+                            {{item.gender |titlecase}}
+                        </td>
+                        <td>
                             {{item.idNumber}}
                         </td>
                         <td>
-                            {{item.address}}
+                            {{item.city}}
                         </td>
                         <td>
                             {{item.birthDate |date:'dd MMM yyyy'}}
@@ -81,7 +90,8 @@
     </div>
 </div>
 
-<p-dialog header="New Data" [modal]="true" [(visible)]="showDialog" [style]="{ 'min-width': '30rem', 'min-height': '15rem' }">
+<p-dialog header="New Data" [modal]="true" [(visible)]="showDialog"
+    [style]="{ 'min-width': '30rem', 'min-height': '15rem' }">
     <div class="grid h-15rem">
         <div class="col-6 flex justify-content-center align-items-center">
             <div>

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { DemographicService } from 'src/app/core/services';
+import { genderOpts } from 'src/app/core/utils/global-types';
 
 @Component({
   selector: 'app-form',
@@ -17,38 +18,51 @@ export class FormComponent {
   demographicForm: FormGroup;
   loading = false;
   isNew = true;
+  demoData: any;
+  genderOpts: any[] = genderOpts;
+  selectedGender: any;
 
   constructor(
     private config: PrimeNGConfig,
     private messageService: MessageService,
     private demographicService: DemographicService,
     private _fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
 
     this.demographicForm = this._fb.group({
-      idNumber: ['12345678', [Validators.required, Validators.minLength(1)]],
-      fullName: ['John Doe', Validators.required],
-      address: ['123 Main St, Cityville', Validators.required],
-      birthDate: [new Date('1992-10-16'), Validators.required],
-      city: ['Cityville', Validators.required],
-      maritalStatus: ['Single'],
-      spouseName: [''],
-      employmentHistory: ['Software Engineer at XYZ Corp'],
-      phoneNumber: ['78143627', [Validators.required, Validators.pattern('^[0-9]{7,20}$')]],
-      // idNumber: ['', [Validators.required, Validators.minLength(1)]],
-      // address: ['', Validators.required],
-      // birthDate: ['', Validators.required],
-      // city: ['', Validators.required],
-      // maritalStatus: [''],
+      id: [''],
+      // idNumber: ['12345678', [Validators.required, Validators.minLength(1)]],
+      // fullName: ['John Doe', Validators.required],
+      // address: ['123 Main St, Cityville', Validators.required],
+      // birthDate: [new Date('1992-10-16'), Validators.required],
+      // city: ['Cityville', Validators.required],
+      // maritalStatus: ['Single'],
       // spouseName: [''],
-      // employmentHistory: [''],
-      // phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{7,20}$')]],
+      // employmentHistory: ['Software Engineer at XYZ Corp'],
+      // phoneNumber: ['78143627', [Validators.required, Validators.pattern('^[0-9]{7,20}$')]],
+      idNumber: ['', [Validators.required, Validators.minLength(1)]],
+      fullName: ['', Validators.required],
+      gender: ['', Validators.required],
+      birthDate: ['', Validators.required],
+      city: ['', Validators.required],
+      maritalStatus: [''],
+      spouseName: [''],
+      employmentHistory: [''],
+      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{7,20}$')]],
     });
+
+    this.demoData = this.route.snapshot.data['demoData'];
+
+    if (this.demoData) {
+      this.isNew = false;
+      this.demographicForm.patchValue(this.demoData);
+      this.demographicForm.get('birthDate')?.setValue(new Date(this.demoData.birthDate));
+    }
   }
 
   ngOnInit() {
-    console.log(this.files);
 
   }
 
@@ -96,12 +110,49 @@ export class FormComponent {
     }
   }
 
+  /**
+   * Updates a demographic on the server.
+   *
+   * The demographic object is sent to the server using the DemographicService.
+   * The loading indicator is set to true until the response is received from the server.
+   * If the response is successful, a success notification is displayed.
+   * If the response is an error, an error notification is displayed with the error message received from the server.
+   * If the form is invalid, an error notification is displayed with the message 'Form is invalid'.
+   * Upon successful update, the user is redirected to the demographics list after a delay.
+   * @param form The demographic object to be sent to the server.
+   */
+
+  update(form: FormGroup) {
+    this.messageService.clear();
+    this.loading = true;
+    if (form.valid) {
+      let formData = form.value;
+      this.demographicService.updateById(this.demoData.id, formData).subscribe({
+        next: (response) => {
+          this.setNotification(true, response);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.setNotification(false, null, error);
+        },
+        complete: () => {
+          this.loading = false;
+          setTimeout(() => {
+            this.router.navigate(['/admin/demographics']);
+          }, 3000)
+        }
+      });
+    } else {
+      this.setNotification(false, null, 'Form is invalid');
+    }
+  }
+
   setNotification(isSuccess: boolean, demographic?: any, error?: any) {
     if (this.isNew) {
       isSuccess ? this.messageService.add({ severity: 'success', summary: 'Demographic Registered Successfully!', detail: `The Demographic data ${demographic.fullName} has been registered.` }) :
         this.messageService.add({ severity: 'error', summary: 'Error', detail: error });
     } else {
-      isSuccess ? this.messageService.add({ severity: 'success', summary: 'User Updated Successfully!', detail: `The Demographic data ${demographic.fullName} informations has been updated` }) :
+      isSuccess ? this.messageService.add({ severity: 'success', summary: 'Demographic Updated Successfully!', detail: `The Demographic data ${demographic.fullName} informations has been updated` }) :
         this.messageService.add({ severity: 'error', summary: 'Error', detail: error });
     }
   }

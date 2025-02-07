@@ -28,6 +28,17 @@ export class DemographicService {
   }
 
   /**
+   * Updates a demographic by ID.
+   *
+   * @param id The ID of the demographic to update.
+   * @param formData The demographic object to be sent to the server.
+   * @returns An observable of the server response.
+   */
+  updateById(id: number, formData: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, formData).pipe(take(1));
+  }
+
+  /**
    * Retrieves a demographic by ID.
    *
    * @param id The ID of the demographic to retrieve.
@@ -47,8 +58,8 @@ export class DemographicService {
    */
   getPagination(page = 0, size = 50): Observable<any> {
     let params = new HttpParams();
-      params.append('page', page)
-      params.append('size', size);
-      return this.http.get<any>(`${this.apiUrl}?page=${page}&size=${size}`).pipe(take(1));
+    params.append('page', page)
+    params.append('size', size);
+    return this.http.get<any>(`${this.apiUrl}?page=${page}&size=${size}`).pipe(take(1));
   }
 }

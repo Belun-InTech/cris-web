@@ -10,23 +10,23 @@
                     <input pInputText id="fullName" formControlName="fullName" class="w-full" />
                     <label for="fullName">Full Name</label>
                 </p-floatLabel>
+                <div class="my-5">
+                    <p-selectButton [options]="genderOpts" formControlName="gender" optionLabel="viewValue"
+                        optionValue="value" />
+                </div>
                 <p-floatLabel>
                     <input pInputText id="idNumber" formControlName="idNumber" class="w-full" />
                     <label for="idNumber">ID Number</label>
                 </p-floatLabel>
                 <p-floatLabel>
-                    <input pInputText id="address" formControlName="address" class="w-full" />
-                    <label for="address">Residence & Mailing Address</label>
-                </p-floatLabel>
-
-                <p-floatLabel>
-                    <p-calendar inputId="birthDate" formControlName="birthDate" class="w-full" dateFormat="dd/mm/yy" />
+                    <p-calendar inputId="birthDate" formControlName="birthDate" class="w-full" dateFormat="dd/mm/yy"
+                        placeholder="dd/mm/yyyy" />
                     <label for="birthDate">Birth Date</label>
                 </p-floatLabel>
 
                 <p-floatLabel>
                     <input pInputText id="city" formControlName="city" class="w-full" />
-                    <label for="city">Birth City</label>
+                    <label for="city">City</label>
                 </p-floatLabel>
 
                 <p-floatLabel>
@@ -50,8 +50,13 @@
                 </p-floatLabel>
             </form>
             <div class="mt-5">
+                @if (isNew) {
                 <p-button label="Save" icon="pi pi-save" [disabled]="!demographicForm.valid" [loading]="loading"
-                (click)="save(demographicForm)" [raised]="true" severity="warning" />
+                    (click)="save(demographicForm)" [raised]="true" severity="warning" />
+                }@else {
+                <p-button label="Update" icon="pi pi-sync" [disabled]="!demographicForm.valid" [loading]="loading"
+                    (click)="update(demographicForm)" [raised]="true" severity="warning" />
+                }
                 <p-button label="Cancel" [routerLink]="['/admin/demographics']" routerLinkActive="router-link-active"
                     icon="pi pi-times" [raised]="true" severity="secondary" class="ml-3" />
             </div>

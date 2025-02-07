@@ -8,12 +8,14 @@ import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { ChipsModule } from 'primeng/chips';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { PaginatorModule } from 'primeng/paginator';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { DemographicRoutingModule } from './demographic-routing.module';
@@ -43,6 +45,8 @@ import { ListComponent } from './list/list.component';
     PaginatorModule,
     DialogModule,
     ChipsModule,
+    DropdownModule,
+    SelectButtonModule,
   ]
 })
 export class DemographicModule { }

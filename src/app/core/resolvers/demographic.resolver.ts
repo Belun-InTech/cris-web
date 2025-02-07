@@ -17,4 +17,10 @@ export const getDemographicByIdResolver: ResolveFn<any> = (route: ActivatedRoute
  *
  * @returns A promise that resolves to an HttpResponse of demographic objects.
  */
-export const getPageDemographicResolver: ResolveFn<any> = () => inject(DemographicService).getPagination();
+export const getPageDemographicResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot) => {
+    const demographicService = inject(DemographicService);
+    // Extract page & size from query parameters (default: page=1, size=10)
+    const page = route.queryParamMap.get('page') ? Number(route.queryParamMap.get('page')) : 0;
+    const size = route.queryParamMap.get('size') ? Number(route.queryParamMap.get('size')) : 50;
+    return demographicService.getPagination(page, size);
+}
