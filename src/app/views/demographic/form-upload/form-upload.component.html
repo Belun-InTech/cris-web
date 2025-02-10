@@ -1,0 +1,192 @@
+<p-stepper [linear]="true">
+    <p-stepperPanel header="Upload File">
+        <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+            <div class="grid">
+                <div class="col-12">
+                    <p-toast />
+                    <p-fileUpload name="myfile[]" url="https://www.primefaces.org/cdn/api/upload.php" [multiple]="false"
+                        accept=".xls,.xlsx,.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
+                        maxFileSize="1000000" (onSelect)="onSelectedFiles($event)">
+                        <ng-template pTemplate="header" let-files let-chooseCallback="chooseCallback"
+                            let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
+                            <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
+                                <div class="flex gap-2">
+                                    <p-button (onClick)="choose($event, chooseCallback)" icon="pi pi-file-excel"
+                                        [rounded]="true" [outlined]="true" />
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="content" let-files let-uploadedFiles="uploadedFiles"
+                            let-removeFileCallback="removeFileCallback"
+                            let-removeUploadedFileCallback="removeUploadedFileCallback">
+                            <div *ngIf="files?.length > 0">
+                                <div class="flex flex-wrap p-0 sm:p-5 gap-5">
+                                    <div *ngFor="let file of files; let i = index"
+                                        class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
+                                        <span class="font-semibold">{{ file.name }}</span>
+                                        <div>{{ formatSize(file.size) }}</div>
+                                        <p-button icon="pi pi-times"
+                                            (onClick)="onRemoveTemplatingFile($event, file, removeFileCallback, index)"
+                                            [outlined]="true" [rounded]="true" severity="danger" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="uploadedFiles?.length > 0">
+                                <h5>Completed</h5>
+                                <div class="flex flex-wrap p-0 sm:p-5 gap-5">
+                                    <div *ngFor="let file of uploadedFiles; let i = index"
+                                        class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
+                                        <div>
+                                            <img role="presentation" [alt]="file.name" [src]="file.objectURL"
+                                                width="100" height="50" />
+                                        </div>
+                                        <span class="font-semibold">{{ file.name }}</span>
+                                        <div>{{ formatSize(file.size) }}</div>
+                                        <p-badge value="Completed" class="mt-3" severity="success" />
+                                        <p-button icon="pi pi-times" (onClick)="removeUploadedFileCallback(index)"
+                                            [outlined]="true" [rounded]="true" severity="danger" />
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="file"> </ng-template>
+                        <ng-template pTemplate="empty">
+                            <div class="flex align-items-center justify-content-center flex-column">
+                                <i
+                                    class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"></i>
+                                <p class="mt-4 mb-0">Drag and drop file here to upload.</p>
+                            </div>
+                        </ng-template>
+                    </p-fileUpload>
+
+                    <div class="flex pt-4 justify-content-end">
+                        <p-button [disabled]="jsonData.length === 0" label="Next" icon="pi pi-arrow-right"
+                            iconPos="right" (click)="nextCallback.emit()" />
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="Check Duplicate & Save">
+        <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback"
+            let-index="index">
+            <div class="">
+                <p-tabView>
+                    <p-tabPanel header="Excel Data">
+                        <p-messages />
+                        <div class="grid">
+                            <div class="col-12">
+                                <p-table #jd [value]="jsonData" [paginator]="true" [rows]="50"
+                                    [rowsPerPageOptions]="[50, 150, 250]" [scrollable]="true" scrollHeight="450px"
+                                    [showCurrentPageReport]="true"
+                                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
+                                    [globalFilterFields]="['fullName', 'idNumber']">
+                                    <ng-template pTemplate="caption">
+                                        <div class="grid">
+                                            <div class="col-6">
+                                                <p-floatLabel>
+                                                    <input pInputText id="search" class="w-full"
+                                                        (input)="jd.filterGlobal($event.target.value, 'contains')" />
+                                                    <label for="search">Search</label>
+                                                </p-floatLabel>
+                                            </div>
+                                            <div class="col-6">
+                                                <p-button label="Scan for Duplicates" icon="pi pi-search"
+                                                    [disabled]="jsonData.length === 0" [loading]="isScanning"
+                                                    (click)="checkJsonData(jsonData)" [raised]="true"
+                                                    severity="warning" />
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            @for (item of columns; track $index) {
+                                            <th>{{item}}</th>
+                                            }
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-item let-columns="columns">
+                                        <tr>
+                                            <td>
+                                                {{item.fullName}}
+                                            </td>
+                                            <td>
+                                                {{item.gender |titlecase}}
+                                            </td>
+                                            <td>
+                                                {{item.idNumber}}
+                                            </td>
+                                            <td>
+                                                {{item.address}} - {{item.city}}
+                                            </td>
+                                            <td>
+                                                {{item.birthDate |date:'dd MMM yyyy'}}
+                                            </td>
+                                            <td>
+                                                {{item.phoneNumber}}
+                                            </td>
+                                            <td>
+                                                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true"
+                                                    [outlined]="true" severity="success"
+                                                    [routerLink]="['/admin/demographics', item.id]" />
+                                                <p-button (click)="deleteJsonData(item)" icon="pi pi-trash"
+                                                    severity="danger" [rounded]="true" [outlined]="true" />
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                    </p-tabPanel>
+
+                    <p-tabPanel [disabled]="duplicatesData.length === 0" header="Duplicated Data">
+                        <p-table [value]="duplicatesData" [paginator]="true" [rows]="50"
+                            [rowsPerPageOptions]="[50, 150, 250]" [scrollable]="true" scrollHeight="450px"
+                            [showCurrentPageReport]="true"
+                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    @for (item of columns; track $index) {
+                                    @if (item !== 'Actions') {
+                                    <th>{{item}}</th>
+                                    }
+                                    }
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-item let-columns="columns">
+                                <tr>
+                                    <td>
+                                        {{item.fullName}}
+                                    </td>
+                                    <td>
+                                        {{item.gender |titlecase}}
+                                    </td>
+                                    <td>
+                                        {{item.idNumber}}
+                                    </td>
+                                    <td>
+                                        {{item.address}} - {{item.city}}
+                                    </td>
+                                    <td>
+                                        {{item.birthDate |date:'dd MMM yyyy'}}
+                                    </td>
+                                    <td>
+                                        {{item.phoneNumber}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <p-paginator (onPageChange)="onPageChange($event)" [rows]="size" [totalRecords]="totalData"
+                            [rowsPerPageOptions]="[50, 150, 250]" />
+                    </p-tabPanel>
+                </p-tabView>
+            </div>
+            <div class="flex pt-4 justify-content-between">
+                <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+                <p-button [disabled]="!allowSubmit()" [loading]="isSubmitting" label="Save" icon="pi pi-save"
+                    (click)="saveDemographicData(jsonData)" />
+            </div>
+        </ng-template>
+    </p-stepperPanel>
+</p-stepper>
+<p-toast key="deleteJson" position="bottom-right" />

@@ -12,9 +12,6 @@ import { genderOpts } from 'src/app/core/utils/global-types';
   providers: [MessageService]
 })
 export class FormComponent {
-  files: any[] = [];
-  totalSize: number = 0;
-  totalSizePercent: number = 0;
   demographicForm: FormGroup;
   loading = false;
   isNew = true;
@@ -23,7 +20,6 @@ export class FormComponent {
   selectedGender: any;
 
   constructor(
-    private config: PrimeNGConfig,
     private messageService: MessageService,
     private demographicService: DemographicService,
     private _fb: FormBuilder,
@@ -33,18 +29,10 @@ export class FormComponent {
 
     this.demographicForm = this._fb.group({
       id: [''],
-      // idNumber: ['12345678', [Validators.required, Validators.minLength(1)]],
-      // fullName: ['John Doe', Validators.required],
-      // address: ['123 Main St, Cityville', Validators.required],
-      // birthDate: [new Date('1992-10-16'), Validators.required],
-      // city: ['Cityville', Validators.required],
-      // maritalStatus: ['Single'],
-      // spouseName: [''],
-      // employmentHistory: ['Software Engineer at XYZ Corp'],
-      // phoneNumber: ['78143627', [Validators.required, Validators.pattern('^[0-9]{7,20}$')]],
       idNumber: ['', [Validators.required, Validators.minLength(1)]],
       fullName: ['', Validators.required],
       gender: ['', Validators.required],
+      address: ['', Validators.required],
       birthDate: ['', Validators.required],
       city: ['', Validators.required],
       maritalStatus: [''],
@@ -65,7 +53,6 @@ export class FormComponent {
   ngOnInit() {
 
   }
-
 
   /**
    * Saves a demographic to the server.
@@ -147,6 +134,17 @@ export class FormComponent {
     }
   }
 
+  /**
+   * Displays a notification message based on the success or failure of an operation.
+   *
+   * If the operation is for a new demographic registration, the notification is for a new demographic registration.
+   * If the operation is for an existing demographic update, the notification is for an existing demographic update.
+   * If the operation is successful, the notification is a success message.
+   * If the operation is an error, the notification is an error message with the error message received from the server.
+   * @param isSuccess - Indicates whether the operation was successful.
+   * @param demographic - The demographic object that was registered or updated, if any.
+   * @param error - The error message received, if any.
+   */
   setNotification(isSuccess: boolean, demographic?: any, error?: any) {
     if (this.isNew) {
       isSuccess ? this.messageService.add({ severity: 'success', summary: 'Demographic Registered Successfully!', detail: `The Demographic data ${demographic.fullName} has been registered.` }) :
@@ -157,56 +155,4 @@ export class FormComponent {
     }
   }
 
-
-  choose(event, callback) {
-    callback();
-  }
-
-  onRemoveTemplatingFile(event, file, removeFileCallback, index) {
-    console.log(removeFileCallback);
-    console.log(file);
-
-
-    removeFileCallback(event, index);
-    this.totalSize -= parseInt(this.formatSize(file.size));
-    this.totalSizePercent = this.totalSize / 10;
-  }
-
-  onClearTemplatingUpload(clear) {
-    clear();
-    this.totalSize = 0;
-    this.totalSizePercent = 0;
-  }
-
-  onTemplatedUpload() {
-    this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
-  }
-
-  onSelectedFiles(event) {
-    this.files = event.currentFiles;
-    this.files.forEach((file) => {
-      this.totalSize += parseInt(this.formatSize(file.size));
-    });
-    console.log(this.files);
-
-    this.totalSizePercent = this.totalSize / 10;
-  }
-
-  uploadEvent(callback) {
-    callback();
-  }
-
-  formatSize(bytes) {
-    const k = 1024;
-    const dm = 3;
-    const sizes = this.config.translation.fileSizeTypes;
-    if (bytes === 0) {
-      return `0 ${sizes[0]}`;
-    }
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    const formattedSize = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
-
-    return `${formattedSize} ${sizes[i]}`;
-  }
 }

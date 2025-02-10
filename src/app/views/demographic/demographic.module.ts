@@ -8,7 +8,6 @@ import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { ChipsModule } from 'primeng/chips';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,16 +15,20 @@ import { MenuModule } from 'primeng/menu';
 import { PaginatorModule } from 'primeng/paginator';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { StepperModule } from 'primeng/stepper';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { DemographicRoutingModule } from './demographic-routing.module';
+import { FormUploadComponent } from './form-upload/form-upload.component';
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
+import { TabViewModule } from 'primeng/tabview';
 
 @NgModule({
   declarations: [
     ListComponent,
-    FormComponent
+    FormComponent,
+    FormUploadComponent
   ],
   imports: [
     CommonModule,
@@ -45,8 +48,9 @@ import { ListComponent } from './list/list.component';
     PaginatorModule,
     DialogModule,
     ChipsModule,
-    DropdownModule,
     SelectButtonModule,
+    StepperModule,
+    TabViewModule,
   ]
 })
 export class DemographicModule { }

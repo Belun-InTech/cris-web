@@ -28,6 +28,20 @@ export class DemographicService {
   }
 
   /**
+   * Saves a list of demographics to the server.
+   *
+   * @param formList The array of demographic objects to be sent to the server.
+   * @returns An observable of the server response.
+   */
+  saveAll(formList: any[]): Observable<any> {
+    const form = {
+      demographics: formList,
+      demographic: null
+    }
+    return this.http.post<any>(this.apiUrl, form).pipe(take(1));
+  }
+
+  /**
    * Updates a demographic by ID.
    *
    * @param id The ID of the demographic to update.
@@ -61,5 +75,16 @@ export class DemographicService {
     params.append('page', page)
     params.append('size', size);
     return this.http.get<any>(`${this.apiUrl}?page=${page}&size=${size}`).pipe(take(1));
+  }
+
+  /**
+   * Checks for duplicate demographics in the database.
+   *
+   * @param data An array of demographic objects to be checked for duplicates.
+   * @returns An observable of the server response, which is an array of demographic
+   * objects that are duplicates. If no duplicates are found, the array is empty.
+   */
+  checkDuplicates(data: any[]): Observable<any[]> {
+    return this.http.post<any>(`${this.apiUrl}/duplicate-check`, data).pipe(take(1));
   }
 }

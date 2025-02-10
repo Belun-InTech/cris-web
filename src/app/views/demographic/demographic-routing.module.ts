@@ -4,6 +4,7 @@ import { getDemographicByIdResolver, getPageDemographicResolver } from 'src/app/
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
 import { canActivateQueryParams } from 'src/app/core/security/route.guard';
+import { FormUploadComponent } from './form-upload/form-upload.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'new',
     component: FormComponent
+  },
+  {
+    path: 'upload',
+    component: FormUploadComponent
   },
   {
     path: ':id',
