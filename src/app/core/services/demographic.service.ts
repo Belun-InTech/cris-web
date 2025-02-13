@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, take } from 'rxjs';
+import { EMPTY, expand, Observable, reduce, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -76,6 +76,75 @@ export class DemographicService {
     params.append('size', size);
     return this.http.get<any>(`${this.apiUrl}?page=${page}&size=${size}`).pipe(take(1));
   }
+
+  /**
+   * Retrieves a list of demographic records that match the given search query.
+   *
+   * This method makes a GET request to the server's /search endpoint with the
+   * query parameter set to the given query. The server will return a list of
+   * demographic records that match the query.
+   *
+   * @param query The query string to search for.
+   * @returns An observable of the server response.
+   */
+  filterByQuery(query: any): Observable<any> {
+    let params = new HttpParams()
+      .append('query', query)
+    return this.http.get<any>(`${this.apiUrl}/search`, { params }).pipe(take(1));
+  }
+
+  /**
+   * Makes a GET request to the demographics endpoint with query parameters
+   * representing the current filters.
+   *
+   * The server will return a list of demographic records that match the current
+   * filters.
+   *
+   * @param filters An object of filter keys to values, where each key is the name
+   * of a demographic field and the value is an array of values to filter by.
+   * @returns An observable of the server response.
+   */
+  filterByParams(filters: any): Observable<any> {
+    let params = new HttpParams()
+      .append('fullName', filters.fullName[0].value)
+      .append('idNumber', filters.idNumber[0].value);
+    return this.http.get<any>(`${this.apiUrl}/filter`, { params }).pipe(take(1));
+  }
+
+
+  /**
+   * Retrieves all demographic records from the server by repeatedly calling the
+   * {@link getPagination} method until no more pages are available.
+   *
+   * The observable returned by this method will emit a single array containing all
+   * the demographic records retrieved from the server.
+   *
+   * @param size The number of demographic records per page.
+   * @param initialPage The page number to start retrieving records from.
+   * @returns An observable of an array of demographic records.
+   */
+  getAll(size: number = 50, initialPage: number = 0): Observable<any[]> {
+    let currentPage = initialPage;
+
+    return this.getPagination(currentPage, size).pipe(
+      expand(response => {
+        // Assuming the response has a property `content` (an array of items)
+        // If the current page returns as many items as the page size, we assume there is another page.
+        if (response.content && response.content.length === size) {
+          currentPage++;
+          return this.getPagination(currentPage, size);
+        } else {
+          return EMPTY;
+        }
+      }),
+      // Accumulate all the responses into a single array.
+      reduce((allItems, response) => {
+        // Concatenate the current page's items with all previously retrieved items.
+        return allItems.concat(response.content);
+      }, [])
+    );
+  }
+
 
   /**
    * Checks for duplicate demographics in the database.

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { DemographicService } from 'src/app/core/services';
+import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs';
+import { DemographicService, FileExportService } from 'src/app/core/services';
 
 @Component({
   selector: 'app-list',
@@ -15,10 +17,16 @@ export class ListComponent {
   size = 50;
   totalData = 0;
   showDialog = false;
+  columns = ['Name', 'Gender', 'ID Number / TIN', 'Address', 'City', 'Birth Date', 'Phone Nº'];
+  filename = 'Demographic';
+  dataIsFetching = false;
+  inMemoryData: any[] = [];
+  searchFormControl = new FormControl('', { updateOn: 'change' });
 
   constructor(
     private route: ActivatedRoute,
     private service: DemographicService,
+    private excelService: FileExportService,
   ) {
     this.demoData = this.route.snapshot.data['demographicList'].content;
     this.totalData = this.route.snapshot.data['demographicList'].totalElements;
@@ -37,6 +45,9 @@ export class ListComponent {
         label: 'PDF',
         command: () => {
           // this.messageService.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
+          if (this.demoData.length > 0) {
+            this.exportToPDF();
+          }
         }
       },
       {
@@ -44,9 +55,39 @@ export class ListComponent {
         label: 'Excel',
         command: () => {
           // this.messageService.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
+          if (this.demoData.length > 0) {
+            this.exportToExcel();
+          }
         }
       },
     ];
+
+    this.searchFormControl.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        tap(() => this.dataIsFetching = true),
+        switchMap(value => {
+          const trimmedValue = value.trim();
+          if (trimmedValue === '') {
+            // If query is empty, return the original unfiltered data
+            return this.service.getPagination(this.page, this.size);
+          } else {
+            // Perform filtered search
+            return this.service.filterByQuery(trimmedValue);
+          }
+        })
+      )
+      .subscribe({
+        next: response => {
+          this.demoData = response.content;
+          this.totalData = response.totalElements;
+          this.dataIsFetching = false;
+        },
+        error: err => {
+          this.dataIsFetching = false;
+        }
+      });
   }
 
   /**
@@ -59,9 +100,10 @@ export class ListComponent {
       next: response => {
         this.demoData = response.content;
         this.totalData = response.totalElements;
+        this.dataIsFetching = false;
       },
       error: err => {
-
+        this.dataIsFetching = false;
       },
     });
   }
@@ -76,8 +118,36 @@ export class ListComponent {
    * @param event The event emitted by the paginator.
    */
   onPageChange(event: any): void {
+    this.dataIsFetching = true;
     this.page = event.page;
     this.size = event.rows;
     this.getData(this.page, this.size);
+  }
+
+  exportToExcel(): void {
+    this.dataIsFetching = true;
+    this.service.getAll().subscribe({
+      next: response => {
+        this.dataIsFetching = false;
+        this.excelService.exportToExcel(response, this.filename);
+      },
+      error: err => {
+        this.dataIsFetching = false;
+      },
+    });
+  }
+  // ['fullName', 'gender', 'idNumber', 'city', 'brithDate', 'phoneNumber']
+
+  exportToPDF(): void {
+    this.dataIsFetching = true;
+    this.service.getAll().subscribe({
+      next: response => {
+        this.dataIsFetching = false;
+        this.excelService.exportToPDF(this.columns, response, this.filename);
+      },
+      error: err => {
+        this.dataIsFetching = false;
+      },
+    });
   }
 }
