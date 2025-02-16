@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    url: 'https://cris-api-eegc.onrender.com',
-    apiUrl: 'https://cris-api-eegc.onrender.com/api/v1',
+    url: 'https://api-cristl.belunintech.cloud',
+    apiUrl: 'https://api-cristl.belunintech.cloud/api/v1',
   };
