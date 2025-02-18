@@ -18,9 +18,10 @@ import { HttpErrorInterceptor } from './core/security/http-error.interceptor';
 import { AppLayoutModule } from './layout/app.layout.module';
 import { FaqComponent } from './views/faq/faq.component';
 import { LoginComponent } from './views/login/login.component';
+import { ActivationComponent } from './views/activation/activation.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, FaqComponent],
+  declarations: [AppComponent, LoginComponent, FaqComponent, ActivationComponent],
   imports: [
     AppRoutingModule,
     AppLayoutModule,

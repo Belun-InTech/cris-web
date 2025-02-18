@@ -1,0 +1,36 @@
+.login-bg {
+    // background: #0f0c29;
+    // background: -webkit-linear-gradient(to bottom, #24243e, #302b63, #0f0c29);
+    // background: linear-gradient(to bottom, #24243e, #302b63, #0f0c29);
+    //
+    // background-image: url('/assets/layout/images/cne-office.jpeg');
+    // background-size: cover;
+    // background-position: left;
+    // background-repeat: no-repeat;
+
+    background: black;
+    overflow: hidden;
+    background: rgb(106, 200, 251);
+    background: linear-gradient(rgba(29, 38, 113, 0.6), rgba(248, 194, 127, 0.6)), url('/assets/layout/images/bctl-office.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.form {
+    min-width: 412px;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    // background-color: rgba(30, 26, 26, 0.75);
+    background-color: rgb(23, 33, 47);
+    border-radius: 12px;
+    border: 1px solid rgba(209, 213, 219, 0.3);
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Adjust the color and opacity */
+}
+
+.error {
+    color: rgb(213, 0, 0);
+}

@@ -65,4 +65,8 @@ export class UserService {
       return this.http.get<any>(this.apiUrl, { params }).pipe(take(1));
     }
   }
+
+  activate(token: string, form: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/activate?token=${token}`, form);
+  }
 }

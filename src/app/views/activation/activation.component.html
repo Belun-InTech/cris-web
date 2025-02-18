@@ -1,0 +1,36 @@
+<div class="login-bg flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex flex-column align-items-center justify-content-center">
+        <!-- <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg"
+            alt="Sakai logo" class="mb-5 w-6rem flex-shrink-0"> -->
+        <div class="form py-5 px-4 shadow-1 border-round-3xl">
+            <div class="text-center">
+                <img src="assets/layout/images/bctl-logo.png" alt="CNE logo" class="mb-3 w-10rem flex-shrink-0">
+            </div>
+            <div class="text-center">
+                <h3>Credit Registry Information System</h3>
+            </div>
+            <p-messages></p-messages>
+            <div class="text-center py-3">
+                <span>Activate Your Account: Set Your New Password</span>
+            </div>
+            <form [formGroup]="activationForm">
+                <div class="field p-fluid">
+                    <p-password formControlName="password" id="password" placeholder="Password" [feedback]="false"
+                        [toggleMask]="true"></p-password>
+                </div>
+                <div class="field p-fluid">
+                    <p-password formControlName="confirmPassword" id="confirmPassword" placeholder="Confirm Password"
+                        [feedback]="false" [toggleMask]="true"></p-password>
+                </div>
+                @if (activationForm.get('confirmPassword').touched &&
+                activationForm.get('confirmPassword').hasError('mustMatch')) {
+                <div>
+                    <p class="error">Passwords must match.</p>
+                </div>
+                }
+                <button (click)="activateUser(activationForm)" [disabled]="!activationForm.valid" [loading]="loading"
+                    icon="pi pi-sign-in" pButton pRipple label="Activate account"
+                    class="w-full p-3 text-lg mt-3"></button>
+            </form>
+        </div>
+    </div>

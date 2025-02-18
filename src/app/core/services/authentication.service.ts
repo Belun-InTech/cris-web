@@ -63,9 +63,10 @@ export class AuthenticationService {
    */
 
   logout(): Observable<any> {
+    const token = this.getToken;
     localStorage.removeItem(this.userKey);
     localStorage.removeItem(this.jwtKey);
-    return this.http.post<any>(`${this.apiUrl}/logout`, this.getToken);
+    return this.http.post<any>(`${this.apiUrl}/logout`, token);
   }
 
   /**

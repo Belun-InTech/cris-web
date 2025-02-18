@@ -60,6 +60,7 @@ export class LoginComponent implements OnInit {
     // Update timeLeft every second.
     this.timerId = setInterval(() => {
       this.updateTime();
+      this.checkSession();
     }, 1000);
   }
 
@@ -103,6 +104,7 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authService.authServer(form.value).subscribe({
       next: response => {
+        this.loginForm.reset();
         this.username = response.username;
         this.otpSessionActive = true;
         this.otpSessionService.createSession(this.username);
@@ -125,20 +127,18 @@ export class LoginComponent implements OnInit {
   validateOTP(otp: string): void {
     this.messageService.clear();
     this.authService.validateOTP(this.username, otp).subscribe({
-      next: () => {
-        setTimeout(() => {
-          this.router.navigate(['/admin/dashboard']).then(() => {
-            this.otpInput.reset();
-            this.otpSessionActive = false;
-            this.otpSessionService.clearSession();
-            this.loading = false;
-          });
-        }, 2500);
-      },
+      next: () => this.router.navigate(['/admin/dashboard']).then(() => this.loading = false),
       error: err => {
         this.otpInput.reset();
         this.messageService.add({ severity: 'error', summary: '', detail: err });
         this.loading = false;
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.otpInput.reset();
+          this.otpSessionActive = false;
+          this.otpSessionService.clearSession();
+        }, 2500);
       }
     });
   }

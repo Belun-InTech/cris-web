@@ -1,6 +1,7 @@
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, Router, RouterStateSnapshot } from "@angular/router";
 import { UserService } from "../services";
+import { EMPTY, of } from "rxjs";
 
 /**
  * Resolves a page of users.
@@ -23,4 +24,20 @@ export const getUserByUsernameResolver: ResolveFn<any> = (route: ActivatedRouteS
     const username = route.paramMap.get('username');
     const service = inject(UserService);
     return service.getByUsername(username);
+}
+
+export const getTokenActivationResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot) => {
+    const router = inject(Router);
+    const token = route.queryParamMap.get('t');
+
+    // Basic JWT regex: header.payload.signature
+    const jwtRegex = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/;
+
+    if (token && jwtRegex.test(token)) {
+        return of(token);
+    } else {
+        // If token is invalid or missing, navigate to the index route
+        router.navigate(['/']);
+        return EMPTY;
+    }
 }

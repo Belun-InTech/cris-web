@@ -5,6 +5,8 @@ import { FaqComponent } from './views/faq/faq.component';
 import { LoginComponent } from './views/login/login.component';
 import { authenticationCanActivate, loginGuard } from './core/security/route.guard';
 import { getFaqListResolver } from './core/resolvers/data-master.resolver';
+import { ActivationComponent } from './views/activation/activation.component';
+import { getTokenActivationResolver } from './core/resolvers/utilizador.resolver';
 
 @NgModule({
     imports: [
@@ -13,6 +15,13 @@ import { getFaqListResolver } from './core/resolvers/data-master.resolver';
                 path: '',
                 component: LoginComponent,
                 canActivate: [loginGuard],
+            },
+            {
+                path: 'activate',
+                component: ActivationComponent,
+                resolve: {
+                    tokenResolve: getTokenActivationResolver
+                }
             },
             {
                 path: 'admin', component: AppLayoutComponent,
