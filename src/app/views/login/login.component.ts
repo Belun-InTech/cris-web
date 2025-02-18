@@ -75,6 +75,13 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  /**
+   * Checks whether the OTP session is active and has not expired.
+   * Updates the "remainingTime" property with the time remaining in the session.
+   * If the session is active, it optionally starts a timer to update the remaining time
+   * every second. If the session is not active, it sets "otpSessionActive" to false.
+   * @returns void
+   */
   checkSession(): void {
     this.otpSessionActive = this.otpSessionService.isSessionActive();
     if (this.otpSessionActive) {
@@ -143,6 +150,13 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  /**
+   * Resends the OTP to the user's email.
+   * 
+   * Initiates the process to regenerate and resend the OTP for the current user.
+   * Displays a success message if the OTP is successfully resent, or shows an error
+   * message if there is a failure during the process.
+   */
   resendCode() {
     this.loading = true;
     this.authService.regenerateOTP(this.username).subscribe({
@@ -173,6 +187,11 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  /**
+   * Updates the "timeLeft" signal with the remaining time in the OTP session.
+   * This method is called when the component is initialized and every second
+   * thereafter to update the timer.
+   */
   private updateTime(): void {
     // Get the remaining time from the OTP session service.
     this.timeLeft.set(this.otpSessionService.getRemainingTime());

@@ -10,10 +10,13 @@
                 <h3>Credit Registry Information System</h3>
             </div>
             <p-messages></p-messages>
-            <div class="text-center py-3">
-                <span>Activate Your Account: Set Your New Password</span>
-            </div>
+            @if (doLogin) {
+            <button icon="pi pi-sign-in" [routerLink]="['/']" pButton pRipple label="Go to Log in" class="w-full p-3 text-lg mt-3"></button>
+            }@else {
             <form [formGroup]="activationForm">
+                <div class="text-center py-3">
+                    <span>Activate Your Account: Set Your New Password</span>
+                </div>
                 <div class="field p-fluid">
                     <p-password formControlName="password" id="password" placeholder="Password" [feedback]="false"
                         [toggleMask]="true"></p-password>
@@ -29,8 +32,10 @@
                 </div>
                 }
                 <button (click)="activateUser(activationForm)" [disabled]="!activationForm.valid" [loading]="loading"
-                    icon="pi pi-sign-in" pButton pRipple label="Activate account"
+                    icon="pi pi-verified" pButton pRipple label="Activate account"
                     class="w-full p-3 text-lg mt-3"></button>
             </form>
+            }
+
         </div>
     </div>

@@ -16,6 +16,7 @@ export class ActivationComponent {
   activationForm: FormGroup;
   loading = false;
   token: string;
+  doLogin = false;
 
 
   constructor(
@@ -43,6 +44,7 @@ export class ActivationComponent {
       next: response => {
         this.loading = false;
         this.setNotification(true, response);
+        this.doLogin = true;
       },
       error: error => {
         this.loading = false;

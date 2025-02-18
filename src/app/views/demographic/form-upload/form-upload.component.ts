@@ -65,6 +65,9 @@ export class FormUploadComponent {
           if (newRow.birthDate) {
             newRow.birthDate = new Date(newRow.birthDate).toISOString().split('T')[0];
           }
+          if (newRow.gender) {
+            newRow.gender = newRow.gender.toLowerCase();
+          }
           return newRow;
         });
       };

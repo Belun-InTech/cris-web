@@ -1,5 +1,4 @@
 import { formatDate } from "@angular/common";
-import { FormControl, Validators } from "@angular/forms";
 import { Gender } from "../models/gender.enum";
 
 interface OptionsType {

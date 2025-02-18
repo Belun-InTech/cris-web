@@ -38,7 +38,7 @@ export class FormComponent {
       maritalStatus: [''],
       spouseName: [''],
       employmentHistory: [''],
-      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{7,20}$')]],
+      phoneNumber: ['', [Validators.required]],
     });
 
     this.demoData = this.route.snapshot.data['demoData'];
