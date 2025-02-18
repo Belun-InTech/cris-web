@@ -4,18 +4,20 @@ import { NgModule, isDevMode } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
+import { InputOtpModule } from 'primeng/inputotp';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessagesModule } from 'primeng/messages';
 import { PasswordModule } from 'primeng/password';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpErrorInterceptor } from './core/security/http-error.interceptor';
 import { AppLayoutModule } from './layout/app.layout.module';
-import { LoginComponent } from './views/login/login.component';
 import { FaqComponent } from './views/faq/faq.component';
-import { AccordionModule } from 'primeng/accordion';
+import { LoginComponent } from './views/login/login.component';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent, FaqComponent],
@@ -36,6 +38,8 @@ import { AccordionModule } from 'primeng/accordion';
     PasswordModule,
     MessagesModule,
     AccordionModule,
+    InputOtpModule,
+    ProgressSpinnerModule,
   ],
   providers: [
     {

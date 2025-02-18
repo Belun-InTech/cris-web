@@ -9,6 +9,8 @@ import { User } from '../models/user';
 })
 export class AuthenticationService {
   protected apiUrl = `${environment.apiUrl}/users`;
+  private userKey = 'user';
+  private jwtKey = 'token';
 
   constructor(
     private http: HttpClient,
@@ -25,13 +27,30 @@ export class AuthenticationService {
    * authenticated user data and the JWT.
    */
   authServer(form: User): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/authenticate`, form)
+    return this.http.post<User>(`${this.apiUrl}/authenticate`, form);
+  }
+
+  /**
+   * Validates the provided OTP for the given username by sending a POST request
+   * to the server. If the OTP is valid, the user's session is set and the user
+   * data is returned.
+   *
+   * @param {string} username - The username of the user to validate the OTP for.
+   * @param {string} otp - The one-time password to be validated.
+   * @returns {Observable<User>} - An observable containing the authenticated user data.
+   */
+  validateOTP(username: string, otp: string): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/otp/${otp}`, { username })
       .pipe(
         map(response => {
           this.setSession(response);
           return response;
         })
       );
+  }
+
+  regenerateOTP(username: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/otp/${username}`, { username });
   }
 
   /**
@@ -44,7 +63,8 @@ export class AuthenticationService {
    */
 
   logout(): Observable<any> {
-    localStorage.clear();
+    localStorage.removeItem(this.userKey);
+    localStorage.removeItem(this.jwtKey);
     return this.http.post<any>(`${this.apiUrl}/logout`, this.getToken);
   }
 
@@ -58,12 +78,12 @@ export class AuthenticationService {
    */
   private setSession(authResult: any): void {
     localStorage.clear();
-    localStorage.setItem('user', JSON.stringify(authResult));
-    localStorage.setItem('token', authResult.token);
+    localStorage.setItem(this.userKey, JSON.stringify(authResult));
+    localStorage.setItem(this.jwtKey, authResult.token);
   }
 
   get currentUserValue(): any {
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem(this.userKey);
     if (user) {
       return JSON.parse(user);
     }
@@ -71,7 +91,7 @@ export class AuthenticationService {
   }
 
   get getToken(): any {
-    return localStorage.getItem('token');
+    return localStorage.getItem(this.jwtKey);
   }
 
 }

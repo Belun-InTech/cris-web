@@ -21,7 +21,7 @@
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     // background-color: rgba(30, 26, 26, 0.75);
-    background-color: rgb(23,33,47);
+    background-color: rgb(23, 33, 47);
     border-radius: 12px;
     border: 1px solid rgba(209, 213, 219, 0.3);
 }
@@ -29,4 +29,15 @@
 .overlay {
     background-color: rgba(0, 0, 0, 0.5);
     /* Adjust the color and opacity */
+}
+
+::ng-deep .p-inputotp {
+    .p-inputtext {
+        font-size: 3rem;
+    }
+
+    .p-inputotp-input {
+        width: 4rem;
+    }
+
 }

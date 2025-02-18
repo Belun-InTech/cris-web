@@ -6,10 +6,11 @@
             <div class="text-center">
                 <img src="assets/layout/images/bctl-logo.png" alt="CNE logo" class="mb-3 w-10rem flex-shrink-0">
             </div>
-            <p-messages></p-messages>
             <div class="text-center">
                 <h3>Credit Registry Information System</h3>
             </div>
+            <p-messages></p-messages>
+            @if (!otpSessionActive) {
             <form [formGroup]="loginForm">
                 <div class="field p-fluid">
                     <!-- <label for="email1" class="block text-900 text-xl font-medium mb-2">Email/Username</label> -->
@@ -23,12 +24,32 @@
                 </div>
 
                 <!-- <div class="flex align-items-center justify-content-end mb-5 gap-5">
-                    <a class="font-medium no-underline ml-2 text-right cursor-pointer"
-                        style="color: var(--primary-color)">Forgot password?</a>
-                </div> -->
+                        <a class="font-medium no-underline ml-2 text-right cursor-pointer"
+                            style="color: var(--primary-color)">Forgot password?</a>
+                    </div> -->
                 <button (click)="login(loginForm)" [disabled]="!loginForm.valid" [loading]="loading"
                     icon="pi pi-sign-in" pButton pRipple label="Sign In" class="w-full p-3 text-lg mt-3"></button>
             </form>
+            } @else {
+            @if (loading) {
+            <div class="card flex justify-content-center">
+                <p-progressSpinner strokeWidth="6" fill="var(--surface-ground)" />
+            </div>
+            }@else {
+            <div class="card flex justify-content-center">
+                <div class="flex flex-column align-items-center">
+                    <div class="font-bold text-xl mb-2">Authenticate Your Account</div>
+                    <p class="text-color-secondary block mb-5">Please enter the code sent to your email.</p>
+                    <p-inputOtp [formControl]="otpInput" (onChange)="otpInputOnChange($event)" [length]="6"
+                        [variant]="'filled'" [autofocus]="true" [integerOnly]="true">
+                    </p-inputOtp>
+                </div>
+            </div>
+            <div class="flex justify-content-between mt-5 align-self-stretch">
+                <p-button label="Resend Code" [link]="true" (click)="resendCode()" [disabled]="!activateResendBtn()" class="p-0" />
+                <p>Time remaining: <strong>{{ formattedTime() }}</strong></p>
+            </div>
+            }
+            }
         </div>
     </div>
-</div>
