@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateChildFn, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { of } from 'rxjs';
 
@@ -8,12 +8,34 @@ export const authenticationCanActivate: CanActivateFn = () => {
     const authService = inject(AuthenticationService);
     const location = inject(Location);
     const admin = authService.currentUserValue;
-
+    console.log(admin);
+    
     if (admin) {
         return true;
     } else {
         location.back();
         return false;
+    }
+}
+
+export const canActivateByRole: CanActivateChildFn = (
+    childRoute: ActivatedRouteSnapshot
+) => {
+    const authService = inject(AuthenticationService);
+    const location = inject(Location);
+    const user = authService.currentUserValue;
+
+    const allowedRoles: any[] = childRoute.data['role'];
+
+    if (!allowedRoles || allowedRoles.length === 0) {
+        // role not authorised so redirect to home page
+        location.back();
+        return of(false);
+    } else if (allowedRoles.includes(user.role)) {
+        return of(true);
+    } else {
+        location.back();
+        return of(false);
     }
 }
 
@@ -34,7 +56,7 @@ export const loginGuard: CanActivateFn = () => {
     const router = inject(Router);
     const user = authService.currentUserValue;
     if (user) {
-        router.navigate(['/admin/dashboard']).then();
+        router.navigate(['/dashboard']).then();
         return of(false);
     } else {
         return of(true);

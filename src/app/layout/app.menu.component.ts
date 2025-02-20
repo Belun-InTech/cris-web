@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { Role } from '../core/models/role.enum';
 import { AuthenticationService } from '../core/services';
+import { adminNavs } from './navs/admin';
+import { clientNavs } from './navs/client';
+import { staffNavs } from './navs/staff';
 import { LayoutService } from './service/app.layout.service';
 
 @Component({
@@ -13,71 +17,32 @@ export class AppMenuComponent implements OnInit {
     model: MenuItem[] = [];
     setting: MenuItem[] = [];
 
-    constructor(public layoutService: LayoutService, private authService: AuthenticationService) { }
+    constructor(public layoutService: LayoutService, private authService: AuthenticationService) {
+        this.setMenuByUserRole(
+            this.authService.currentRole
+        );
+    }
+
+    setMenuByUserRole(role: string): void {
+        switch (role) {
+            case Role.admin:
+                this.model = adminNavs;
+                break;
+            case Role.staff:
+                this.model = staffNavs;
+                break;
+            case Role.client:
+                this.model = clientNavs;
+                break;
+        }
+    }
 
     ngOnInit() {
-        this.model = [
-            {
-                label: 'Home',
-                items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/admin/dashboard'] },
-                    { label: `FAQ's`, icon: 'bi bi-fw bi-person-raised-hand', routerLink: ['/admin/faq'] },
-                ]
-            },
-            {
-                label: 'Credit Informations & Demographic Data',
-                items: [
-                    {
-                        label: 'Demographic Data',
-                        icon: 'bi bi-fw bi-person-vcard',
-                        routerLink: ['/admin/demographics'],
-                    },
-                    {
-                        label: 'Credit Informations',
-                        icon: 'bi bi-fw bi-credit-card-2-front',
-                        routerLink: ['/admin/credit-informations']
-                    },
-                    {
-                        label: 'Reports',
-                        icon: 'bi bi-fw bi-bar-chart-line',
-                        routerLink: ['/admin/relatoriu/form']
-                    },
-
-                ]
-            },
-            {
-                label: 'Settings',
-                items: [
-                    { label: 'User Management', icon: 'pi pi-fw pi-users', routerLink: ['/admin/users'] },
-                    {
-                        label: 'Data Master',
-                        icon: 'pi pi-fw pi-database',
-                        items: [
-                            { label: 'Banks', icon: 'bi bi-fw bi-bank', routerLink: ['/admin/data/banks'] },
-                            { label: 'Sectors', icon: 'bi bi-fw bi-building', routerLink: ['/admin/data/sectors'] },
-                            { label: 'Type of Collateral', icon: 'bi bi-fw bi-card-list', routerLink: ['/admin/data/type-of-collaterals'] },
-                            { label: 'Credit Classification', icon: 'bi bi-fw bi-card-list', routerLink: ['/admin/data/credit-classifications'] },
-                            { label: 'Frequently Answers & Questions', icon: 'bi bi-fw bi-person-raised-hand', routerLink: ['/admin/data/faqs'] },
-                        ],
-                    },
-                    { label: 'System', icon: 'bi bi-fw bi-gear-wide-connected', routerLink: ['/admin/data/sistema'] },
-                ]
-            },
-            {
-                label: 'Audit Logs',
-                icon: 'pi pi-fw pi-file',
-                items: [
-                    { label: 'Activities Log', icon: 'bi bi-fw bi-activity', routerLink: ['/admin/audit/activities'] },
-                    { label: 'Authentication Log', icon: 'bi bi-fw bi-fingerprint', routerLink: ['/admin/audit/authentication'] }
-                ]
-            }
-        ];
-
         this.setting = [
             {
                 label: 'Settings',
                 items: [
-                    { label: 'Profile', icon: 'pi pi-fw pi-user', routerLink: ['/admin/profile'] },
+                    { label: 'Profile', icon: 'pi pi-fw pi-user', routerLink: ['/profile'] },
                     { label: 'Logout', icon: 'pi pi-fw pi-sign-out', command: () => this.authService.logout() }
                 ]
             },

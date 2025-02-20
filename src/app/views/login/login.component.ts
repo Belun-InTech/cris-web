@@ -2,6 +2,7 @@ import { Component, computed, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { Role } from 'src/app/core/models/role.enum';
 import { AuthenticationService } from 'src/app/core/services';
 import { OtpSessionService } from 'src/app/core/services/otp-session.service';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
@@ -134,7 +135,17 @@ export class LoginComponent implements OnInit {
   validateOTP(otp: string): void {
     this.messageService.clear();
     this.authService.validateOTP(this.username, otp).subscribe({
-      next: () => this.router.navigate(['/admin/dashboard']).then(() => this.loading = false),
+      next: response => {
+        switch (response.role) {
+          case Role.admin:
+          case Role.staff:
+            this.router.navigate(['/dashboard']).then(() => this.loading = false)
+            break;
+          case Role.client:
+            this.router.navigate(['/demographics']).then(() => this.loading = false)
+            break;
+        }
+      },
       error: err => {
         this.otpInput.reset();
         this.messageService.add({ severity: 'error', summary: '', detail: err });

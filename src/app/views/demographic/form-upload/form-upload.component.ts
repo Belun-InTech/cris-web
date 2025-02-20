@@ -148,7 +148,7 @@ export class FormUploadComponent {
       complete: () => {
         this.isSubmitting = false;
         setTimeout(() => {
-          this.router.navigate(['/admin/demographics']);
+          this.router.navigate(['/demographics']);
         }, 3000)
       }
     });

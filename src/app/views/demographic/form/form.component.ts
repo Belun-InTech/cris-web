@@ -88,7 +88,7 @@ export class FormComponent {
           this.demographicForm.reset();
           this.loading = false;
           setTimeout(() => {
-            this.router.navigate(['/admin/demographics']);
+            this.router.navigate(['/demographics']);
           }, 3000)
         }
       });
@@ -125,7 +125,7 @@ export class FormComponent {
         complete: () => {
           this.loading = false;
           setTimeout(() => {
-            this.router.navigate(['/admin/demographics']);
+            this.router.navigate(['/demographics']);
           }, 3000)
         }
       });

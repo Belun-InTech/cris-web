@@ -8,7 +8,6 @@ export function mustMatch(passwordControlName: string, confirmPasswordControlNam
         const confirmPasswordControl = formGroup.get(confirmPasswordControlName);
 
         if (!passwordControl || !confirmPasswordControl) {
-            console.error('MustMatch validator: Form controls not found');
             return null;
         }
 

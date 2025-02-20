@@ -39,7 +39,7 @@ export class AuthenticationService {
    * @param {string} otp - The one-time password to be validated.
    * @returns {Observable<User>} - An observable containing the authenticated user data.
    */
-  validateOTP(username: string, otp: string): Observable<User> {
+  validateOTP(username: string, otp: string): Observable<any> {
     return this.http.post<User>(`${this.apiUrl}/otp/${otp}`, { username })
       .pipe(
         map(response => {
@@ -87,6 +87,14 @@ export class AuthenticationService {
     const user = localStorage.getItem(this.userKey);
     if (user) {
       return JSON.parse(user);
+    }
+    return null;
+  }
+
+  get currentRole(): any {
+    const user = localStorage.getItem(this.userKey);
+    if (user) {
+      return JSON.parse(user).role;
     }
     return null;
   }

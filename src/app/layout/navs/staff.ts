@@ -1,7 +1,7 @@
 import { MenuItem } from "primeng/api";
 
 
-export const adminNavs: MenuItem[] = [
+export const staffNavs: MenuItem[] = [
     {
         label: 'Home',
         items: [
@@ -27,13 +27,11 @@ export const adminNavs: MenuItem[] = [
                 icon: 'bi bi-fw bi-bar-chart-line',
                 routerLink: ['/reports/form']
             },
-
         ]
     },
     {
         label: 'Settings',
         items: [
-            { label: 'User Management', icon: 'pi pi-fw pi-users', routerLink: ['/users'] },
             {
                 label: 'Data Master',
                 icon: 'pi pi-fw pi-database',
@@ -45,7 +43,6 @@ export const adminNavs: MenuItem[] = [
                     { label: 'Frequently Answers & Questions', icon: 'bi bi-fw bi-person-raised-hand', routerLink: ['/data/faqs'] },
                 ],
             },
-            { label: 'System', icon: 'bi bi-fw bi-gear-wide-connected', routerLink: ['/data/sistema'] },
         ]
     },
     {

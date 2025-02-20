@@ -7,7 +7,7 @@
             </p-floatLabel>
         </div>
         <div class="col-7 flex justify-content-end">
-            <p-button label="New User" [outlined]="true" icon="pi pi-user-plus" [routerLink]="['/admin/users/form']"
+            <p-button label="New User" [outlined]="true" icon="pi pi-user-plus" [routerLink]="['/users/form']"
                 routerLinkActive="router-link-active" />
         </div>
     </div>
@@ -42,7 +42,7 @@
                         </td>
                         <td>
                             <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
-                                severity="success" [routerLink]="['/admin/users', user.username]" />
+                                severity="success" [routerLink]="['/users', user.username]" />
                             <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" /> -->
                         </td>
                     </tr>
