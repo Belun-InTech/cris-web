@@ -3,7 +3,7 @@
         <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
             <div class="grid">
                 <div class="col-12">
-                    <p-toast />
+                    <p-messages />
                     <p-fileUpload name="myfile[]" url="https://www.primefaces.org/cdn/api/upload.php" [multiple]="false"
                         accept=".xls,.xlsx,.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
                         maxFileSize="1000000" (onSelect)="onSelectedFiles($event)">
@@ -60,7 +60,7 @@
                     </p-fileUpload>
 
                     <div class="flex pt-4 justify-content-end">
-                        <p-button [disabled]="jsonData.length === 0" label="Next" icon="pi pi-arrow-right"
+                        <p-button [disabled]="jsonData.length === 0 && validateExcelData(jsonData)" label="Next" icon="pi pi-arrow-right"
                             iconPos="right" (click)="nextCallback.emit()" />
                     </div>
                 </div>
@@ -126,9 +126,9 @@
                                                 {{item.phoneNumber}}
                                             </td>
                                             <td>
-                                                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true"
+                                                <!-- <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true"
                                                     [outlined]="true" severity="success"
-                                                    [routerLink]="['/demographics', item.id]" />
+                                                    [routerLink]="['/demographics', item.id]" /> -->
                                                 <p-button (click)="deleteJsonData(item)" icon="pi pi-trash"
                                                     severity="danger" [rounded]="true" [outlined]="true" />
                                             </td>
@@ -139,7 +139,48 @@
                         </div>
                     </p-tabPanel>
 
-                    <p-tabPanel [disabled]="duplicatesData.length === 0" header="Duplicated Data">
+                    <p-tabPanel [disabled]="duplicatesDataFile.length === 0" header="Matching Records Found in Excel File">
+                        <p-table [value]="duplicatesDataFile" [paginator]="true" [rows]="50"
+                            [rowsPerPageOptions]="[50, 150, 250]" [scrollable]="true" scrollHeight="450px"
+                            [showCurrentPageReport]="true"
+                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    @for (item of columns; track $index) {
+                                    @if (item !== 'Actions') {
+                                    <th>{{item}}</th>
+                                    }
+                                    }
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-item let-columns="columns">
+                                <tr>
+                                    <td>
+                                        {{item.fullName}}
+                                    </td>
+                                    <td>
+                                        {{item.gender |titlecase}}
+                                    </td>
+                                    <td>
+                                        {{item.idNumber}}
+                                    </td>
+                                    <td>
+                                        {{item.address}} - {{item.city}}
+                                    </td>
+                                    <td>
+                                        {{item.birthDate |date:'dd MMM yyyy'}}
+                                    </td>
+                                    <td>
+                                        {{item.phoneNumber}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <p-paginator (onPageChange)="onPageChange($event)" [rows]="size" [totalRecords]="totalData"
+                            [rowsPerPageOptions]="[50, 150, 250]" />
+                    </p-tabPanel>
+
+                    <p-tabPanel [disabled]="duplicatesData.length === 0" header="Matching Records Found in Database">
                         <p-table [value]="duplicatesData" [paginator]="true" [rows]="50"
                             [rowsPerPageOptions]="[50, 150, 250]" [scrollable]="true" scrollHeight="450px"
                             [showCurrentPageReport]="true"

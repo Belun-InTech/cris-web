@@ -8,7 +8,6 @@ export const authenticationCanActivate: CanActivateFn = () => {
     const authService = inject(AuthenticationService);
     const location = inject(Location);
     const admin = authService.currentUserValue;
-    console.log(admin);
     
     if (admin) {
         return true;

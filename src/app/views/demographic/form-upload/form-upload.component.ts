@@ -20,6 +20,7 @@ export class FormUploadComponent {
   isJsonDataChecked = false;
   jsonDataSize = 50;
   duplicatesData = [];
+  duplicatesDataFile = [];
   isScanning = false;
   isSubmitting = false;
 
@@ -58,18 +59,21 @@ export class FormUploadComponent {
         const data = new Uint8Array(e.target.result as ArrayBuffer);
         const workbook = XLSX.read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { raw: false });
+        let excelData = XLSX.utils.sheet_to_json(worksheet, { raw: false });
 
-        this.jsonData = jsonData.map((row) => {
-          const newRow = { ...row as any };
-          if (newRow.birthDate) {
-            newRow.birthDate = new Date(newRow.birthDate).toISOString().split('T')[0];
-          }
-          if (newRow.gender) {
-            newRow.gender = newRow.gender.toLowerCase();
-          }
-          return newRow;
-        });
+        if (this.validateExcelData(excelData)) {
+          this.jsonData = excelData.map((row) => {
+            const newRow = { ...row as any };
+            if (newRow.birthDate) {
+              // newRow.birthDate = new Date(newRow.birthDate).toISOString().split('T')[0];
+              newRow.birthDate = this.showDateValidationMessage(newRow.birthDate);
+            }
+            if (newRow.gender) {
+              newRow.gender = newRow.gender.toLowerCase();
+            }
+            return newRow;
+          });
+        }
       };
       fileReader.readAsArrayBuffer(this.files[0]);
     }
@@ -110,6 +114,9 @@ export class FormUploadComponent {
   checkJsonData(data: any[]): void {
     this.messageService.clear();
     this.isScanning = true;
+
+    this.duplicatesDataFile = this.getAllDuplicateEntries(data);
+
     this.demographicService.checkDuplicates(data).subscribe({
       next: response => {
         this.duplicatesData = response;
@@ -126,6 +133,32 @@ export class FormUploadComponent {
   }
 
   /**
+   * Gets all duplicate entries in the given array based on the 'idNumber' field.
+   * @param arr The array of demographic objects to be checked for duplicates.
+   * @returns An array of demographic objects that are duplicates.
+   */
+  private getAllDuplicateEntries(arr: any[]) {
+    let idMap = new Map();
+    let duplicates = [];
+
+    for (let item of arr) {
+      if (idMap.has(item.idNumber)) {
+        // If it's a duplicate, store both the original and the current one
+        if (idMap.get(item.idNumber) !== 'stored') {
+          duplicates.push(idMap.get(item.idNumber)); // Add original duplicate
+          idMap.set(item.idNumber, 'stored'); // Mark as already stored
+        }
+        duplicates.push(item); // Add current duplicate
+      } else {
+        idMap.set(item.idNumber, item); // Store unique entry
+      }
+    }
+
+    return duplicates;
+  }
+
+
+  /**
    * Saves the given demographic data to the server.
    *
    * The given demographic data is sent to the server using the DemographicService.
@@ -136,6 +169,7 @@ export class FormUploadComponent {
    * @param data The demographic data to be sent to the server.
    */
   saveDemographicData(data: any[]): void {
+    this.messageService.clear();
     this.isSubmitting = true;
     this.demographicService.saveAll(data).subscribe({
       next: (response) => {
@@ -162,7 +196,7 @@ export class FormUploadComponent {
    */
 
   allowSubmit(): boolean {
-    return this.isJsonDataChecked && this.duplicatesData.length === 0;
+    return this.isJsonDataChecked && this.duplicatesData.length === 0 && this.duplicatesDataFile.length === 0;
   }
 
   /**
@@ -171,18 +205,130 @@ export class FormUploadComponent {
    * @param item The demographic data item to be deleted.
    */
   deleteJsonData(item: any): void {
-    this.jsonData = this.jsonData.filter((val) => val.idNumber !== item.idNumber);
+    this.jsonData = this.jsonData.filter((val) => val !== item);
     this.messageService.add({ key: 'deleteJson', severity: 'success', summary: 'Successful', detail: 'Data Deleted', life: 3000 });
   }
 
   /**
-   * Displays a notification message to the user based on whether the data uploaded contains any duplicates in the database.
-   * If there are no duplicates, a success notification is shown.
-   * If there are duplicates, a warning notification is shown with a message indicating that the data has been found in the database.
+   * Shows messages based on whether duplicate records were detected in the database or in the file.
+   * 
+   * If no duplicate records were detected, a success message is displayed.
+   * If duplicate records were detected in the database, a warning message is displayed.
+   * If duplicate records were detected in the file, a warning message is displayed.
+   * 
+   * @returns {void}
    */
   showDuplicateMessages(): void {
-    this.duplicatesData.length === 0 ? this.messageService.add({ severity: 'success', summary: 'No duplicate records detected!', detail: `The provided data is unique and not found in the database.` }) :
-      this.messageService.add({ severity: 'warn', summary: 'Duplicate data detected', detail: 'The database already contains this record.' });
+    const hasDatabaseDuplicates = this.duplicatesData.length > 0;
+    const hasFileDuplicates = this.duplicatesDataFile.length > 0;
+
+    if (!hasDatabaseDuplicates && !hasFileDuplicates) {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'No duplicate records detected!',
+        detail: 'The provided data is unique and not found in the database or the file.'
+      });
+    } else {
+      if (hasDatabaseDuplicates) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Duplicate data detected in database',
+          detail: 'The database already contains this record.'
+        });
+      }
+
+      if (hasFileDuplicates) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Duplicate entries detected in file',
+          detail: 'Identical entries detected in the Excel file. Please review the duplicates for consistency.'
+        });
+      }
+    }
+  }
+
+  /**
+   * Shows an error message and returns null if the given date string is not in ISO format (YYYY-MM-DD).
+   * If the date string is valid, it is parsed and checked for being a valid calendar date.
+   * If the date string is not a valid calendar date, an error message is displayed.
+   * Finally, the date string is converted to "YYYY-MM-DD" format and returned.
+   * @param dateStr The date string to be validated.
+   * @returns The validated and formatted date string, or null if the date string is invalid.
+   */
+  private showDateValidationMessage(dateStr: string): string | null {
+    const isoRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD format
+
+    if (!isoRegex.test(dateStr)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid Date Format',
+        detail: `The provided date "${dateStr}" is not in ISO format (YYYY-MM-DD). Please enter a valid date.`
+      });
+      return null;
+    }
+
+    const parsedDate = new Date(dateStr);
+
+    if (isNaN(parsedDate.getTime())) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid Date',
+        detail: `The provided date "${dateStr}" is not a valid calendar date.`
+      });
+      return null;
+    }
+
+    // Convert to "YYYY-MM-DD" format to ensure consistency
+    const formattedDate = parsedDate.toISOString().split('T')[0];
+
+    return formattedDate;
+  }
+
+  /**
+   * Validates the given Excel data rows by checking for required fields and adds an error message to the MessageService
+   * for each row with invalid data.
+   * @param rows The rows of Excel data to be validated.
+   * @returns True if all rows are valid, false otherwise.
+   */
+  validateExcelData(rows: any[]): boolean {
+    let isValid = true;
+
+    rows.forEach((row, index) => {
+      let errors: string[] = [];
+
+      if (!row.idNumber || row.idNumber.toString().length < 1) {
+        errors.push("ID Number is required.");
+      }
+      if (!row.fullName) {
+        errors.push("Full Name is required.");
+      }
+      if (!row.gender) {
+        errors.push("Gender is required.");
+      }
+      if (!row.address) {
+        errors.push("Address is required.");
+      }
+      if (!row.birthDate) {
+        errors.push("Birth Date is required.");
+      }
+      if (!row.city) {
+        errors.push("City is required.");
+      }
+      if (!row.phoneNumber) {
+        errors.push("Phone Number is required.");
+      }
+
+      if (errors.length > 0) {
+        isValid = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: `Row ${index + 1}: Invalid Data`,
+          detail: errors.join(" "),
+        });
+      }
+    });
+
+    return isValid;
   }
 
   /**
