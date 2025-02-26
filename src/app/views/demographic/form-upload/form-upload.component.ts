@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { DemographicService } from 'src/app/core/services';
-import * as XLSX from 'xlsx';
+import { utils, read, writeFileXLSX } from "xlsx";
 
 @Component({
   selector: 'app-form-upload',
@@ -57,16 +57,17 @@ export class FormUploadComponent {
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
         const data = new Uint8Array(e.target.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
+        const workbook = read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        let excelData = XLSX.utils.sheet_to_json(worksheet, { raw: false });
+        let excelData = utils.sheet_to_json(worksheet, { raw: false });
 
         if (this.validateExcelData(excelData)) {
-          this.jsonData = excelData.map((row) => {
+          this.jsonData = excelData.map((row, index) => {
             const newRow = { ...row as any };
+
             if (newRow.birthDate) {
               // newRow.birthDate = new Date(newRow.birthDate).toISOString().split('T')[0];
-              newRow.birthDate = this.showDateValidationMessage(newRow.birthDate);
+              newRow.birthDate = this.showDateValidationMessage(newRow.birthDate, index);
             }
             if (newRow.gender) {
               newRow.gender = newRow.gender.toLowerCase();
@@ -247,41 +248,81 @@ export class FormUploadComponent {
     }
   }
 
+
   /**
-   * Shows an error message and returns null if the given date string is not in ISO format (YYYY-MM-DD).
-   * If the date string is valid, it is parsed and checked for being a valid calendar date.
-   * If the date string is not a valid calendar date, an error message is displayed.
-   * Finally, the date string is converted to "YYYY-MM-DD" format and returned.
-   * @param dateStr The date string to be validated.
-   * @returns The validated and formatted date string, or null if the date string is invalid.
+   * Validates a date string in the format "DD-MM-YYYY".
+   * 
+   * If the date string is invalid, an error message is displayed and the function returns null.
+   * 
+   * If the date string is valid, the function returns the date string in the format "YYYY-MM-DD".
+   * 
+   * @param {string} dateStr - The date string to validate.
+   * @param {number} index - The row index of the date string in the Excel file.
+   * @returns {string | null} The validated date string or null if invalid.
    */
-  private showDateValidationMessage(dateStr: string): string | null {
-    const isoRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD format
-
-    if (!isoRegex.test(dateStr)) {
+  private showDateValidationMessage(dateStr: string, index: number): string | null {
+    // Validate date format (DD-MM-YYYY)
+    const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+    if (!dateRegex.test(dateStr)) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Invalid Date Format',
-        detail: `The provided date "${dateStr}" is not in ISO format (YYYY-MM-DD). Please enter a valid date.`
+        summary: `Row ${index + 1}: Invalid Date Format`,
+        detail: `The provided date "${dateStr}" is not in the correct format (DD-MM-YYYY).`
       });
       return null;
     }
 
-    const parsedDate = new Date(dateStr);
+    // Extract day, month, and year
+    const [day, month, year] = dateStr.split("-").map(Number);
 
-    if (isNaN(parsedDate.getTime())) {
+    // **Specific Error Handling for Month**
+    if (month < 1 || month > 12) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Invalid Date',
-        detail: `The provided date "${dateStr}" is not a valid calendar date.`
+        summary: `Row ${index + 1}: Invalid Month`,
+        detail: `The month "${month}" in the date "${dateStr}" is invalid. Month must be between 1 and 12.`
       });
       return null;
     }
 
-    // Convert to "YYYY-MM-DD" format to ensure consistency
-    const formattedDate = parsedDate.toISOString().split('T')[0];
+    // **Specific Error Handling for Day Range**
+    const maxDays = this.getDaysInMonth(month, year);
+    if (day < 1 || day > maxDays) {
+      this.messageService.add({
+        severity: 'error',
+        summary: `Row ${index + 1}: Invalid Day`,
+        detail: `The day "${day}" in the date "${dateStr}" is out of range for month "${month}". Maximum days in this month: ${maxDays}.`
+      });
+      return null;
+    }
+
+    // Convert to "YYYY-MM-DD" format
+    const formattedDate = new Date(Date.UTC(year, month - 1, day)).toISOString().split("T")[0];
 
     return formattedDate;
+  }
+
+  /**
+   * Get the number of days in a given month.
+   * @param month - The month (1-12).
+   * @param year - The year.
+   * @returns The number of days in the given month.
+   */
+  private getDaysInMonth(month: number, year: number): number {
+    const daysInMonth = [31, (this.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    return daysInMonth[month - 1];
+  }
+
+  /**
+   * Determines if the given year is a leap year.
+   * @param year - The year.
+   * @returns True if the given year is a leap year, false otherwise.
+   * 
+   * A leap year is a year that is divisible by 4, except for end-of-century years which must be divisible by 400.
+   * This means that the year 2000 was a leap year, although the years 1700, 1800, and 1900 were not.
+   */
+  private isLeapYear(year: number): boolean {
+    return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
   }
 
   /**
@@ -352,6 +393,7 @@ export class FormUploadComponent {
   }
 
   onRemoveTemplatingFile(event, file, removeFileCallback, index) {
+    this.messageService.clear();
     removeFileCallback(event, index);
     this.totalSize -= parseInt(this.formatSize(file.size));
     this.totalSizePercent = this.totalSize / 10;
