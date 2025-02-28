@@ -35,8 +35,8 @@ export class DataMasterService {
    * Retrieves a list of all banks.
    * @returns An observable of the server response.
    */
-  getListBanks(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/banks`).pipe(take(1));
+  getListFinancialInstitution(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/financial-institutions`).pipe(take(1));
   }
 
   /**
@@ -44,8 +44,8 @@ export class DataMasterService {
    * @param form The bank object to be sent to the server.
    * @returns An observable of the server response.
    */
-  saveBank(form: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/banks`, form).pipe(take(1));
+  saveFinancialInstitution(form: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/financial-institutions`, form).pipe(take(1));
   }
   //#endregion Bank
 

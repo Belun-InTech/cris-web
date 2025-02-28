@@ -3,9 +3,9 @@ import { ResolveFn } from "@angular/router";
 import { DataMasterService } from "../services";
 
 
-export const getBankListResolver: ResolveFn<any> = () => {
+export const getFinancialInstitutionListResolver: ResolveFn<any> = () => {
     const service = inject(DataMasterService);
-    return service.getListBanks();
+    return service.getListFinancialInstitution();
 }
 
 export const getFaqListResolver: ResolveFn<any> = () => {

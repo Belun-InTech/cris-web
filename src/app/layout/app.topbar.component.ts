@@ -1,8 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { LayoutService } from "./service/app.layout.service";
-import { AuthenticationService } from '../core/services';
 import { Router } from '@angular/router';
+import { MenuItem } from 'primeng/api';
+import { AuthenticationService } from '../core/services';
+import { LayoutService } from "./service/app.layout.service";
 
 @Component({
     selector: 'app-topbar',

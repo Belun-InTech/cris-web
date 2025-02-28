@@ -69,12 +69,12 @@ export const tipuRelatoriuList = [
 ]
 
 export const tipuEleitorTuanList = [
-    { name: 'Kartaun Tohar', value: 'kartaunTohar'},
-    { name: 'Muda hela fatin', value: 'mudaHelaFatin'},
-    { name: 'Muda Tinan/Data Moris/Naran', value: 'mudaTinanDataNaran'},
-    { name: 'Kartaun Tuan', value: 'kartaunTuan'},
-    { name: 'Kartaun Lakon', value: 'kartaunLakon'},
-    
+    { name: 'Kartaun Tohar', value: 'kartaunTohar' },
+    { name: 'Muda hela fatin', value: 'mudaHelaFatin' },
+    { name: 'Muda Tinan/Data Moris/Naran', value: 'mudaTinanDataNaran' },
+    { name: 'Kartaun Tuan', value: 'kartaunTuan' },
+    { name: 'Kartaun Lakon', value: 'kartaunLakon' },
+
 ]
 
 //Print years in array from 2023 until current year

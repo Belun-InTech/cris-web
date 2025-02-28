@@ -37,7 +37,7 @@ export class DataMasterComponent {
   setDataMaster(type: string) {
     switch (type) {
       case 'banks':
-        this.dataList = this.route.snapshot.data['bankListResolve']._embedded.banks;
+        this.dataList = this.route.snapshot.data['financialInstitutionListResolve']._embedded.financialInstitutions;
         this.cols = [
           { field: 'name', header: 'Name' },
           { field: 'code', header: 'Code' },

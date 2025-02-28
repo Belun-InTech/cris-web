@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { getCreditClassificationListResolver, getFaqListResolver, getFinancialInstitutionListResolver, getSectorListResolver, getTypeCollateralListResolver } from 'src/app/core/resolvers/data-master.resolver';
 import { DataMasterComponent } from './data-master/data-master.component';
-import { getBankListResolver, getCreditClassificationListResolver, getFaqListResolver, getSectorListResolver, getTypeCollateralListResolver } from 'src/app/core/resolvers/data-master.resolver';
 
 const routes: Routes = [
   {
-    path: 'banks',
+    path: 'financial-institutions',
     component: DataMasterComponent,
     resolve: {
-      bankListResolve: getBankListResolver,
+      financialInstitutionListResolve: getFinancialInstitutionListResolver,
     },
     data: {
       type: 'banks'

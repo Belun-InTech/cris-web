@@ -36,7 +36,7 @@ export const staffNavs: MenuItem[] = [
                 label: 'Data Master',
                 icon: 'pi pi-fw pi-database',
                 items: [
-                    { label: 'Banks', icon: 'bi bi-fw bi-bank', routerLink: ['/data/banks'] },
+                    { label: 'Financial Institutions', icon: 'bi bi-fw bi-bank', routerLink: ['/data/financial-institutions'] },
                     { label: 'Sectors', icon: 'bi bi-fw bi-building', routerLink: ['/data/sectors'] },
                     { label: 'Type of Collateral', icon: 'bi bi-fw bi-card-list', routerLink: ['/data/type-of-collaterals'] },
                     { label: 'Credit Classification', icon: 'bi bi-fw bi-card-list', routerLink: ['/data/credit-classifications'] },
