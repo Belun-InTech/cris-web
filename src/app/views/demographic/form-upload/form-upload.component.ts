@@ -250,7 +250,7 @@ export class FormUploadComponent {
 
 
   /**
-   * Validates a date string in the format "DD-MM-YYYY".
+   * Validates a date string in the format "YYYY-MM-DD".
    * 
    * If the date string is invalid, an error message is displayed and the function returns null.
    * 
@@ -262,8 +262,8 @@ export class FormUploadComponent {
    */
   private showDateValidationMessage(dateStr: string, index: number): string | null {
     // Validate date format (DD-MM-YYYY)
-    const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
-    if (!dateRegex.test(dateStr)) {
+    const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!isoDateRegex.test(dateStr)) {
       this.messageService.add({
         severity: 'error',
         summary: `Row ${index + 1}: Invalid Date Format`,
@@ -272,8 +272,8 @@ export class FormUploadComponent {
       return null;
     }
 
-    // Extract day, month, and year
-    const [day, month, year] = dateStr.split("-").map(Number);
+    // Extract year, month, and day
+    const [year, month, day] = dateStr.split("-").map(Number);
 
     // **Specific Error Handling for Month**
     if (month < 1 || month > 12) {
