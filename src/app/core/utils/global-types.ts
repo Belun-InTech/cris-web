@@ -1,5 +1,5 @@
 import { formatDate } from "@angular/common";
-import { Gender } from "../models/gender.enum";
+import { Gender } from "../models/enum";
 
 interface OptionsType {
     value: string;

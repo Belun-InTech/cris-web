@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Status } from 'src/app/core/models';
+import { Status } from 'src/app/core/models/enum';
 import { UserService } from 'src/app/core/services';
 import { mustMatch } from 'src/app/core/validators/must-match.validator';
 

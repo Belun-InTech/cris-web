@@ -131,4 +131,68 @@ export class DataMasterService {
   }
 
   //#endregion Credit Classification
+
+  //#region City
+  
+  /**
+   * Retrieves a list of all cities.
+   * @returns An observable of the server response.
+   */
+  getListCity(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/cities`).pipe(take(1));
+  }
+
+  /**
+   * Saves a city to the server.
+   * @param form The city object to be sent to the server.
+   * @returns An observable of the server response.
+   */
+  saveCity(form: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/cities`, form).pipe(take(1));
+  }
+  //#endregion City
+
+  
+  //region Institution
+  
+/**
+ * Retrieves a list of all institutions.
+ * @returns An observable of the server response.
+ */
+
+  getListInstitution(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/institutions`).pipe(take(1));
+  }
+
+  /**
+   * Saves an institution to the server.
+   * @param form The institution object to be sent to the server.
+   * @returns An observable of the server response.
+   */
+  saveInstitution(form: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/institutions`, form).pipe(take(1));
+  }
+  //#endregion Institution
+
+
+
+  //region Marital Status
+  
+  /**
+   * Retrieves a list of all marital statuses.
+   * @returns An observable of the server response.
+   */
+  getListMaritalStatus(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/marital-status`).pipe(take(1));
+  }
+
+  /**
+   * Saves a marital status to the server.
+   * @param form The marital status object to be sent to the server.
+   * @returns An observable of the server response.
+   */
+  saveMaritalStatus(form: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/marital-status`, form).pipe(take(1));
+  }
+  //#endregion Marital Status
 }

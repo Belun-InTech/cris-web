@@ -48,10 +48,11 @@
 <!-- Edit Dialog -->
 
 @if (showDialog) {
-<p-dialog header="Edit {{type|titlecase}}" [modal]="true" [position]="'top'" [(visible)]="showDialog"
+<p-dialog header="{{isNew?'New':'Edit'}} {{type|titlecase}}" [modal]="true" [position]="'top'" [(visible)]="showDialog"
     [style]="{ 'min-width': '30rem' }">
     <form [formGroup]="dataForm">
-        @if (type === 'financial-institutions' || type === 'sectors' || type === 'type-collaterals' || type === 'credit-classifications')
+        @if (type === 'financial-institutions' || type === 'sectors' || type === 'type-collaterals' || type ===
+        'credit-classifications' || type === 'cities' || type === 'institutions' || type === 'marital-status')
         {
         <input formControlName="name" id="name" type="text" placeholder="Name" pInputText class="mb-2">
         }

@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Status, User } from 'src/app/core/models';
+import { User } from 'src/app/core/models';
 import { FinancialInstitution, Role } from 'src/app/core/models/data-master';
-import { Account } from 'src/app/core/models/enum';
+import { Account, Status } from 'src/app/core/models/enum';
 import { UserService } from 'src/app/core/services';
 import { mustMatch } from 'src/app/core/validators/must-match.validator';
 

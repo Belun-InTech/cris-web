@@ -35,6 +35,8 @@ export class DataMasterComponent {
    * @param type The type of the data master, which can be 'financialInstitutions', 'sector', 'collateral', or 'credit'.
    */
   setDataMaster(type: string) {
+    console.log(type);
+    this.type = type;
     switch (type) {
       case 'financial-institutions':
         this.dataList = this.route.snapshot.data['financialInstitutionListResolve']._embedded.financialInstitutions;
@@ -42,7 +44,6 @@ export class DataMasterComponent {
           { field: 'name', header: 'Name' },
           { field: 'code', header: 'Code' },
         ];
-        this.type = 'financial-institutions';
         this.dataForm = this._fb.group({
           name: ['', [Validators.required, Validators.minLength(1)]],
           code: ['', [Validators.required, Validators.minLength(1)]],
@@ -54,28 +55,44 @@ export class DataMasterComponent {
           { field: 'name', header: 'Name' },
           { field: 'description', header: 'Description' },
         ];
-        this.type = 'sectors';
         this.dataForm = this._fb.group({
           name: ['', [Validators.required, Validators.minLength(1)]],
           description: ['', [Validators.required, Validators.minLength(2)]],
         });
         break;
       case 'type-collaterals':
-        this.dataList = this.route.snapshot.data['typeCollateralsListResolve']._embedded.typeCollateral;
+        this.dataList = this.route.snapshot.data[`typeCollateralsListResolve`]._embedded['typeCollateral'];
         this.cols = [
           { field: 'name', header: 'Name' },
         ];
-        this.type = 'type-collaterals';
         this.dataForm = this._fb.group({
           name: ['', [Validators.required, Validators.minLength(1)]],
         });
         break;
       case 'credit-classifications':
-        this.dataList = this.route.snapshot.data['creditClassificationListResolve']._embedded.creditClassifications;
+        this.dataList = this.route.snapshot.data[`creditClassificationListResolve`]._embedded['creditClassifications'];
         this.cols = [
           { field: 'name', header: 'Name' },
         ];
-        this.type = 'credit-classifications';
+        this.dataForm = this._fb.group({
+          name: ['', [Validators.required, Validators.minLength(1)]],
+        });
+        break;
+      case 'marital-status':
+        this.dataList = this.route.snapshot.data[`maritalStatusListResolve`]._embedded['maritalStatus'];
+        this.cols = [
+          { field: 'name', header: 'Name' },
+        ];
+        this.dataForm = this._fb.group({
+          name: ['', [Validators.required, Validators.minLength(1)]],
+        });
+        break;
+      case 'cities':
+      case 'institutions':
+        this.dataList = this.route.snapshot.data[`${type}ListResolve`]._embedded[type];
+        this.cols = [
+          { field: 'name', header: 'Name' },
+        ];
         this.dataForm = this._fb.group({
           name: ['', [Validators.required, Validators.minLength(1)]],
         });
@@ -86,7 +103,6 @@ export class DataMasterComponent {
           { field: 'question', header: 'Question' },
           { field: 'answer', header: 'Answer' },
         ];
-        this.type = 'faqs';
         this.dataForm = this._fb.group({
           question: ['', [Validators.required, Validators.minLength(1)]],
           answer: ['', [Validators.required, Validators.minLength(1)]],

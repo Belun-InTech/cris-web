@@ -7,7 +7,7 @@ import { authenticationCanActivate, canActivateByRole, loginGuard } from './core
 import { getFaqListResolver } from './core/resolvers/data-master.resolver';
 import { ActivationComponent } from './views/activation/activation.component';
 import { getTokenActivationResolver } from './core/resolvers/utilizador.resolver';
-import { Role } from './core/models/role.enum';
+import { Role } from './core/models/enum';
 
 @NgModule({
     imports: [

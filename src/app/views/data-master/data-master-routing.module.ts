@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { getCreditClassificationListResolver, getFaqListResolver, getFinancialInstitutionListResolver, getSectorListResolver, getTypeCollateralListResolver } from 'src/app/core/resolvers/data-master.resolver';
+import { getCityResolver, getCreditClassificationListResolver, getFaqListResolver, getFinancialInstitutionListResolver, getInstitutionResolver, getMaritalStatusResolver, getSectorListResolver, getTypeCollateralListResolver } from 'src/app/core/resolvers/data-master.resolver';
 import { DataMasterComponent } from './data-master/data-master.component';
 
 const routes: Routes = [
@@ -54,6 +54,36 @@ const routes: Routes = [
       type: 'faqs'
     },
   },
+  {
+    path: 'cities',
+    component: DataMasterComponent,
+    resolve: {
+      citiesListResolve: getCityResolver,
+    },
+    data: {
+      type: 'cities'
+    },
+  },
+  {
+    path: 'institutions',
+    component: DataMasterComponent,
+    resolve: {
+      institutionsListResolve: getInstitutionResolver,
+    },
+    data: {
+      type: 'institutions'
+    },
+  },
+  {
+    path: 'marital-status',
+    component: DataMasterComponent,
+    resolve: {
+      maritalStatusListResolve: getMaritalStatusResolver,
+    },
+    data: {
+      type: 'marital-status'
+    },
+  }
 ];
 
 @NgModule({

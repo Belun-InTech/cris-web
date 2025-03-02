@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Role } from '../core/models/role.enum';
+import { Role } from '../core/models/enum';
 import { AuthenticationService } from '../core/services';
 import { adminNavs } from './navs/admin';
 import { clientNavs } from './navs/client';

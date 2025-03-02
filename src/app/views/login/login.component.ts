@@ -2,7 +2,7 @@ import { Component, computed, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Role } from 'src/app/core/models/role.enum';
+import { Role } from 'src/app/core/models/enum';
 import { AuthenticationService } from 'src/app/core/services';
 import { OtpSessionService } from 'src/app/core/services/otp-session.service';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';

@@ -27,3 +27,18 @@ export const getCreditClassificationListResolver: ResolveFn<any> = () => {
     const service = inject(DataMasterService);
     return service.getListCreditClassification();
 }
+
+export const getCityResolver: ResolveFn<any> = () => {
+    const service = inject(DataMasterService);
+    return service.getListCity();
+}
+
+export const getInstitutionResolver: ResolveFn<any> = () => {
+    const service = inject(DataMasterService);
+    return service.getListInstitution();
+}
+
+export const getMaritalStatusResolver: ResolveFn<any> = () => {
+    const service = inject(DataMasterService);
+    return service.getListMaritalStatus();
+}
