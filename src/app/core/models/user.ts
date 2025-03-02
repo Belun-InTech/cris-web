@@ -1,3 +1,4 @@
+import { FinancialInstitution } from "./data-master";
 import { Role } from "./role";
 
 export interface User {
@@ -10,4 +11,6 @@ export interface User {
     password: string;
     jwtSession: string;
     role: Role;
+    financialInstitution: FinancialInstitution
+    internal: boolean;
 }

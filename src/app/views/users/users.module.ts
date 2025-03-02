@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -22,6 +23,7 @@ import { UsersRoutingModule } from './users-routing.module';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     UsersRoutingModule,
     TableModule,
     FloatLabelModule,
@@ -31,6 +33,7 @@ import { UsersRoutingModule } from './users-routing.module';
     DropdownModule,
     MessagesModule,
     SelectButtonModule,
+    AutoCompleteModule,
   ]
 })
 export class UsersModule { }

@@ -69,4 +69,15 @@ export class UserService {
   activate(token: string, form: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/activate?token=${token}`, form);
   }
+
+  /**
+   * Makes a GET request to the users endpoint with the /ldap/{username} path
+   * to retrieve a user from LDAP by their username.
+   *
+   * @param username The username of the user to retrieve from LDAP.
+   * @returns An observable of the server response.
+   */
+  getByLdapByUsername(username: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/ldap/${username}`).pipe(take(1));
+  }
 }

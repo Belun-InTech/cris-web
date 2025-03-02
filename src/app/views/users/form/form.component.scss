@@ -5,3 +5,11 @@ input {
 :host ::ng-deep .p-dropdown {
     width: 100% !important;
 }
+
+:host ::ng-deep .p-autocomplete {
+    width: 100% !important;
+
+    input {
+        width: 100%;
+    }
+}

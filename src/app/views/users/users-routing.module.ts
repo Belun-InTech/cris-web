@@ -4,6 +4,7 @@ import { ListComponent } from './list/list.component';
 import { FormComponent } from './form/form.component';
 import { getRoleListResolver } from 'src/app/core/resolvers/role.resolver';
 import { getUserByUsernameResolver } from 'src/app/core/resolvers/utilizador.resolver';
+import { getFinancialInstitutionListResolver } from 'src/app/core/resolvers/data-master.resolver';
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
     path: 'form',
     component: FormComponent,
     resolve: {
-      roleList: getRoleListResolver
+      roleList: getRoleListResolver,
+      financialInstitutionList: getFinancialInstitutionListResolver,
     }
   },
   {
@@ -23,6 +25,7 @@ const routes: Routes = [
     resolve: {
       roleList: getRoleListResolver,
       userData: getUserByUsernameResolver,
+      financialInstitutionList: getFinancialInstitutionListResolver,
     }
   }
 ];

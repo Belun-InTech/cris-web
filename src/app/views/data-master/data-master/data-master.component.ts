@@ -32,17 +32,17 @@ export class DataMasterComponent {
   /**
    * Set the data list and column definitions based on the given type.
    *
-   * @param type The type of the data master, which can be 'bank', 'sector', 'collateral', or 'credit'.
+   * @param type The type of the data master, which can be 'financialInstitutions', 'sector', 'collateral', or 'credit'.
    */
   setDataMaster(type: string) {
     switch (type) {
-      case 'banks':
+      case 'financial-institutions':
         this.dataList = this.route.snapshot.data['financialInstitutionListResolve']._embedded.financialInstitutions;
         this.cols = [
           { field: 'name', header: 'Name' },
           { field: 'code', header: 'Code' },
         ];
-        this.type = 'banks';
+        this.type = 'financial-institutions';
         this.dataForm = this._fb.group({
           name: ['', [Validators.required, Validators.minLength(1)]],
           code: ['', [Validators.required, Validators.minLength(1)]],

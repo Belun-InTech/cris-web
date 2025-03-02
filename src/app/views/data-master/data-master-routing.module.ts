@@ -11,7 +11,7 @@ const routes: Routes = [
       financialInstitutionListResolve: getFinancialInstitutionListResolver,
     },
     data: {
-      type: 'banks'
+      type: 'financial-institutions'
     },
   },
   {
