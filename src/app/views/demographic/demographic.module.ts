@@ -6,8 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
-import { ChipsModule } from 'primeng/chips';
 import { DialogModule } from 'primeng/dialog';
+import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -17,12 +17,12 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { StepperModule } from 'primeng/stepper';
 import { TableModule } from 'primeng/table';
+import { TabViewModule } from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
 import { DemographicRoutingModule } from './demographic-routing.module';
 import { FormUploadComponent } from './form-upload/form-upload.component';
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
-import { TabViewModule } from 'primeng/tabview';
 
 @NgModule({
   declarations: [
@@ -47,10 +47,10 @@ import { TabViewModule } from 'primeng/tabview';
     MenuModule,
     PaginatorModule,
     DialogModule,
-    ChipsModule,
     SelectButtonModule,
     StepperModule,
     TabViewModule,
+    FieldsetModule,
   ]
 })
 export class DemographicModule { }

@@ -43,10 +43,14 @@
                                 {{item.gender |titlecase}}
                             </td>
                             <td>
-                                {{item.idNumber}}
+                                @if (item.idNumber) {
+                                    {{item.idNumber}}
+                                }@else {
+                                    {{item.tinNumber}}
+                                }
                             </td>
                             <td>
-                                {{item.address}} - {{item.city}}
+                                {{item.address}} - {{item.city.name}}
                             </td>
                             <td>
                                 {{item.birthDate |date:'dd MMM yyyy'}}
@@ -56,7 +60,7 @@
                             </td>
                             <td>
                                 <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
-                                    severity="success" [routerLink]="['/demographics', item.id]" />
+                                    severity="success" (click)="routeToDetailPage(item.idNumber, item.type)" />
                                 <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" /> -->
                             </td>
                         </tr>

@@ -5,7 +5,16 @@
                 Fill form
             </h4>
             <p-messages />
-            <form [formGroup]="demographicForm">
+
+            <div class="grid">
+                <div class="col-6">
+                    <p-selectButton [options]="entityTypeList" [formControl]="entityType" optionLabel="name"
+                        optionValue="value" />
+                </div>
+            </div>
+
+            @if (entityType.value === person) {
+            <form [formGroup]="personForm">
                 <p-floatLabel>
                     <input pInputText id="fullName" formControlName="fullName" class="w-full" />
                     <label for="fullName">Full Name</label>
@@ -18,6 +27,12 @@
                     <input pInputText id="idNumber" formControlName="idNumber" class="w-full" />
                     <label for="idNumber">ID Number</label>
                 </p-floatLabel>
+                @if (personForm.controls['idNumber'].errors?.['pattern']) {
+                <div class="text-red-400">
+                    <small class="text-red-200">No Symbols or spaces allowed in the TIN Number.</small>
+                </div>
+                }
+
                 <p-floatLabel>
                     <p-calendar inputId="birthDate" formControlName="birthDate" class="w-full" dateFormat="dd/mm/yy"
                         placeholder="dd/mm/yyyy" />
@@ -28,13 +43,15 @@
                     <label for="address">Address</label>
                 </p-floatLabel>
                 <p-floatLabel>
-                    <input pInputText id="city" formControlName="city" class="w-full" />
-                    <label for="city">City</label>
+                    <p-dropdown inputId="float-label" [options]="cityList" formControlName="city" optionLabel="name"
+                        [showClear]="true" />
+                    <label for="float-label">Select a City</label>
                 </p-floatLabel>
 
                 <p-floatLabel>
-                    <input pInputText id="maritalStatus" formControlName="maritalStatus" class="w-full" />
-                    <label for="maritalStatus">Marital Status</label>
+                    <p-dropdown inputId="float-label" [options]="maritalStatusList" formControlName="maritalStatus"
+                        optionLabel="name" [showClear]="true" />
+                    <label for="float-label">Select a Marital Status</label>
                 </p-floatLabel>
 
                 <p-floatLabel>
@@ -43,10 +60,93 @@
                 </p-floatLabel>
 
                 <p-floatLabel>
-                    <input pInputText id="employmentHistory" formControlName="employmentHistory" class="w-full" />
-                    <label for="employmentHistory">Employment History</label>
+                    <p-dropdown inputId="float-label" [options]="institutionList" formControlName="employmentHistory"
+                        optionLabel="name" [showClear]="true" />
+                    <label for="float-label">Select the Employer (Institution/Organization)</label>
                 </p-floatLabel>
+                <p-floatLabel>
+                    <input pInputText id="phoneNumber" formControlName="phoneNumber" class="w-full" />
+                    <label for="phoneNumber">Telephone Number</label>
+                </p-floatLabel>
+                <!-- <div class="pt-5">
+                    <p-fieldset legend="Guarantee Information" formGroupName="guarantee">
+                        <p-floatLabel>
+                            <input pInputText id="fullName" formControlName="fullName" class="w-full" />
+                            <label for="fullName">Full Name</label>
+                        </p-floatLabel>
 
+                        <p-floatLabel>
+                            <input pInputText id="electoralNumber" formControlName="electoralNumber" class="w-full" />
+                            <label for="idNumber">Electoral Number</label>
+                        </p-floatLabel>
+
+                        <p-floatLabel>
+                            <p-calendar inputId="birthDate" formControlName="birthDate" class="w-full"
+                                dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" />
+                            <label for="birthDate">Birth Date</label>
+                        </p-floatLabel>
+                        <p-floatLabel>
+                            <p-dropdown inputId="float-label" [options]="cityList" formControlName="city"
+                                optionLabel="name" [showClear]="true" />
+                            <label for="float-label">Select a City</label>
+                        </p-floatLabel>
+                        <p-floatLabel>
+                            <p-dropdown inputId="float-label" [options]="institutionList"
+                                formControlName="employmentHistory" optionLabel="name" [showClear]="true" />
+                            <label for="float-label">Select the Employer (Institution/Organization)</label>
+                        </p-floatLabel>
+                    </p-fieldset>
+                </div> -->
+                <!-- Nested Form Group for Guarantee -->
+
+            </form>
+            <div class="mt-5">
+                @if (isNew) {
+                <p-button label="Save" icon="pi pi-save" [disabled]="!personForm.valid" [loading]="loading"
+                    (click)="save(personForm)" [raised]="true" severity="warning" />
+                }@else {
+                <p-button label="Update" icon="pi pi-sync" [disabled]="!personForm.valid" [loading]="loading"
+                    (click)="update(personForm)" [raised]="true" severity="warning" />
+                }
+                <p-button label="Cancel" [routerLink]="['/demographics']" routerLinkActive="router-link-active"
+                    icon="pi pi-times" [raised]="true" severity="secondary" class="ml-3" />
+            </div>
+            }
+
+            @if (entityType.value === business) {
+            <form [formGroup]="businessForm">
+                <p-floatLabel>
+                    <input pInputText id="fullName" formControlName="fullName" class="w-full" />
+                    <label for="fullName">Full Name</label>
+                </p-floatLabel>
+                <div class="my-5">
+                    <p-selectButton [options]="genderOpts" formControlName="gender" optionLabel="viewValue"
+                        optionValue="value" />
+                </div>
+                <p-floatLabel>
+                    <input pInputText id="idNumber" formControlName="idNumber" class="w-full" />
+                    <label for="idNumber">TIN Number</label>
+                </p-floatLabel>
+                @if (businessForm.controls['idNumber'].errors?.['pattern']) {
+                <div class="text-red-400">
+                    <small class="text-red-200">No Symbols or spaces allowed in the TIN Number.</small>
+                </div>
+                }
+
+                <p-floatLabel>
+                    <p-calendar inputId="birthDate" formControlName="birthDate" class="w-full" dateFormat="dd/mm/yy"
+                        placeholder="dd/mm/yyyy" />
+                    <label for="birthDate">Birth Date</label>
+                </p-floatLabel>
+                <p-floatLabel>
+                    <input pInputText id="address" formControlName="address" class="w-full" />
+                    <label for="address">Address</label>
+                </p-floatLabel>
+                <p-floatLabel>
+                    <p-dropdown inputId="float-label" [options]="cityList" formControlName="city" optionLabel="name"
+                        [showClear]="true" />
+                    <label for="float-label">Select a City</label>
+                </p-floatLabel>
                 <p-floatLabel>
                     <input pInputText id="phoneNumber" formControlName="phoneNumber" class="w-full" />
                     <label for="phoneNumber">Telephone Number</label>
@@ -54,15 +154,16 @@
             </form>
             <div class="mt-5">
                 @if (isNew) {
-                <p-button label="Save" icon="pi pi-save" [disabled]="!demographicForm.valid" [loading]="loading"
-                    (click)="save(demographicForm)" [raised]="true" severity="warning" />
+                <p-button label="Save" icon="pi pi-save" [disabled]="!businessForm.valid" [loading]="loading"
+                    (click)="save(businessForm)" [raised]="true" severity="warning" />
                 }@else {
-                <p-button label="Update" icon="pi pi-sync" [disabled]="!demographicForm.valid" [loading]="loading"
-                    (click)="update(demographicForm)" [raised]="true" severity="warning" />
+                <p-button label="Update" icon="pi pi-sync" [disabled]="!businessForm.valid" [loading]="loading"
+                    (click)="update(businessForm)" [raised]="true" severity="warning" />
                 }
                 <p-button label="Cancel" [routerLink]="['/demographics']" routerLinkActive="router-link-active"
                     icon="pi pi-times" [raised]="true" severity="secondary" class="ml-3" />
             </div>
+            }
         </div>
         <!-- <div class="col-6 border-left-1 border-orange-300 pl-4">
             <div class="grid">

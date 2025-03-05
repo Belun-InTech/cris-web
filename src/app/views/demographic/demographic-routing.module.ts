@@ -5,6 +5,7 @@ import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
 import { canActivateQueryParams } from 'src/app/core/security/route.guard';
 import { FormUploadComponent } from './form-upload/form-upload.component';
+import { getCityResolver, getInstitutionResolver, getMaritalStatusResolver } from 'src/app/core/resolvers/data-master.resolver';
 
 const routes: Routes = [
   {
@@ -17,7 +18,12 @@ const routes: Routes = [
   },
   {
     path: 'new',
-    component: FormComponent
+    component: FormComponent,
+    resolve: {
+      citiesListResolve: getCityResolver,
+      maritalStatusListResolve: getMaritalStatusResolver,
+      institutionsListResolve: getInstitutionResolver,
+    },
   },
   {
     path: 'upload',
@@ -27,7 +33,10 @@ const routes: Routes = [
     path: ':id',
     component: FormComponent,
     resolve: {
-      demoData: getDemographicByIdResolver
+      demoData: getDemographicByIdResolver,
+      citiesListResolve: getCityResolver,
+      maritalStatusListResolve: getMaritalStatusResolver,
+      institutionsListResolve: getInstitutionResolver,
     }
   }
 ];

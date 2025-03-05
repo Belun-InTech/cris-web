@@ -1,5 +1,5 @@
 import { formatDate } from "@angular/common";
-import { Gender } from "../models/enum";
+import { EntityType, Gender } from "../models/enum";
 
 interface OptionsType {
     value: string;
@@ -86,3 +86,7 @@ export const yearsList = Array.from(
     })
 ).reverse();
 
+export const entityTypeOpts: any[] = [
+    { name: EntityType.business, value: EntityType.business.toLowerCase() },
+    { name: EntityType.person, value: EntityType.person.toLowerCase() },
+];

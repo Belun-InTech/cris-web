@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs';
 import { DemographicService, FileExportService } from 'src/app/core/services';
@@ -27,6 +27,7 @@ export class ListComponent {
     private route: ActivatedRoute,
     private service: DemographicService,
     private excelService: FileExportService,
+    private router: Router,
   ) {
     this.demoData = this.route.snapshot.data['demographicList'].content;
     this.totalData = this.route.snapshot.data['demographicList'].totalElements;
@@ -148,6 +149,12 @@ export class ListComponent {
       error: err => {
         this.dataIsFetching = false;
       },
+    });
+  }
+
+  routeToDetailPage(idNumber: string, type: string): void {
+    this.router.navigate(['/demographics', idNumber], {
+      queryParams: { type: type, extraData: 'value' }
     });
   }
 }

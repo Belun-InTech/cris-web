@@ -2,10 +2,14 @@
     margin-top: 30px;
 }
 
-::ng-deep  .p-float-label:not(:first-child) {
+::ng-deep .p-float-label:not(:first-child) {
     margin-top: 0px !important;
 }
 
 ::ng-deep.p-calendar {
     width: 100%;
+}
+
+:host ::ng-deep .p-dropdown {
+    width: 100% !important;
 }

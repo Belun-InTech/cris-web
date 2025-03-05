@@ -56,6 +56,9 @@ export class OtpSessionService {
     }
     const expiration = parseInt(expirationStr, 10);
     const remaining = expiration - Date.now();
+    console.log(expirationStr);
+    console.log(remaining);
+    
     return remaining > 0 ? remaining : 0;
   }
 
@@ -63,6 +66,8 @@ export class OtpSessionService {
    * Clears the OTP session from storage.
    */
   clearSession(): void {
+    console.log('clearSession');
+    
     this.storage.removeItem(this.tokenKey);
     this.storage.removeItem(this.expirationKey);
   }

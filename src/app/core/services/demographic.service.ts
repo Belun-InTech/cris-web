@@ -58,8 +58,10 @@ export class DemographicService {
    * @param id The ID of the demographic to retrieve.
    * @returns An observable of the server response.
    */
-  getById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(take(1));
+  getByIdNumberAndType(idNumber: string, type: string): Observable<any> {
+    const params = new HttpParams()
+      .append('type', type);
+    return this.http.get<any>(`${this.apiUrl}/${idNumber}`, { params }).pipe(take(1));
   }
 
   /**

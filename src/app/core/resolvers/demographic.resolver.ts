@@ -10,7 +10,9 @@ import { inject } from "@angular/core";
  *
  * @returns A promise of the eventu.
  */
-export const getDemographicByIdResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot) => inject(DemographicService).getById(+route.paramMap.get('id')!);
+export const getDemographicByIdResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot) => 
+    inject(DemographicService).getByIdNumberAndType(route.paramMap.get('id')!, route.queryParamMap.get('type'));
+
 
 /**
  * Resolves a page of demographic data.
