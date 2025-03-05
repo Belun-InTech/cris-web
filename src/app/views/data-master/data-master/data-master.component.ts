@@ -35,7 +35,6 @@ export class DataMasterComponent {
    * @param type The type of the data master, which can be 'financialInstitutions', 'sector', 'collateral', or 'credit'.
    */
   setDataMaster(type: string) {
-    console.log(type);
     this.type = type;
     switch (type) {
       case 'financial-institutions':

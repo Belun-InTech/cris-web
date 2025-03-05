@@ -3,11 +3,12 @@ import { RouterModule } from '@angular/router';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { FaqComponent } from './views/faq/faq.component';
 import { LoginComponent } from './views/login/login.component';
-import { authenticationCanActivate, canActivateByRole, loginGuard } from './core/security/route.guard';
+import { authenticationCanActivate, canActivateByRole, loginGuard, validateGuard } from './core/security/route.guard';
 import { getFaqListResolver } from './core/resolvers/data-master.resolver';
 import { ActivationComponent } from './views/activation/activation.component';
 import { getTokenActivationResolver } from './core/resolvers/utilizador.resolver';
 import { Role } from './core/models/enum';
+import { OtpComponent } from './views/otp/otp.component';
 
 @NgModule({
     imports: [
@@ -16,6 +17,11 @@ import { Role } from './core/models/enum';
                 path: '',
                 component: LoginComponent,
                 canActivate: [loginGuard],
+            },
+            {
+                path: 'otp',
+                component: OtpComponent,
+                canActivate: [validateGuard],
             },
             {
                 path: 'activate',

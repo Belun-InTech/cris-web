@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateChildFn, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { of } from 'rxjs';
+import { OtpSessionService } from '../services/otp-session.service';
 
 export const authenticationCanActivate: CanActivateFn = () => {
     const authService = inject(AuthenticationService);
@@ -59,6 +60,21 @@ export const loginGuard: CanActivateFn = () => {
         return of(false);
     } else {
         return of(true);
+    }
+}
+
+export const validateGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+    const otpService = inject(OtpSessionService);
+    const router = inject(Router);
+    const otp = otpService.isSessionActive();
+    const username = route.queryParamMap.get('u');
+    
+    if (otp && username) {
+        return of(true);
+    } else {
+        router.navigate(['/']).then();
+        otpService.clearSession();
+        return of(false);
     }
 }
 

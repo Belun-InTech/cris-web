@@ -19,9 +19,10 @@ import { AppLayoutModule } from './layout/app.layout.module';
 import { ActivationComponent } from './views/activation/activation.component';
 import { FaqComponent } from './views/faq/faq.component';
 import { LoginComponent } from './views/login/login.component';
+import { OtpComponent } from './views/otp/otp.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, FaqComponent, ActivationComponent],
+  declarations: [AppComponent, LoginComponent, FaqComponent, ActivationComponent, OtpComponent],
   imports: [
     AppRoutingModule,
     AppLayoutModule,
