@@ -60,7 +60,7 @@ export class DemographicService {
    */
   getByIdNumberAndType(idNumber: string, type: string): Observable<any> {
     const params = new HttpParams()
-      .append('type', type);
+      .append('type', type.toUpperCase());
     return this.http.get<any>(`${this.apiUrl}/${idNumber}`, { params }).pipe(take(1));
   }
 

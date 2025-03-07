@@ -38,7 +38,7 @@ export enum DataMasterTitle {
     MARITAL_STATUS = 'Marital Status'
 }
 
-export enum EntityType {
-    person = 'Person',
-    business = 'Business'
+export enum BeneficiaryType {
+    individual = 'Individual',
+    company = 'Company'
 }

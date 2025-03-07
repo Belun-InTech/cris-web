@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -51,6 +52,7 @@ import { ListComponent } from './list/list.component';
     StepperModule,
     TabViewModule,
     FieldsetModule,
+    AccordionModule,
   ]
 })
 export class DemographicModule { }

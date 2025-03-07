@@ -3,65 +3,137 @@
         <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
             <div class="grid">
                 <div class="col-12">
-                    <p-messages />
-                    <p-fileUpload name="myfile[]" url="https://www.primefaces.org/cdn/api/upload.php" [multiple]="false"
-                        accept=".xls,.xlsx,.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
-                        maxFileSize="1000000" (onSelect)="onSelectedFiles($event)">
-                        <ng-template pTemplate="header" let-files let-chooseCallback="chooseCallback"
-                            let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
-                            <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
-                                <div class="flex gap-2">
-                                    <p-button (onClick)="choose($event, chooseCallback)" icon="pi pi-file-excel"
-                                        [rounded]="true" [outlined]="true" />
-                                </div>
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="content" let-files let-uploadedFiles="uploadedFiles"
-                            let-removeFileCallback="removeFileCallback"
-                            let-removeUploadedFileCallback="removeUploadedFileCallback">
-                            <div *ngIf="files?.length > 0">
-                                <div class="flex flex-wrap p-0 sm:p-5 gap-5">
-                                    <div *ngFor="let file of files; let i = index"
-                                        class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
-                                        <span class="font-semibold">{{ file.name }}</span>
-                                        <div>{{ formatSize(file.size) }}</div>
-                                        <p-button icon="pi pi-times"
-                                            (onClick)="onRemoveTemplatingFile($event, file, removeFileCallback, index)"
-                                            [outlined]="true" [rounded]="true" severity="danger" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div *ngIf="uploadedFiles?.length > 0">
-                                <h5>Completed</h5>
-                                <div class="flex flex-wrap p-0 sm:p-5 gap-5">
-                                    <div *ngFor="let file of uploadedFiles; let i = index"
-                                        class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
-                                        <div>
-                                            <img role="presentation" [alt]="file.name" [src]="file.objectURL"
-                                                width="100" height="50" />
-                                        </div>
-                                        <span class="font-semibold">{{ file.name }}</span>
-                                        <div>{{ formatSize(file.size) }}</div>
-                                        <p-badge value="Completed" class="mt-3" severity="success" />
-                                        <p-button icon="pi pi-times" (onClick)="removeUploadedFileCallback(index)"
-                                            [outlined]="true" [rounded]="true" severity="danger" />
-                                    </div>
-                                </div>
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="file"> </ng-template>
-                        <ng-template pTemplate="empty">
-                            <div class="flex align-items-center justify-content-center flex-column">
-                                <i
-                                    class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"></i>
-                                <p class="mt-4 mb-0">Drag and drop file here to upload.</p>
-                            </div>
-                        </ng-template>
-                    </p-fileUpload>
 
+                    <p-accordion [activeIndex]="activeTab">
+                        <!-- Upload File tab -->
+                        <p-accordionTab header="Upload File">
+                            <p-fileUpload name="myfile[]" url="https://www.primefaces.org/cdn/api/upload.php"
+                                [multiple]="false"
+                                accept=".xls,.xlsx,.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
+                                maxFileSize="1000000" (onSelect)="onSelectedFiles($event)">
+                                <ng-template pTemplate="header" let-files let-chooseCallback="chooseCallback"
+                                    let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
+                                    <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
+                                        <div class="flex gap-2">
+                                            <p-button (onClick)="choose($event, chooseCallback)" icon="pi pi-file-excel"
+                                                [rounded]="true" [outlined]="true" />
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="content" let-files let-uploadedFiles="uploadedFiles"
+                                    let-removeFileCallback="removeFileCallback"
+                                    let-removeUploadedFileCallback="removeUploadedFileCallback">
+                                    <div *ngIf="files?.length > 0">
+                                        <div class="flex flex-wrap p-0 sm:p-5 gap-5">
+                                            <div *ngFor="let file of files; let i = index"
+                                                class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
+                                                <span class="font-semibold">{{ file.name }}</span>
+                                                <div>{{ formatSize(file.size) }}</div>
+                                                <p-button icon="pi pi-times"
+                                                    (onClick)="onRemoveTemplatingFile($event, file, removeFileCallback, index)"
+                                                    [outlined]="true" [rounded]="true" severity="danger" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="uploadedFiles?.length > 0">
+                                        <h5>Completed</h5>
+                                        <div class="flex flex-wrap p-0 sm:p-5 gap-5">
+                                            <div *ngFor="let file of uploadedFiles; let i = index"
+                                                class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
+                                                <div>
+                                                    <img role="presentation" [alt]="file.name" [src]="file.objectURL"
+                                                        width="100" height="50" />
+                                                </div>
+                                                <span class="font-semibold">{{ file.name }}</span>
+                                                <div>{{ formatSize(file.size) }}</div>
+                                                <p-badge value="Completed" class="mt-3" severity="success" />
+                                                <p-button icon="pi pi-times"
+                                                    (onClick)="removeUploadedFileCallback(index)" [outlined]="true"
+                                                    [rounded]="true" severity="danger" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="file"> </ng-template>
+                                <ng-template pTemplate="empty">
+                                    <div class="flex align-items-center justify-content-center flex-column">
+                                        <i
+                                            class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"></i>
+                                        <p class="mt-4 mb-0">Drag and drop file here to upload.</p>
+                                    </div>
+                                </ng-template>
+                            </p-fileUpload>
+                        </p-accordionTab>
+
+                        <!-- Table tab -->
+                        <p-accordionTab header="Excel Data" [disabled]="jsonData.length === 0">
+                            <p-messages />
+                            <p-table #jd [value]="jsonData" [paginator]="true" [rows]="50"
+                                [rowsPerPageOptions]="[50, 150, 250]" [scrollable]="true" scrollHeight="450px"
+                                [showCurrentPageReport]="true"
+                                currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
+                                [globalFilterFields]="['fullName', 'idNumber']">
+                                <ng-template pTemplate="caption">
+                                    <div class="grid">
+                                        <div class="col-6">
+                                            <p-floatLabel>
+                                                <input pInputText id="search" class="w-full"
+                                                    (input)="jd.filterGlobal($event.target.value, 'contains')" />
+                                                <label for="search">Search</label>
+                                            </p-floatLabel>
+                                        </div>
+                                        <!-- <div class="col-6">
+                                            <p-button label="Scan for Duplicates" icon="pi pi-search"
+                                                [disabled]="jsonData.length === 0" [loading]="isScanning"
+                                                (click)="checkJsonData(jsonData)" [raised]="true" severity="warning" />
+                                        </div> -->
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>No.</th>
+                                        @for (item of columnsExcel; track $index) {
+                                        <th>{{item}}</th>
+                                        }
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-item let-columns="columns" let-rowIndex="rowIndex">
+                                    <tr [ngClass]="{'row-invalid': item.valid !== true}">
+                                        <td>
+                                            {{ rowIndex + 1 }}
+                                        </td>
+                                        <td>
+                                            {{item.fullName | uppercase}}
+                                        </td>
+                                        <td>
+                                            {{item.idNumber}}
+                                        </td>
+                                        <td>
+                                            {{item.beneficiary | uppercase}}
+                                        </td>
+                                        <td>
+                                            {{item.birthDate |date:'dd MMM yyyy'}}
+                                        </td>
+                                        <td>
+                                            {{item.gender |titlecase}}
+                                        </td>
+                                        <td>
+                                            {{item.city.name}} - {{item.address}}
+                                        </td>
+                                        <td>
+                                            {{item.employmentHistory.name}}
+                                        </td>
+                                        <td>
+                                            {{item.phoneNumber}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </p-accordionTab>
+                    </p-accordion>
                     <div class="flex pt-4 justify-content-end">
-                        <p-button [disabled]="jsonData.length === 0 && validateExcelData(jsonData)" label="Next" icon="pi pi-arrow-right"
-                            iconPos="right" (click)="nextCallback.emit()" />
+                        <p-button [disabled]="jsonData.length === 0 || !isAttributesValid" label="Next"
+                            icon="pi pi-arrow-right" iconPos="right" (click)="nextCallback.emit()" />
                     </div>
                 </div>
             </div>
@@ -106,21 +178,27 @@
                                         </tr>
                                     </ng-template>
                                     <ng-template pTemplate="body" let-item let-columns="columns">
-                                        <tr>
+                                        <tr [ngClass]="{'row-invalid': item.valid !== true}">
                                             <td>
-                                                {{item.fullName}}
-                                            </td>
-                                            <td>
-                                                {{item.gender |titlecase}}
+                                                {{item.fullName | uppercase}}
                                             </td>
                                             <td>
                                                 {{item.idNumber}}
                                             </td>
                                             <td>
-                                                {{item.address}} - {{item.city}}
+                                                {{item.beneficiary | uppercase}}
                                             </td>
                                             <td>
                                                 {{item.birthDate |date:'dd MMM yyyy'}}
+                                            </td>
+                                            <td>
+                                                {{item.gender |titlecase}}
+                                            </td>
+                                            <td>
+                                                {{item.city.name}} - {{item.address}}
+                                            </td>
+                                            <td>
+                                                {{item.employmentHistory.name}}
                                             </td>
                                             <td>
                                                 {{item.phoneNumber}}
@@ -139,7 +217,8 @@
                         </div>
                     </p-tabPanel>
 
-                    <p-tabPanel [disabled]="duplicatesDataFile.length === 0" header="Matching Records Found in Excel File">
+                    <p-tabPanel [disabled]="duplicatesDataFile.length === 0"
+                        header="Matching Records Found in Excel File">
                         <p-table [value]="duplicatesDataFile" [paginator]="true" [rows]="50"
                             [rowsPerPageOptions]="[50, 150, 250]" [scrollable]="true" scrollHeight="450px"
                             [showCurrentPageReport]="true"

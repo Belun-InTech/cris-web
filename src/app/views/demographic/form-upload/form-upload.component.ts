@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
+import { DemographicExcel } from 'src/app/core/models/data';
+import { City, Institution, MaritalStatus } from 'src/app/core/models/data-master';
+import { BeneficiaryType } from 'src/app/core/models/enum';
 import { DemographicService } from 'src/app/core/services';
-import { utils, read, writeFileXLSX } from "xlsx";
+import { read, utils } from "xlsx";
 
 @Component({
   selector: 'app-form-upload',
@@ -14,8 +17,15 @@ export class FormUploadComponent {
   files: any[] = [];
   totalSize: number = 0;
   totalSizePercent: number = 0;
-  jsonData: any[] = [];
+  jsonData: DemographicExcel[] = [];
+  columnsExcel: string[];
   columns: string[];
+  activeTab = 0;
+  isAttributesValid = true;
+  cityList: City[] = [];
+  institutionList: Institution[] = [];
+  maritalStatusList: MaritalStatus[] = [];
+
   disabledTab = true;
   isJsonDataChecked = false;
   jsonDataSize = 50;
@@ -30,8 +40,14 @@ export class FormUploadComponent {
     private messageService: MessageService,
     private demographicService: DemographicService,
     private router: Router,
+    private route: ActivatedRoute,
   ) {
-    this.columns = ['Name', 'Gender', 'Electoral Nº/Taxpayer ID (TIN)', 'Address - City', 'Date of Birth', 'Telephone Nº', 'Actions']
+    this.columnsExcel = ['Name', 'Electoral Nº/Taxpayer ID (TIN)', 'Beneficiary', 'Date of Birth', 'Gender', 'City - Address', 'Employment History', 'Telephone Nº'];
+    this.columns = ['Name', 'Electoral Nº/Taxpayer ID (TIN)', 'Beneficiary', 'Date of Birth', 'Gender', 'City - Address', 'Employment History', 'Telephone Nº', 'Actions'];
+
+    this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
+    this.institutionList = this.mapToIdAndName(this.route.snapshot.data['institutionsListResolve']._embedded.institutions);
+    this.maritalStatusList = this.mapToIdAndName(this.route.snapshot.data['maritalStatusListResolve']._embedded.maritalStatus);
   }
 
   /**
@@ -59,25 +75,134 @@ export class FormUploadComponent {
         const data = new Uint8Array(e.target.result as ArrayBuffer);
         const workbook = read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        let excelData = utils.sheet_to_json(worksheet, { raw: false });
-
-        if (this.validateExcelData(excelData)) {
-          this.jsonData = excelData.map((row, index) => {
-            const newRow = { ...row as any };
-
-            if (newRow.birthDate) {
-              // newRow.birthDate = new Date(newRow.birthDate).toISOString().split('T')[0];
-              newRow.birthDate = this.showDateValidationMessage(newRow.birthDate, index);
-            }
-            if (newRow.gender) {
-              newRow.gender = newRow.gender.toLowerCase();
-            }
-            return newRow;
-          });
-        }
+        this.activeTab = 1;
+        this.mapAndValidateExcelTemplate(utils.sheet_to_json(worksheet, { raw: false }));
       };
       fileReader.readAsArrayBuffer(this.files[0]);
     }
+  }
+
+  mapAndValidateExcelTemplate(data: any): void {
+    this.jsonData = data.map((row, index) => {
+      let newRow: DemographicExcel;
+      if (row) {
+        newRow = {
+          id: undefined,
+          fullName: row['Name'],
+          idNumber: row['ElectNo'],
+          beneficiary: row['Beneficiary'],
+          birthDate: row['DOB'],
+          gender: row['Gender'],
+          maritalStatus: {
+            id: undefined,
+            name: row['MStatus']
+          },
+          spouseName: row['SpouseName'],
+          city: {
+            id: undefined,
+            name: row['City']
+          },
+          address: row['Address'],
+          employmentHistory: {
+            id: undefined,
+            name: row['EmpHist']
+          },
+          phoneNumber: row['Telephone'],
+          valid: true
+        };
+      }
+      this.validateDemographicAttributes(newRow, index);
+
+      if (newRow.birthDate) {
+        newRow.birthDate = this.showDateValidationMessage(newRow.birthDate, index);
+      }
+      if (newRow.gender) {
+        newRow.gender = newRow.gender.toLowerCase();
+      }
+
+      this.mappingDataFromDB(newRow, index);
+      return newRow;
+    });
+
+  }
+
+  validateDemographicAttributes(row: DemographicExcel, index: number): void {
+    let errors: string[] = [];
+
+    if (!row.idNumber || row.idNumber.toString().length < 1) {
+      errors.push("ID Number is required.");
+    }
+    if (!row.fullName) {
+      errors.push("Full Name is required.");
+    }
+    if (!row.beneficiary) {
+      errors.push("Beneficiary is required.");
+    }
+    if (!row.gender) {
+      errors.push("Gender is required.");
+    }
+    if (!row.address) {
+      errors.push("Address is required.");
+    }
+    if (!row.birthDate) {
+      errors.push("Birth Date is required.");
+    }
+    if (!row.city.name) {
+      errors.push("City is required.");
+    }
+    if (!row.employmentHistory.name) {
+      errors.push("Employment History is required.");
+    }
+    if (!row.phoneNumber) {
+      errors.push("Phone Number is required.");
+    }
+
+    if (errors.length > 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: `Row ${index + 1}: Invalid Data`,
+        detail: errors.join(" "),
+      });
+      row.valid = false;
+      this.isAttributesValid = false;
+    }
+  }
+
+  mappingDataFromDB(obj: DemographicExcel, index: number) {
+    let errors: string[] = [];
+
+    const city = this.cityList.find((city) => city.name.toLowerCase() === obj.city.name.toLowerCase());
+    const employmentHistory = this.institutionList.find((institution) => institution.name.toLowerCase() === obj.employmentHistory.name.toLowerCase());
+    const maritalStatus = this.maritalStatusList.find((maritalStatus) => maritalStatus.name.toLowerCase() === obj.maritalStatus.name.toLowerCase());
+
+    if (city === undefined) {
+      errors.push("City is not found.");
+    } else {
+      obj.city.id = city.id;
+    }
+
+    if (employmentHistory === undefined) {
+      errors.push("Employment History is not found.");
+    } else {
+      obj.employmentHistory.id = employmentHistory.id;
+    }
+
+    if (maritalStatus === undefined) {
+      errors.push("Marital Status is not found.");
+    } else {
+      obj.maritalStatus.id = maritalStatus.id;
+    }
+
+    if (errors.length > 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: `Row ${index + 1}: Invalid Data`,
+        detail: errors.join(" "),
+      });
+      obj.valid = false;
+      this.isAttributesValid = false;
+    }
+
   }
 
   /**
@@ -267,7 +392,7 @@ export class FormUploadComponent {
       this.messageService.add({
         severity: 'error',
         summary: `Row ${index + 1}: Invalid Date Format`,
-        detail: `The provided date "${dateStr}" is not in the correct format (DD-MM-YYYY).`
+        detail: `The provided date "${dateStr}" is not in the correct format (YYYY-MM-DD).`
       });
       return null;
     }
@@ -325,52 +450,6 @@ export class FormUploadComponent {
     return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
   }
 
-  /**
-   * Validates the given Excel data rows by checking for required fields and adds an error message to the MessageService
-   * for each row with invalid data.
-   * @param rows The rows of Excel data to be validated.
-   * @returns True if all rows are valid, false otherwise.
-   */
-  validateExcelData(rows: any[]): boolean {
-    let isValid = true;
-
-    rows.forEach((row, index) => {
-      let errors: string[] = [];
-
-      if (!row.idNumber || row.idNumber.toString().length < 1) {
-        errors.push("ID Number is required.");
-      }
-      if (!row.fullName) {
-        errors.push("Full Name is required.");
-      }
-      if (!row.gender) {
-        errors.push("Gender is required.");
-      }
-      if (!row.address) {
-        errors.push("Address is required.");
-      }
-      if (!row.birthDate) {
-        errors.push("Birth Date is required.");
-      }
-      if (!row.city) {
-        errors.push("City is required.");
-      }
-      if (!row.phoneNumber) {
-        errors.push("Phone Number is required.");
-      }
-
-      if (errors.length > 0) {
-        isValid = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: `Row ${index + 1}: Invalid Data`,
-          detail: errors.join(" "),
-        });
-      }
-    });
-
-    return isValid;
-  }
 
   /**
    * Displays a notification message based on the success or failure of the data submission.
@@ -405,5 +484,20 @@ export class FormUploadComponent {
     this.totalSize = 0;
     this.totalSizePercent = 0;
     this.jsonData = [];
+  }
+
+  /**
+ * Maps an array of objects to an array of objects with only id and name properties.
+ *
+ * @param array The array of objects to be mapped.
+ * @returns An array of objects with only id and name properties.
+ */
+  private mapToIdAndName(array: any[]): { id: number, name: string }[] {
+    return array.map(item => {
+      return {
+        id: item.id,
+        name: item.name
+      };
+    });
   }
 }

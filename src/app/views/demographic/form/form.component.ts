@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { City, Institution, MaritalStatus } from 'src/app/core/models/data-master';
-import { EntityType } from 'src/app/core/models/enum';
+import { BeneficiaryType } from 'src/app/core/models/enum';
 import { DemographicService } from 'src/app/core/services';
 import { entityTypeOpts, genderOpts } from 'src/app/core/utils/global-types';
 
@@ -21,8 +21,8 @@ export class FormComponent {
   isNew = true;
   demoData: any;
   entityTypeList = entityTypeOpts;
-  person = EntityType.person.toLowerCase();
-  business = EntityType.business.toLowerCase();
+  person = BeneficiaryType.individual.toLowerCase();
+  business = BeneficiaryType.company.toLowerCase();
   genderOpts: any[] = genderOpts;
   selectedGender: any;
   cityList: City[] = [];
@@ -39,7 +39,7 @@ export class FormComponent {
 
     this.personForm = this._fb.group({
       id: [''],
-      type: [EntityType.person.toUpperCase()],
+      type: [BeneficiaryType.individual.toUpperCase()],
       idNumber: ['', [Validators.required, Validators.minLength(1), Validators.pattern(/^[A-Za-z0-9]+$/)]],
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       gender: ['', Validators.required],
@@ -62,7 +62,7 @@ export class FormComponent {
 
     this.businessForm = this._fb.group({
       id: [''],
-      type: [EntityType.business.toUpperCase()],
+      type: [BeneficiaryType.company.toUpperCase()],
       idNumber: ['', [Validators.required, Validators.minLength(1), Validators.pattern(/^[A-Za-z0-9]+$/)]],
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       gender: ['', Validators.required],
@@ -87,12 +87,12 @@ export class FormComponent {
         name: this.demoData.city.name,
       }
 
-      if (this.demoData.type === EntityType.business.toUpperCase()) {
-        this.entityType.setValue(EntityType.business.toLowerCase());
+      if (this.demoData.type === BeneficiaryType.company.toUpperCase()) {
+        this.entityType.setValue(BeneficiaryType.company.toLowerCase());
         this.businessForm.patchValue(this.demoData);
         this.businessForm.get('birthDate')?.setValue(new Date(this.demoData.birthDate));
       } else {
-        this.entityType.setValue(EntityType.person.toLowerCase());
+        this.entityType.setValue(BeneficiaryType.individual.toLowerCase());
         this.demoData.maritalStatus = {
           id: this.demoData.maritalStatus.id,
           name: this.demoData.maritalStatus.name,

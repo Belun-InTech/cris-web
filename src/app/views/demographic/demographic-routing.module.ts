@@ -27,7 +27,12 @@ const routes: Routes = [
   },
   {
     path: 'upload',
-    component: FormUploadComponent
+    component: FormUploadComponent,
+    resolve: {
+      citiesListResolve: getCityResolver,
+      maritalStatusListResolve: getMaritalStatusResolver,
+      institutionsListResolve: getInstitutionResolver,
+    },
   },
   {
     path: ':id',
