@@ -16,6 +16,21 @@ export interface Demographic {
     phoneNumber: string;
 }
 
+export interface DemographicPage {
+    id: number;
+    fullName: string;
+    idNumber: string;
+    beneficiary: BeneficiaryType;
+    birthDate: any;
+    gender: Gender;
+    maritalStatusName: string;
+    spouseName: string;
+    cityName: string;
+    address: string;
+    employmentHistoryName: string;
+    phoneNumber: string;
+}
+
 export interface DemographicExcel {
     id: number;
     fullName: string;

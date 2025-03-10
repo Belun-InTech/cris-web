@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs';
+import { DemographicPage } from 'src/app/core/models/data';
 import { DemographicService, FileExportService } from 'src/app/core/services';
 
 @Component({
@@ -11,7 +12,7 @@ import { DemographicService, FileExportService } from 'src/app/core/services';
   styleUrl: './list.component.scss'
 })
 export class ListComponent {
-  demoData: any[] = [];
+  demoData: DemographicPage[] = [];
   items: MenuItem[] | undefined;
   page = 0;
   size = 50;
