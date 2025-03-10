@@ -86,7 +86,7 @@ export const yearsList = Array.from(
     })
 ).reverse();
 
-export const entityTypeOpts: any[] = [
+export const beneficiaryTypeOpts: any[] = [
     { name: BeneficiaryType.company, value: BeneficiaryType.company.toLowerCase() },
     { name: BeneficiaryType.individual, value: BeneficiaryType.individual.toLowerCase() },
 ];

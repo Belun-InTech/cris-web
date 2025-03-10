@@ -7,6 +7,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -24,6 +25,7 @@ import { DemographicRoutingModule } from './demographic-routing.module';
 import { FormUploadComponent } from './form-upload/form-upload.component';
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import { ListComponent } from './list/list.component';
     TabViewModule,
     FieldsetModule,
     AccordionModule,
+    RadioButtonModule,
   ]
 })
 export class DemographicModule { }

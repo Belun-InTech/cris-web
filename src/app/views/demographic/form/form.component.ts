@@ -5,7 +5,7 @@ import { MessageService } from 'primeng/api';
 import { City, Institution, MaritalStatus } from 'src/app/core/models/data-master';
 import { BeneficiaryType } from 'src/app/core/models/enum';
 import { DemographicService } from 'src/app/core/services';
-import { entityTypeOpts, genderOpts } from 'src/app/core/utils/global-types';
+import { beneficiaryTypeOpts, genderOpts } from 'src/app/core/utils/global-types';
 
 @Component({
   selector: 'app-form',
@@ -20,9 +20,9 @@ export class FormComponent {
   loading = false;
   isNew = true;
   demoData: any;
-  entityTypeList = entityTypeOpts;
-  person = BeneficiaryType.individual.toLowerCase();
-  business = BeneficiaryType.company.toLowerCase();
+  beneficiaryTypeList = beneficiaryTypeOpts;
+  individual = BeneficiaryType.individual.toLowerCase();
+  company = BeneficiaryType.company.toLowerCase();
   genderOpts: any[] = genderOpts;
   selectedGender: any;
   cityList: City[] = [];
@@ -39,36 +39,30 @@ export class FormComponent {
 
     this.personForm = this._fb.group({
       id: [''],
-      type: [BeneficiaryType.individual.toUpperCase()],
+      beneficiary: [BeneficiaryType.individual.toUpperCase()],
       idNumber: ['', [Validators.required, Validators.minLength(1), Validators.pattern(/^[A-Za-z0-9]+$/)]],
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       gender: ['', Validators.required],
       address: ['', [Validators.required, Validators.minLength(3)]],
       birthDate: ['', Validators.required],
       city: [undefined, Validators.required],
-      maritalStatus: [undefined],
+      maritalStatus: [undefined, Validators.required],
       spouseName: [''],
       employmentHistory: [undefined],
       phoneNumber: ['', [Validators.required, , Validators.minLength(3)]],
-      // guarantee: this._fb.group({
-      //   id: [''],
-      //   fullName: ['', [Validators.required, Validators.minLength(3)]],
-      //   electoralNumber: ['', [Validators.required, Validators.minLength(1)]],
-      //   birthDate: ['', Validators.required],
-      //   city: [undefined, Validators.required],
-      //   employmentHistory: [undefined, Validators.required],
-      // })
+      useGuarantee: [undefined, Validators.required],
     });
 
     this.businessForm = this._fb.group({
       id: [''],
-      type: [BeneficiaryType.company.toUpperCase()],
+      beneficiary: [BeneficiaryType.company.toUpperCase()],
       idNumber: ['', [Validators.required, Validators.minLength(1), Validators.pattern(/^[A-Za-z0-9]+$/)]],
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       gender: ['', Validators.required],
       address: ['', Validators.required],
       birthDate: ['', Validators.required],
       city: [undefined, Validators.required],
+      employmentHistory: [undefined],
       phoneNumber: ['', [Validators.required, Validators.minLength(3)]],
     });
 
@@ -79,33 +73,17 @@ export class FormComponent {
     this.maritalStatusList = this.mapToIdAndName(this.route.snapshot.data['maritalStatusListResolve']._embedded.maritalStatus);
 
     if (this.demoData) {
-      this.isNew = false;
-      // this.entityType.disable();
-
-      this.demoData.city = {
-        id: this.demoData.city.id,
-        name: this.demoData.city.name,
-      }
-
-      if (this.demoData.type === BeneficiaryType.company.toUpperCase()) {
-        this.entityType.setValue(BeneficiaryType.company.toLowerCase());
-        this.businessForm.patchValue(this.demoData);
-        this.businessForm.get('birthDate')?.setValue(new Date(this.demoData.birthDate));
-      } else {
-        this.entityType.setValue(BeneficiaryType.individual.toLowerCase());
-        this.demoData.maritalStatus = {
-          id: this.demoData.maritalStatus.id,
-          name: this.demoData.maritalStatus.name,
-        }
-        this.demoData.employmentHistory = {
-          id: this.demoData.employmentHistory.id,
-          name: this.demoData.employmentHistory.name,
-        }
-        this.personForm.get('birthDate')?.setValue(new Date(this.demoData.birthDate));
-        this.personForm.patchValue(this.demoData);
-      }
+      this.mapFormData(this.demoData);
     }
   }
+
+  /**
+   * Initializes the component by setting up form value change subscriptions.
+   * If the form is not new, subscribes to changes in the entityType form control
+   * to patch both the personForm and businessForm with demoData. Additionally,
+   * sets up a subscription for the 'useGuarantee' form control to dynamically
+   * add or remove the 'guarantee' form control based on its value.
+   */
 
   ngOnInit() {
     if (!this.isNew) {
@@ -114,6 +92,71 @@ export class FormComponent {
         this.businessForm.patchValue(this.demoData);
       });
     }
+
+    this.personForm.get('useGuarantee').valueChanges.subscribe(value => {
+      if (value) {
+        this.personForm.addControl('guarantee', this.createGuaranteeForm());
+      } else {
+        this.personForm.removeControl('guarantee');
+      }
+    });
+  }
+
+  /**
+   * Maps the demographic object from the backend to the form controls.
+   * @param form The demographic object to be mapped.
+   */
+  mapFormData(form: any) {
+    this.isNew = false;
+
+    form.city = {
+      id: form.city.id,
+      name: form.city.name,
+    }
+    form.employmentHistory = {
+      id: form.employmentHistory.id,
+      name: form.employmentHistory.name,
+    }
+
+    const birthDate = new Date(form.birthDate);
+
+    if (form.beneficiary === BeneficiaryType.company.toLowerCase()) {
+      this.entityType.setValue(BeneficiaryType.company.toLowerCase());
+      this.businessForm.patchValue(form);
+      this.businessForm.get('birthDate')?.setValue(birthDate);
+    } else {
+      this.entityType.setValue(BeneficiaryType.individual.toLowerCase());
+      form.maritalStatus = {
+        id: form.maritalStatus.id,
+        name: form.maritalStatus.name,
+      }
+      this.personForm.patchValue(form);
+      this.personForm.get('birthDate')?.setValue(birthDate);
+      this.demoData.guarantee ? this.mapGuarantee(form.guarantee) : this.personForm.get('useGuarantee').setValue(false);
+    }
+  }
+
+
+  /**
+   * Maps the guarantee object from the backend to the form controls,
+   * and adds the guarantee form control to the person form if it is not already present.
+   * @param guarantee The guarantee object to be mapped.
+   */
+  mapGuarantee(guarantee: any) {
+    guarantee.city = {
+      id: this.demoData.guarantee.city.id,
+      name: this.demoData.guarantee.city.name,
+    }
+    guarantee.employmentHistory = {
+      id: this.demoData.guarantee.employmentHistory.id,
+      name: this.demoData.guarantee.employmentHistory.name,
+    }
+
+    guarantee.birthDate = new Date(guarantee.birthDate);
+
+    this.personForm.get('useGuarantee').setValue(true);
+    this.personForm.addControl('guarantee', this.createGuaranteeForm());
+    this.personForm.get('guarantee').patchValue(guarantee);
   }
 
   /**
@@ -131,6 +174,8 @@ export class FormComponent {
     this.loading = true;
     if (form.valid) {
       let formData = form.value;
+
+      formData.beneficiary = this.entityType.value;
 
       // Convert birthDate to 'yyyy-MM-dd' format
       formData.birthDate = new Date(formData.birthDate).toISOString().split('T')[0]; // Extracts 'yyyy-MM-dd'
@@ -198,6 +243,17 @@ export class FormComponent {
     } else {
       this.setNotification(false, null, 'Form is invalid');
     }
+  }
+
+  createGuaranteeForm() {
+    return this._fb.group({
+      id: [''],
+      fullName: ['', [Validators.required, Validators.minLength(3)]],
+      electoralNumber: ['', [Validators.required, Validators.minLength(1)]],
+      birthDate: ['', Validators.required],
+      city: [undefined, Validators.required],
+      employmentHistory: [undefined, Validators.required],
+    });
   }
 
   /**

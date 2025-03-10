@@ -8,12 +8,12 @@
 
             <div class="grid">
                 <div class="col-6">
-                    <p-selectButton [options]="entityTypeList" [formControl]="entityType" optionLabel="name"
+                    <p-selectButton [options]="beneficiaryTypeList" [formControl]="entityType" optionLabel="name"
                         optionValue="value" />
                 </div>
             </div>
 
-            @if (entityType.value === person) {
+            @if (entityType.value === individual) {
             <form [formGroup]="personForm">
                 <p-floatLabel>
                     <input pInputText id="fullName" formControlName="fullName" class="w-full" />
@@ -68,7 +68,26 @@
                     <input pInputText id="phoneNumber" formControlName="phoneNumber" class="w-full" />
                     <label for="phoneNumber">Telephone Number</label>
                 </p-floatLabel>
-                <!-- <div class="pt-5">
+
+                <div class="grid">
+                    <div class="col-6 mt-5">
+                        <h5>Use Guarantee</h5>
+                        <div class="flex justify-content-start">
+                            <p-radioButton inputId="yes" [value]="true" formControlName="useGuarantee" />
+                            <label for="yes" class="ml-2">
+                                Yes
+                            </label>
+                            <p-radioButton inputId="no" [value]="false" formControlName="useGuarantee" class="ml-3" />
+                            <label for="no" class="ml-2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                @if (personForm.controls['useGuarantee'].value) {
+                <div class="pt-5">
                     <p-fieldset legend="Guarantee Information" formGroupName="guarantee">
                         <p-floatLabel>
                             <input pInputText id="fullName" formControlName="fullName" class="w-full" />
@@ -96,7 +115,8 @@
                             <label for="float-label">Select the Employer (Institution/Organization)</label>
                         </p-floatLabel>
                     </p-fieldset>
-                </div> -->
+                </div>
+                }
                 <!-- Nested Form Group for Guarantee -->
 
             </form>
@@ -113,7 +133,7 @@
             </div>
             }
 
-            @if (entityType.value === business) {
+            @if (entityType.value === company) {
             <form [formGroup]="businessForm">
                 <p-floatLabel>
                     <input pInputText id="fullName" formControlName="fullName" class="w-full" />
@@ -148,6 +168,11 @@
                     <label for="float-label">Select a City</label>
                 </p-floatLabel>
                 <p-floatLabel>
+                    <p-dropdown inputId="float-label" [options]="institutionList" formControlName="employmentHistory"
+                        optionLabel="name" [showClear]="true" />
+                    <label for="float-label">Select the Company</label>
+                </p-floatLabel>
+                <p-floatLabel>
                     <input pInputText id="phoneNumber" formControlName="phoneNumber" class="w-full" />
                     <label for="phoneNumber">Telephone Number</label>
                 </p-floatLabel>
@@ -165,87 +190,5 @@
             </div>
             }
         </div>
-        <!-- <div class="col-6 border-left-1 border-orange-300 pl-4">
-            <div class="grid">
-                <div class="col-12">
-                    <h4>
-                        Upload Excel File
-                    </h4>
-                    <p-toast />
-                    <p-fileUpload name="myfile[]" url="https://www.primefaces.org/cdn/api/upload.php" [multiple]="false"
-                        accept="image/*" maxFileSize="1000000" (onUpload)="onTemplatedUpload()"
-                        (onSelect)="onSelectedFiles($event)">
-                        <ng-template pTemplate="header" let-files let-chooseCallback="chooseCallback"
-                            let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
-                            <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
-                                <div class="flex gap-2">
-                                    <p-button (onClick)="choose($event, chooseCallback)" icon="pi pi-images"
-                                        [rounded]="true" [outlined]="true" />
-                                    <p-button (onClick)="uploadEvent(uploadCallback)" icon="pi pi-cloud-upload"
-                                        [rounded]="true" [outlined]="true" severity="success"
-                                        [disabled]="!files || files.length === 0" />
-                                    <p-button (onClick)="clearCallback()" icon="pi pi-times" [rounded]="true"
-                                        [outlined]="true" severity="danger" [disabled]="!files || files.length === 0" />
-                                </div>
-                                <p-progressBar [value]="totalSizePercent" [showValue]="false"
-                                    styleClass="md:w-20rem h-1rem w-full md:ml-auto"
-                                    [ngClass]="{ 'exceeded-progress-bar': totalSizePercent > 100 }">
-                                    <span class="white-space-nowrap">{{ totalSize }}B / 1Mb</span>
-                                </p-progressBar>
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="content" let-files let-uploadedFiles="uploadedFiles"
-                            let-removeFileCallback="removeFileCallback"
-                            let-removeUploadedFileCallback="removeUploadedFileCallback">
-                            <div *ngIf="files?.length > 0">
-                                <h5>Pending</h5>
-                                <div class="flex flex-wrap p-0 sm:p-5 gap-5">
-                                    <div *ngFor="let file of files; let i = index"
-                                        class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
-                                        <div>
-                                            <img role="presentation" [alt]="file.name" [src]="file.objectURL"
-                                                width="100" height="50" />
-                                        </div>
-                                        <span class="font-semibold">{{ file.name }}</span>
-                                        <div>{{ formatSize(file.size) }}</div>
-                                        <p-badge value="Pending" severity="warning" />
-                                        <p-button icon="pi pi-times"
-                                            (onClick)="onRemoveTemplatingFile($event, file, removeFileCallback, index)"
-                                            [outlined]="true" [rounded]="true" severity="danger" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div *ngIf="uploadedFiles?.length > 0">
-                                <h5>Completed</h5>
-                                <div class="flex flex-wrap p-0 sm:p-5 gap-5">
-                                    <div *ngFor="let file of uploadedFiles; let i = index"
-                                        class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
-                                        <div>
-                                            <img role="presentation" [alt]="file.name" [src]="file.objectURL"
-                                                width="100" height="50" />
-                                        </div>
-                                        <span class="font-semibold">{{ file.name }}</span>
-                                        <div>{{ formatSize(file.size) }}</div>
-                                        <p-badge value="Completed" class="mt-3" severity="success" />
-                                        <p-button icon="pi pi-times" (onClick)="removeUploadedFileCallback(index)"
-                                            [outlined]="true" [rounded]="true" severity="danger" />
-                                    </div>
-                                </div>
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="file"> </ng-template>
-                        <ng-template pTemplate="empty">
-                            <div class="flex align-items-center justify-content-center flex-column">
-                                <i
-                                    class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"></i>
-                                <p class="mt-4 mb-0">Drag and drop file here to upload.</p>
-                            </div>
-                        </ng-template>
-                    </p-fileUpload>
-
-
-                </div>
-            </div>
-        </div> -->
     </div>
 </div>
