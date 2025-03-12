@@ -120,6 +120,7 @@
                 <!-- Nested Form Group for Guarantee -->
 
             </form>
+            <p-messages />
             <div class="mt-5">
                 @if (isNew) {
                 <p-button label="Save" icon="pi pi-save" [disabled]="!personForm.valid" [loading]="loading"
@@ -176,7 +177,57 @@
                     <input pInputText id="phoneNumber" formControlName="phoneNumber" class="w-full" />
                     <label for="phoneNumber">Telephone Number</label>
                 </p-floatLabel>
+
+                <div class="grid">
+                    <div class="col-6 mt-5">
+                        <h5>Use Guarantee</h5>
+                        <div class="flex justify-content-start">
+                            <p-radioButton inputId="yes" [value]="true" formControlName="useGuarantee" />
+                            <label for="yes" class="ml-2">
+                                Yes
+                            </label>
+                            <p-radioButton inputId="no" [value]="false" formControlName="useGuarantee" class="ml-3" />
+                            <label for="no" class="ml-2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                @if (businessForm.controls['useGuarantee'].value) {
+                <div class="pt-5">
+                    <p-fieldset legend="Guarantee Information" formGroupName="guarantee">
+                        <p-floatLabel>
+                            <input pInputText id="fullName" formControlName="fullName" class="w-full" />
+                            <label for="fullName">Full Name</label>
+                        </p-floatLabel>
+
+                        <p-floatLabel>
+                            <input pInputText id="electoralNumber" formControlName="electoralNumber" class="w-full" />
+                            <label for="idNumber">Electoral Number</label>
+                        </p-floatLabel>
+
+                        <p-floatLabel>
+                            <p-calendar inputId="birthDate" formControlName="birthDate" class="w-full"
+                                dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" />
+                            <label for="birthDate">Birth Date</label>
+                        </p-floatLabel>
+                        <p-floatLabel>
+                            <p-dropdown inputId="float-label" [options]="cityList" formControlName="city"
+                                optionLabel="name" [showClear]="true" />
+                            <label for="float-label">Select a City</label>
+                        </p-floatLabel>
+                        <p-floatLabel>
+                            <p-dropdown inputId="float-label" [options]="institutionList"
+                                formControlName="employmentHistory" optionLabel="name" [showClear]="true" />
+                            <label for="float-label">Select the Employer (Institution/Organization)</label>
+                        </p-floatLabel>
+                    </p-fieldset>
+                </div>
+                }
+                <!-- Nested Form Group for Guarantee -->
             </form>
+            <p-messages />
             <div class="mt-5">
                 @if (isNew) {
                 <p-button label="Save" icon="pi pi-save" [disabled]="!businessForm.valid" [loading]="loading"

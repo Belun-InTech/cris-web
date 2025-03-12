@@ -64,6 +64,7 @@ export class FormComponent {
       city: [undefined, Validators.required],
       employmentHistory: [undefined],
       phoneNumber: ['', [Validators.required, Validators.minLength(3)]],
+      useGuarantee: [undefined, Validators.required],
     });
 
     this.demoData = this.route.snapshot.data['demoData'];
@@ -100,6 +101,14 @@ export class FormComponent {
         this.personForm.removeControl('guarantee');
       }
     });
+
+    this.businessForm.get('useGuarantee').valueChanges.subscribe(value => {
+      if (value) {
+        this.businessForm.addControl('guarantee', this.createGuaranteeForm());
+      } else {
+        this.businessForm.removeControl('guarantee');
+      }
+    });
   }
 
   /**
@@ -120,7 +129,7 @@ export class FormComponent {
 
     const birthDate = new Date(form.birthDate);
 
-    if (form.beneficiary === BeneficiaryType.company.toLowerCase()) {
+    if (form.beneficiary.toLowerCase() === BeneficiaryType.company.toLowerCase()) {
       this.entityType.setValue(BeneficiaryType.company.toLowerCase());
       this.businessForm.patchValue(form);
       this.businessForm.get('birthDate')?.setValue(birthDate);
@@ -132,7 +141,13 @@ export class FormComponent {
       }
       this.personForm.patchValue(form);
       this.personForm.get('birthDate')?.setValue(birthDate);
-      this.demoData.guarantee ? this.mapGuarantee(form.guarantee) : this.personForm.get('useGuarantee').setValue(false);
+    }
+
+    if (this.demoData.guarantee) {
+      this.mapGuarantee(form.guarantee, form.beneficiary.toLowerCase())
+    } else {
+      this.personForm.get('useGuarantee').setValue(false);
+      this.businessForm.get('useGuarantee').setValue(false);
     }
   }
 
@@ -142,7 +157,7 @@ export class FormComponent {
    * and adds the guarantee form control to the person form if it is not already present.
    * @param guarantee The guarantee object to be mapped.
    */
-  mapGuarantee(guarantee: any) {
+  mapGuarantee(guarantee: any, beneficiaryType: string) {
     guarantee.city = {
       id: this.demoData.guarantee.city.id,
       name: this.demoData.guarantee.city.name,
@@ -154,9 +169,15 @@ export class FormComponent {
 
     guarantee.birthDate = new Date(guarantee.birthDate);
 
-    this.personForm.get('useGuarantee').setValue(true);
-    this.personForm.addControl('guarantee', this.createGuaranteeForm());
-    this.personForm.get('guarantee').patchValue(guarantee);
+    if (beneficiaryType.toLowerCase() === BeneficiaryType.company.toLowerCase()) {
+      this.businessForm.get('useGuarantee').setValue(true);
+      this.businessForm.addControl('guarantee', this.createGuaranteeForm());
+      this.businessForm.get('guarantee').patchValue(guarantee);
+    } else {
+      this.personForm.get('useGuarantee').setValue(true);
+      this.personForm.addControl('guarantee', this.createGuaranteeForm());
+      this.personForm.get('guarantee').patchValue(guarantee);
+    }
   }
 
   /**
@@ -225,6 +246,12 @@ export class FormComponent {
     this.loading = true;
     if (form.valid) {
       let formData = form.value;
+      
+      if (!formData.useGuarantee) {
+        formData.guarantee = null;
+        
+      }
+
       this.demographicService.updateById(this.demoData.id, formData).subscribe({
         next: (response) => {
           this.setNotification(true, response);
