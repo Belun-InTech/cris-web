@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
-import { DemographicExcel } from 'src/app/core/models/data';
+import { DemographicExcel, Guarantee } from 'src/app/core/models/data';
 import { City, Institution, MaritalStatus } from 'src/app/core/models/data-master';
 import { BeneficiaryType } from 'src/app/core/models/enum';
 import { DemographicService } from 'src/app/core/services';
@@ -48,6 +48,8 @@ export class FormUploadComponent {
     this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
     this.institutionList = this.mapToIdAndName(this.route.snapshot.data['institutionsListResolve']._embedded.institutions);
     this.maritalStatusList = this.mapToIdAndName(this.route.snapshot.data['maritalStatusListResolve']._embedded.maritalStatus);
+    console.log(this.institutionList);
+
   }
 
   /**
@@ -82,10 +84,41 @@ export class FormUploadComponent {
     }
   }
 
+  /**
+   * Maps and validates the Excel template data into the application's
+   * demographic data format. Converts each row of data into a `DemographicExcel`
+   * object, checking for the existence of a Guarantee and mapping its details
+   * if present. Validates demographic attributes and formats specific fields
+   * such as birthDate and gender. Also attempts to map additional data from
+   * the database for both the main demographic entry and its Guarantee, if
+   * applicable.
+   *
+   * @param data The raw JSON data extracted from the Excel worksheet.
+   */
+
   mapAndValidateExcelTemplate(data: any): void {
     this.jsonData = data.map((row, index) => {
       let newRow: DemographicExcel;
       if (row) {
+        let guarantee = undefined;
+
+        // Check if Guarantee exist
+        if (row['Guarantee Name']) {
+          guarantee = {
+            fullName: row['Guarantee Name'],
+            electoralNumber: row['ElectNo (Guarantee)'],
+            birthDate: row['DOB (Guarantee)'],
+            city: {
+              id: undefined,
+              name: row['City (Guarantee)'],
+            },
+            employmentHistory: {
+              id: undefined,
+              name: row['EmpHist (Guarantee)'],
+            }
+          }
+        }
+
         newRow = {
           id: undefined,
           fullName: row['Name'],
@@ -108,7 +141,8 @@ export class FormUploadComponent {
             name: row['EmpHist']
           },
           phoneNumber: row['Telephone'],
-          valid: true
+          valid: true,
+          guarantee: guarantee
         };
       }
       this.validateDemographicAttributes(newRow, index);
@@ -121,11 +155,23 @@ export class FormUploadComponent {
       }
 
       this.mappingDataFromDB(newRow, index);
+
+      if (newRow.guarantee) {
+        this.mappingGuaranteeDataFromDB(newRow, index);
+      }
       return newRow;
     });
+    console.log(this.jsonData);
 
   }
 
+
+  /**
+   * Validates the demographic attributes, given a row of data, and sets the "valid" property of the row accordingly.
+   * If any of the required fields are empty, an error message is added to the message service.
+   * @param row The row of demographic data to be validated.
+   * @param index The index of the row being validated, used for error reporting.
+   */
   validateDemographicAttributes(row: DemographicExcel, index: number): void {
     let errors: string[] = [];
 
@@ -157,6 +203,21 @@ export class FormUploadComponent {
       errors.push("Phone Number is required.");
     }
 
+    if (row.guarantee) {
+      if (!row.guarantee.electoralNumber || row.guarantee.electoralNumber.toString().length < 1) {
+        errors.push("Guarantee Electoral number is required.");
+      }
+      if (!row.guarantee.birthDate) {
+        errors.push("Guarantee Birth Date is required.");
+      }
+      if (!row.guarantee.city.name) {
+        errors.push("Guarantee City is required.");
+      }
+      if (!row.guarantee.employmentHistory.name) {
+        errors.push("Guarantee Employment History is required.");
+      }
+    }
+
     if (errors.length > 0) {
       this.messageService.add({
         severity: 'error',
@@ -168,12 +229,30 @@ export class FormUploadComponent {
     }
   }
 
+  /**
+   * Maps data from the database to the given DemographicExcel object based on city,
+   * employment history, and marital status names. If the corresponding database entries
+   * collected and displayed, marking the object as invalid.
+   *
+   * @param obj - The DemographicExcel object to map data for.
+   * @param index - The index of the object in the array, used for error reporting.
+   */
+
+
   mappingDataFromDB(obj: DemographicExcel, index: number) {
     let errors: string[] = [];
 
     const city = this.cityList.find((city) => city.name.toLowerCase() === obj.city.name.toLowerCase());
     const employmentHistory = this.institutionList.find((institution) => institution.name.toLowerCase() === obj.employmentHistory.name.toLowerCase());
-    const maritalStatus = this.maritalStatusList.find((maritalStatus) => maritalStatus.name.toLowerCase() === obj.maritalStatus.name.toLowerCase());
+
+    if (obj.maritalStatus) {
+      const maritalStatus = this.maritalStatusList.find((maritalStatus) => maritalStatus.name.toLowerCase() === obj.maritalStatus.name.toLowerCase());
+      if (maritalStatus === undefined) {
+        errors.push("Marital Status is not found.");
+      } else {
+        obj.maritalStatus.id = maritalStatus.id;
+      }
+    }
 
     if (city === undefined) {
       errors.push("City is not found.");
@@ -187,10 +266,39 @@ export class FormUploadComponent {
       obj.employmentHistory.id = employmentHistory.id;
     }
 
-    if (maritalStatus === undefined) {
-      errors.push("Marital Status is not found.");
+    if (errors.length > 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: `Row ${index + 1}: Invalid Data`,
+        detail: errors.join(" "),
+      });
+      obj.valid = false;
+      this.isAttributesValid = false;
+    }
+
+  }
+
+  /**
+   * Maps the guarantee data from the database for the given DemographicExcel object
+   * @param obj The DemographicExcel object to map the guarantee data for
+   * @param index The index of the object in the array
+   */
+  mappingGuaranteeDataFromDB(obj: DemographicExcel, index: number) {
+    let errors: string[] = [];
+
+    const city = this.cityList.find((city) => city.name.toLowerCase() === obj.guarantee.city.name.toLowerCase());
+    const employmentHistory = this.institutionList.find((institution) => institution.name.toLowerCase() === obj.guarantee.employmentHistory.name.toLowerCase());
+
+    if (city === undefined) {
+      errors.push("City is not found (Guarantee)");
     } else {
-      obj.maritalStatus.id = maritalStatus.id;
+      obj.guarantee.city.id = city.id;
+    }
+
+    if (employmentHistory === undefined) {
+      errors.push("Employment History is not found (Guarantee)");
+    } else {
+      obj.guarantee.employmentHistory.id = employmentHistory.id;
     }
 
     if (errors.length > 0) {
@@ -477,6 +585,7 @@ export class FormUploadComponent {
     this.totalSize -= parseInt(this.formatSize(file.size));
     this.totalSizePercent = this.totalSize / 10;
     this.jsonData = [];
+    this.messageService.clear();
   }
 
   onClearTemplatingUpload(clear) {
@@ -484,6 +593,7 @@ export class FormUploadComponent {
     this.totalSize = 0;
     this.totalSizePercent = 0;
     this.jsonData = [];
+    this.messageService.clear();
   }
 
   /**

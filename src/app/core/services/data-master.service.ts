@@ -133,7 +133,7 @@ export class DataMasterService {
   //#endregion Credit Classification
 
   //#region City
-  
+
   /**
    * Retrieves a list of all cities.
    * @returns An observable of the server response.
@@ -152,13 +152,13 @@ export class DataMasterService {
   }
   //#endregion City
 
-  
+
   //region Institution
-  
-/**
- * Retrieves a list of all institutions.
- * @returns An observable of the server response.
- */
+
+  /**
+   * Retrieves a list of all institutions.
+   * @returns An observable of the server response.
+   */
 
   getListInstitution(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/institutions`).pipe(take(1));
@@ -177,7 +177,7 @@ export class DataMasterService {
 
 
   //region Marital Status
-  
+
   /**
    * Retrieves a list of all marital statuses.
    * @returns An observable of the server response.

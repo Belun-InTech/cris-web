@@ -45,4 +45,13 @@ export interface DemographicExcel {
     employmentHistory: Institution;
     phoneNumber: string;
     valid: boolean;
+    guarantee: Guarantee;
+}
+
+export interface Guarantee {
+    fullName: string;
+    electoralNumber: string;
+    birthDate: string;
+    city: City;
+    employmentHistory: Institution;
 }

@@ -7,8 +7,7 @@
                     <p-accordion [activeIndex]="activeTab">
                         <!-- Upload File tab -->
                         <p-accordionTab header="Upload File">
-                            <p-fileUpload name="myfile[]" url="https://www.primefaces.org/cdn/api/upload.php"
-                                [multiple]="false"
+                            <p-fileUpload name="myfile[]" [multiple]="false"
                                 accept=".xls,.xlsx,.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
                                 maxFileSize="1000000" (onSelect)="onSelectedFiles($event)">
                                 <ng-template pTemplate="header" let-files let-chooseCallback="chooseCallback"
@@ -238,16 +237,22 @@
                                         {{item.fullName}}
                                     </td>
                                     <td>
-                                        {{item.gender |titlecase}}
-                                    </td>
-                                    <td>
                                         {{item.idNumber}}
                                     </td>
                                     <td>
-                                        {{item.address}} - {{item.city}}
+                                        {{item.beneficiary | uppercase}}
                                     </td>
                                     <td>
                                         {{item.birthDate |date:'dd MMM yyyy'}}
+                                    </td>
+                                    <td>
+                                        {{item.gender |titlecase}}
+                                    </td>
+                                    <td>
+                                        {{item.address}} - {{item.city.name}}
+                                    </td>
+                                    <td>
+                                        {{item.employmentHistory.name}}
                                     </td>
                                     <td>
                                         {{item.phoneNumber}}
@@ -279,16 +284,22 @@
                                         {{item.fullName}}
                                     </td>
                                     <td>
-                                        {{item.gender |titlecase}}
-                                    </td>
-                                    <td>
                                         {{item.idNumber}}
                                     </td>
                                     <td>
-                                        {{item.address}} - {{item.city}}
+                                        {{item.beneficiary | uppercase}}
                                     </td>
                                     <td>
                                         {{item.birthDate |date:'dd MMM yyyy'}}
+                                    </td>
+                                    <td>
+                                        {{item.gender |titlecase}}
+                                    </td>
+                                    <td>
+                                        {{item.address}} - {{item.city.name}}
+                                    </td>
+                                    <td>
+                                        {{item.employmentHistory.name}}
                                     </td>
                                     <td>
                                         {{item.phoneNumber}}
