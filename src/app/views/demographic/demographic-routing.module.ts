@@ -3,17 +3,21 @@ import { RouterModule, Routes } from '@angular/router';
 import { getDemographicByIdResolver, getPageDemographicResolver } from 'src/app/core/resolvers/demographic.resolver';
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
-import { canActivateQueryParams } from 'src/app/core/security/route.guard';
+import { canActivateByRole, canActivateQueryParams } from 'src/app/core/security/route.guard';
 import { FormUploadComponent } from './form-upload/form-upload.component';
 import { getCityResolver, getInstitutionResolver, getMaritalStatusResolver } from 'src/app/core/resolvers/data-master.resolver';
+import { Role } from 'src/app/core/models/enum';
 
 const routes: Routes = [
   {
     path: '',
     component: ListComponent,
-    canActivate: [canActivateQueryParams],
+    canActivate: [canActivateQueryParams, canActivateByRole],
     resolve: {
       demographicList: getPageDemographicResolver
+    },
+    data: {
+      role: [Role.admin, Role.staff]
     }
   },
   {

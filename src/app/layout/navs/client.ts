@@ -8,7 +8,23 @@ export const clientNavs: MenuItem[] = [
             {
                 label: 'Demographic Data',
                 icon: 'bi bi-fw bi-person-vcard',
-                routerLink: ['/demographics'],
+                items: [
+                    {
+                        label: 'Search',
+                        icon: 'bi bi-fw bi-search'
+                    },
+                    {
+                        label: 'New (Form)',
+                        icon: 'bi bi-fw bi-person-add',
+                        routerLink: ['/demographics/new']
+                    },
+                    {
+                        label: 'New (Excel Template)',
+                        icon: 'bi bi-fw bi-file-earmark-arrow-up',
+                        routerLink: ['/demographics/upload']
+                    }
+                ]
+                // routerLink: ['/demographics'],
             },
             {
                 label: 'Credit Informations',
