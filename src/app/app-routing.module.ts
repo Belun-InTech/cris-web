@@ -9,6 +9,7 @@ import { ActivationComponent } from './views/activation/activation.component';
 import { getTokenActivationResolver } from './core/resolvers/utilizador.resolver';
 import { Role } from './core/models/enum';
 import { OtpComponent } from './views/otp/otp.component';
+import { SearchComponent } from './views/demographic/search/search.component';
 
 @NgModule({
     imports: [
@@ -48,6 +49,14 @@ import { OtpComponent } from './views/otp/otp.component';
                         component: FaqComponent,
                         resolve: {
                             faqListResolve: getFaqListResolver,
+                        }
+                    },
+                    {
+                        path: 'search',
+                        component: SearchComponent,
+                        canActivate: [canActivateByRole],
+                        data: {
+                            role: [Role.admin, Role.staff, Role.client]
                         }
                     },
                     {

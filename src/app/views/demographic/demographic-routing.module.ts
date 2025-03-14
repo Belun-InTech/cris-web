@@ -7,6 +7,7 @@ import { canActivateByRole, canActivateQueryParams } from 'src/app/core/security
 import { FormUploadComponent } from './form-upload/form-upload.component';
 import { getCityResolver, getInstitutionResolver, getMaritalStatusResolver } from 'src/app/core/resolvers/data-master.resolver';
 import { Role } from 'src/app/core/models/enum';
+import { SearchComponent } from './search/search.component';
 
 const routes: Routes = [
   {

@@ -1,0 +1,122 @@
+<div class="card">
+    <div class="grid">
+        <div class="col-12">
+            <h4>
+                Search by ID or TIN number
+            </h4>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="search" [formControl]="searchFormControl" class="w-full"
+                    placeholder="ID Number or TIN Number" />
+                <label for="search">Search</label>
+            </p-floatLabel>
+
+            <div class="my-3">
+                <p-button label="Search" (click)="searchData(searchFormControl)" icon="pi pi-search"
+                    [disabled]="!searchFormControl.valid" [loading]="dataIsFetching" [raised]="true"
+                    severity="warning" />
+                <p-button label="Clear" [disabled]="!searchFormControl.valid" icon="pi pi-trash"
+                    (click)="clearFormInput()" [raised]="true" severity="secondary" class="ml-3" />
+            </div>
+
+        </div>
+    </div>
+
+    <p-messages />
+
+</div>
+
+@if (demoData) {
+<!-- Card Demographic -->
+
+<div class="mb-3">
+    <p-fieldset legend="Demographic" [toggleable]="true">
+        <div class="grid">
+            <div class="col-3">
+                <h6>Name</h6>
+                @if (demoData.beneficiary.toLowerCase() === 'individual') {
+                <h6>Electoral Nº</h6>
+                }@else {
+                <h6>TIN Nº</h6>
+                }
+                <h6>Beneficiary</h6>
+                <h6>Date of Birth</h6>
+                <h6>Gender</h6>
+                <h6>Marital Status</h6>
+                <h6>Spouse name</h6>
+                <h6>City</h6>
+                <h6>Address</h6>
+                <h6>Employment History</h6>
+                <h6>Telephone</h6>
+            </div>
+            <div class="col-6">
+                <h6>{{demoData.fullName}}</h6>
+                <h6>{{demoData.idNumber}}</h6>
+                <h6>
+                    {{demoData.beneficiary}}
+                </h6>
+                <h6>
+                    {{demoData.birthDate |date:'dd MMM yyyy'}}
+                </h6>
+                <h6>
+                    {{demoData.gender}}
+                </h6>
+                <h6>
+                    {{demoData.maritalStatus.name}}
+                </h6>
+                <h6>
+                    @if (demoData.spouseName) {
+                    {{demoData.spouseName}}
+                    }@else {
+                    N/A
+                    }
+                </h6>
+                <h6>
+                    {{demoData.city.name}}
+                </h6>
+                <h6>
+                    {{demoData.address}}
+                </h6>
+                <h6>
+                    {{demoData.employmentHistory.name}}
+                </h6>
+                <h6>
+                    {{demoData.phoneNumber}}
+                </h6>
+
+            </div>
+        </div>
+    </p-fieldset>
+</div>
+
+@if(demoData.guarantee) {
+<!-- Card Guarantee -->
+<p-fieldset legend="Guarantee" [toggleable]="true">
+    <div class="grid">
+        <div class="col-3">
+            <h6>Name</h6>
+            <h6>Electoral Nº</h6>
+            <h6>Date of Birth</h6>
+            <h6>City</h6>
+            <h6>Employment History</h6>
+        </div>
+        <div class="col-6">
+            <h6>{{demoData.guarantee.fullName}}</h6>
+            <h6>{{demoData.guarantee.electoralNumber}}</h6>
+            <h6>
+                {{demoData.guarantee.birthDate |date:'dd MMM yyyy'}}
+            </h6>
+            <h6>
+                {{demoData.guarantee.city.name}}
+            </h6>
+            <h6>
+                {{demoData.guarantee.employmentHistory.name}}
+            </h6>
+        </div>
+    </div>
+</p-fieldset>
+}
+}

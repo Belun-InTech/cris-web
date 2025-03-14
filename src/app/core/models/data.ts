@@ -14,6 +14,7 @@ export interface Demographic {
     address: string;
     employmentHistory: Institution;
     phoneNumber: string;
+    guarantee: Guarantee;
 }
 
 export interface DemographicPage {

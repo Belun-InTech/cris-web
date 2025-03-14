@@ -6,6 +6,11 @@ export const adminNavs: MenuItem[] = [
         label: 'Home',
         items: [
             { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] },
+            {
+                label: 'Search',
+                icon: 'bi bi-fw bi-search',
+                routerLink: ['/search']
+            },
             { label: `FAQ's`, icon: 'bi bi-fw bi-person-raised-hand', routerLink: ['/faq'] },
         ]
     },

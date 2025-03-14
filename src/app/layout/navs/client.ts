@@ -3,16 +3,22 @@ import { MenuItem } from "primeng/api";
 
 export const clientNavs: MenuItem[] = [
     {
+        label: 'Home',
+        items: [
+            {
+                label: 'Search',
+                icon: 'bi bi-fw bi-search',
+                routerLink: ['/search']
+            },
+        ]
+    },
+    {
         label: 'Credit Informations & Demographic Data',
         items: [
             {
                 label: 'Demographic Data',
                 icon: 'bi bi-fw bi-person-vcard',
                 items: [
-                    {
-                        label: 'Search',
-                        icon: 'bi bi-fw bi-search'
-                    },
                     {
                         label: 'New (Form)',
                         icon: 'bi bi-fw bi-person-add',
