@@ -18,14 +18,46 @@ export const staffNavs: MenuItem[] = [
         label: 'Credit Informations & Demographic Data',
         items: [
             {
-                label: 'Demographic Data',
+                label: 'Demographic',
                 icon: 'bi bi-fw bi-person-vcard',
-                routerLink: ['/demographics'],
+                items: [
+                    {
+                        label: 'Demographic Data',
+                        icon: 'bi bi-fw bi-person-lines-fill',
+                        routerLink: ['/demographics'],
+                    },
+                    {
+                        label: 'New (Form)',
+                        icon: 'bi bi-fw bi-person-add',
+                        routerLink: ['/demographics/new']
+                    },
+                    {
+                        label: 'New (Excel Template)',
+                        icon: 'bi bi-fw bi-file-earmark-arrow-up',
+                        routerLink: ['/demographics/upload']
+                    }
+                ]
             },
             {
                 label: 'Credit Informations',
                 icon: 'bi bi-fw bi-credit-card-2-front',
-                routerLink: ['/credit-informations']
+                items: [
+                    {
+                        label: 'Credit Data',
+                        icon: 'bi bi-fw bi-card-checklist',
+                        routerLink: ['/credit-informations']
+                    },
+                    {
+                        label: 'New (Form)',
+                        icon: 'bi bi-fw bi-plus-lg',
+                        routerLink: ['/credit-informations/new']
+                    },
+                    {
+                        label: 'New (Excel Template)',
+                        icon: 'bi bi-fw bi-file-earmark-arrow-up',
+                        routerLink: ['/credit-informations/upload']
+                    }
+                ]
             },
             {
                 label: 'Reports',
@@ -48,6 +80,7 @@ export const staffNavs: MenuItem[] = [
                     { label: 'Cities', icon: 'bi bi-fw bi-map', routerLink: ['/data/cities'] },
                     { label: 'Institutions', icon: 'bi bi-fw bi-building', routerLink: ['/data/institutions'] },
                     { label: 'Martial Status', icon: 'bi bi-fw bi-list-task', routerLink: ['/data/marital-status'] },
+                    { label: 'Manner of Payment', icon: 'bi bi-fw bi-credit-card', routerLink: ['/data/manners'] },
                     { label: 'Frequently Answers & Questions', icon: 'bi bi-fw bi-person-raised-hand', routerLink: ['/data/faqs'] },
                 ],
             },

@@ -30,12 +30,22 @@ export const clientNavs: MenuItem[] = [
                         routerLink: ['/demographics/upload']
                     }
                 ]
-                // routerLink: ['/demographics'],
             },
             {
                 label: 'Credit Informations',
                 icon: 'bi bi-fw bi-credit-card-2-front',
-                routerLink: ['/credit-informations']
+                items: [
+                    {
+                        label: 'New (Form)',
+                        icon: 'bi bi-fw bi-plus-lg',
+                        routerLink: ['/credit-informations/new']
+                    },
+                    {
+                        label: 'New (Excel Template)',
+                        icon: 'bi bi-fw bi-file-earmark-arrow-up',
+                        routerLink: ['/credit-informations/upload']
+                    }
+                ]
             },
         ]
     },

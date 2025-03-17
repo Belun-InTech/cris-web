@@ -42,3 +42,8 @@ export const getMaritalStatusResolver: ResolveFn<any> = () => {
     const service = inject(DataMasterService);
     return service.getListMaritalStatus();
 }
+
+export const getMannerOfPaymentResolver: ResolveFn<any> = () => {
+    const service = inject(DataMasterService);
+    return service.getListMannerOfPayment();
+}

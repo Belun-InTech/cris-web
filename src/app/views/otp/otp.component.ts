@@ -57,7 +57,7 @@ export class OtpComponent {
             }, 1000);
             break;
           case Role.client:
-            this.router.navigate(['/demographics']).then(() => {
+            this.router.navigate(['/search']).then(() => {
               this.otpLoading = false;
             });
             break;

@@ -1,16 +1,46 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ListComponent } from './list/list.component';
+import { Role } from 'src/app/core/models/enum';
+import { getCreditByIdResolver, getPageCreditResolver } from 'src/app/core/resolvers/credit.resolver';
+import { canActivateByRole, canActivateQueryParams } from 'src/app/core/security/route.guard';
 import { FormComponent } from './form/form.component';
+import { ListComponent } from './list/list.component';
+import { getCreditClassificationListResolver, getFinancialInstitutionListResolver, getMannerOfPaymentResolver, getSectorListResolver, getTypeCollateralListResolver } from 'src/app/core/resolvers/data-master.resolver';
 
 const routes: Routes = [
   {
     path: '',
-    component: ListComponent
+    component: ListComponent,
+    canActivate: [canActivateQueryParams, canActivateByRole],
+    resolve: {
+      creditList: getPageCreditResolver
+    },
+    data: {
+      role: [Role.admin, Role.staff]
+    }
   },
   {
-    path: 'form',
-    component: FormComponent
+    path: 'new',
+    component: FormComponent,
+    resolve: {
+      grantorListResolve: getFinancialInstitutionListResolver,
+      sectorListResolve: getSectorListResolver,
+      mannerListResolve: getMannerOfPaymentResolver,
+      typeCollateralListResolve: getTypeCollateralListResolver,
+      creditClassificationListResolve: getCreditClassificationListResolver,
+    },
+  },
+  {
+    path: ':id',
+    component: FormComponent,
+    resolve: {
+      creditResolve: getCreditByIdResolver,
+      grantorListResolve: getFinancialInstitutionListResolver,
+      sectorListResolve: getSectorListResolver,
+      mannerListResolve: getMannerOfPaymentResolver,
+      typeCollateralListResolve: getTypeCollateralListResolver,
+      creditClassificationListResolve: getCreditClassificationListResolver,
+    },
   }
 ];
 

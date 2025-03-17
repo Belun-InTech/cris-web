@@ -195,4 +195,26 @@ export class DataMasterService {
     return this.http.post<any>(`${this.apiUrl}/marital-status`, form).pipe(take(1));
   }
   //#endregion Marital Status
+
+  
+  //region Manner of Payment
+
+  /**
+   * Retrieves a list of all manners of payment.
+   * @returns An observable of the server response.
+   */
+  getListMannerOfPayment(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/manners`).pipe(take(1));
+  }
+
+  /**
+   * Saves a manner of payment to the server.
+   * @param form The manner of payment object to be sent to the server.
+   * @returns An observable of the server response.
+   */
+  saveMannerOfPayment(form: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/manners`, form).pipe(take(1));
+  }
+  //#endregion Manner of Payment
+
 }

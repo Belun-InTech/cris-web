@@ -26,7 +26,8 @@ export enum DataMaster {
     CREDIT_CLASSIFICATIONS = 'creditClassifications',
     CITIES = 'cities',
     INSTITUTIONS = 'institutions',
-    MARITAL_STATUS = 'maritalStatus'
+    MARITAL_STATUS = 'maritalStatus',
+    MANNER_OF_PAYMENT = 'manners',
 }
 
 export enum DataMasterTitle {
@@ -35,7 +36,8 @@ export enum DataMasterTitle {
     CREDIT_CLASSIFICATIONS = 'Credit Classifications',
     CITIES = 'Cities',
     INSTITUTIONS = 'Institutions',
-    MARITAL_STATUS = 'Marital Status'
+    MARITAL_STATUS = 'Marital Status',
+    MANNER_OF_PAYMENT = 'Manners of Payment',
 }
 
 export enum BeneficiaryType {

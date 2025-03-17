@@ -119,4 +119,75 @@
     </div>
 </p-fieldset>
 }
+@if (demoData.credits.length > 0) {
+<p-fieldset legend="Credits" [toggleable]="true">
+    <ul class="list-decimal">
+        @for (item of demoData.credits; track item.id) {
+        <li>
+            <div class="grid">
+                <div class="col-3">
+                    <h6>Grantor</h6>
+                    <h6>Date Account Opened</h6>
+                    <h6>Due Date</h6>
+                    <h6>Original Balance</h6>
+                    <h6>Monthly Payment</h6>
+                    <h6>
+                        Last Payment (Date)
+                    </h6>
+                    <h6>
+                        Balance
+                    </h6>
+                    <h6>
+                        Sector
+                    </h6>
+                    <h6>
+                        Manner of Payment
+                    </h6>
+                    <h6>Security (Collateral)</h6>
+                    <h6>Description of Collateral</h6>
+                    <h6>Asset Classification</h6>
+                </div>
+                <div class="col-6">
+                    <h6>{{item.grantor.name}}</h6>
+                    <h6>
+                        {{item.accountCreationDate |date:'dd MMM yyyy'}}
+                    </h6>
+                    <h6>
+                        {{item.dueDate |date:'dd MMM yyyy'}}
+                    </h6>
+                    <h6>
+                        {{item.originalBalance |currency}}
+                    </h6>
+                    <h6>
+                        {{item.monthlyPayment |currency}}
+                    </h6>
+                    <h6>
+                        {{item.lastPaymentDate |date:'dd MMM yyyy'}}
+                    </h6>
+                    <h6>
+                        {{item.balance |currency}}
+                    </h6>
+                    <h6>
+                        {{item.sector.name}}
+                    </h6>
+                    <h6>
+                        {{item.mannerOfPayment.name}}
+                    </h6>
+                    <h6>
+                        {{item.security.name}}
+                    </h6>
+                    <h6>
+                        {{item.descriptionSecurity}}
+                    </h6>
+                    <h6>
+                        {{item.assetClass.name}}
+                    </h6>
+                </div>
+            </div>
+        </li>
+        }
+    </ul>
+</p-fieldset>
+}
+
 }

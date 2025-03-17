@@ -8,7 +8,7 @@
         </div>
         <div class="col-3">
             <p-menu #menu [model]="items" [popup]="true" />
-            <p-button  severity="info" (onClick)="menu.toggle($event)" icon="pi pi-file-export" label="Export" />
+            <p-button severity="info" (onClick)="menu.toggle($event)" icon="pi pi-file-export" label="Export" />
         </div>
         <div class="col-4 flex justify-content-end">
             <p-button label="New Data" [outlined]="true" icon="pi pi-user-plus"
@@ -17,64 +17,51 @@
     </div>
     <div class="grid">
         <div class="col-12">
-            <p-table [value]="creditData" [tableStyle]="{'min-width': '50rem'}">
+            <p-table #demo [value]="creditData" [loading]="dataIsFetching" [scrollable]="true" scrollHeight="500px"
+                [rowHover]="true">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-                        <th>ID Nº</th>
-                        <th>Name of Credit Grantor</th>
-                        <th>Data Credit Disbursed</th>
-                        <th>Total Credit Disbursed</th>
-                        <th> Monthly Payment</th>
-                    </tr>
-                    <tr>
                         <th>
-                            <p-columnFilter type="text" field="id" placeholder="Search by ID Nº"
-                                ariaLabel="Filter ID Nº" />
+                            Credit Grantor
                         </th>
-                        <th>
-                            <p-columnFilter type="text" field="creditGrantor" placeholder="Search by Credit Grantor"
-                                ariaLabel="Filter Credit Grantor" />
-                        </th>
-                        <th>
-                            <p-columnFilter type="text" field="creditDisbursed" placeholder="Search by Credit Disbursed"
-                                ariaLabel="Filter Credit Disbursed" />
-                        </th>
-                        <th>
-                            <p-columnFilter type="numeric" [minFractionDigits]="2" [maxFractionDigits]="2"
-                                field="totalCreditDisbursed" placeholder="Search by Total Credit Disbursed"
-                                ariaLabel="Filter Total Credit Disbursed" />
-                        </th>
-                        <th>
-                            <p-columnFilter type="numeric" [minFractionDigits]="2" [maxFractionDigits]="2"
-                                field="monthlyPayment" placeholder="Search by Monthly Payment"
-                                ariaLabel="Filter Monthly Payment" />
-                        </th>
+                        <th>Electoral Nº/Taxpayer ID (TIN)</th>
+                        <th>Due Date</th>
+                        <th>Monthly Payment</th>
+                        <th>Last Payment (Date)</th>
+                        <th>Balance</th>
+                        <th>Actions</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product let-columns="columns">
+                <ng-template pTemplate="body" let-item let-columns="columns">
                     <tr>
                         <td>
-                            {{product.name}}
+                            {{item.grantorName}}
+                        </td>
+                        <td>{{item.idNumber}}</td>
+                        <td>
+                            {{item.dueDate |date:'dd MMM yyyy'}}
                         </td>
                         <td>
-                            {{product.price | currency:'USD'}}
+                            {{item.monthlyPayment |currency}}
                         </td>
                         <td>
-                            {{product.category}}
+                            {{item.lastPaymentDate |date:'dd MMM yyyy'}}
                         </td>
                         <td>
-                            {{product.quantity}}
+                            {{item.balance |currency}}
                         </td>
                         <td>
-                            <p-tag [value]="product.inventoryStatus"
-                                [severity]="getSeverity(product.inventoryStatus)" />
-                        </td>
-                        <td>
-                            <p-rating [(ngModel)]="product.rating" [readonly]="true" [cancel]="false" />
+                            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
+                                severity="success" (click)="routeToDetailPage(item.id, item.idNumber)" />
+                            <!-- <p-button icon=" pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" />
+                            -->
                         </td>
                     </tr>
                 </ng-template>
             </p-table>
+            <p-paginator (onPageChange)="onPageChange($event)" [rows]="size" [totalRecords]="totalData"
+                [rowsPerPageOptions]="[50, 150, 250]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" />
         </div>
     </div>
 </div>

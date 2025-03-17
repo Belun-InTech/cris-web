@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
+import { CreditClassification, FinancialInstitution, MannerPayment, Sector, TypeCollateral } from 'src/app/core/models/data-master';
+import { CreditService } from 'src/app/core/services/credit.service';
 
 @Component({
   selector: 'app-form',
@@ -8,69 +12,160 @@ import { MessageService, PrimeNGConfig } from 'primeng/api';
   providers: [MessageService]
 })
 export class FormComponent {
-  files: any[] = [];
+  creditForm: FormGroup;
+  loading = false;
+  isNew = true;
+  creditData: any;
+  financialInsititutionList: FinancialInstitution[] = [];
+  sectorList: Sector[] = [];
+  mannerList: MannerPayment[] = [];
+  typeCollateralList: TypeCollateral[] = [];
+  creditClassificationList: CreditClassification[] = [];
 
-  totalSize: number = 0;
-
-  totalSizePercent: number = 0;
-
-  constructor(private config: PrimeNGConfig, private messageService: MessageService) { }
-
-  ngOnInit() {
-    console.log(this.files);
-
-  }
-
-
-  choose(event, callback) {
-    callback();
-  }
-
-  onRemoveTemplatingFile(event, file, removeFileCallback, index) {
-    console.log(removeFileCallback);
-    console.log(file);
-
-
-    removeFileCallback(event, index);
-    this.totalSize -= parseInt(this.formatSize(file.size));
-    this.totalSizePercent = this.totalSize / 10;
-  }
-
-  onClearTemplatingUpload(clear) {
-    clear();
-    this.totalSize = 0;
-    this.totalSizePercent = 0;
-  }
-
-  onTemplatedUpload() {
-    this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
-  }
-
-  onSelectedFiles(event) {
-    this.files = event.currentFiles;
-    this.files.forEach((file) => {
-      this.totalSize += parseInt(this.formatSize(file.size));
+  constructor(
+    private messageService: MessageService,
+    private service: CreditService,
+    protected _fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {
+    this.creditForm = this._fb.group({
+      id: [undefined],
+      idNumber: [undefined, Validators.required],
+      grantor: [undefined, Validators.required],
+      accountCreationDate: [undefined, Validators.required],
+      dueDate: [undefined, Validators.required],
+      originalBalance: [undefined, [Validators.required]],
+      monthlyPayment: [undefined, Validators.required],
+      lastPaymentDate: [undefined, Validators.required],
+      balance: [undefined, Validators.required],
+      sector: [undefined, Validators.required],
+      mannerOfPayment: [undefined, Validators.required],
+      security: [undefined, Validators.required],
+      descriptionSecurity: [''],
+      assetClass: [undefined, Validators.required],
     });
-    console.log(this.files);
 
-    this.totalSizePercent = this.totalSize / 10;
-  }
+    this.financialInsititutionList = this.mapToIdAndName(this.route.snapshot.data['grantorListResolve']._embedded.financialInstitutions.filter(item => item.name.toLowerCase() !== 'internal'));
+    this.sectorList = this.mapToIdAndName(this.route.snapshot.data['sectorListResolve']._embedded.sectors);
+    this.mannerList = this.mapToIdAndName(this.route.snapshot.data['mannerListResolve']._embedded.manners);
+    this.typeCollateralList = this.mapToIdAndName(this.route.snapshot.data['typeCollateralListResolve']._embedded.typeCollateral);
+    this.creditClassificationList = this.mapToIdAndName(this.route.snapshot.data['creditClassificationListResolve']._embedded.creditClassifications);
 
-  uploadEvent(callback) {
-    callback();
-  }
+    // this.creditForm.setValue({
+    //   id: null,
+    //   idNumber: '123456789',
+    //   grantor: { id: 2, name: 'Banco Nacional do Comercio de Timor-Leste', description: '' },
+    //   accountCreationDate: new Date('2025-01-01'),
+    //   dueDate: new Date('2025-01-01'),
+    //   originalBalance: 10000,
+    //   monthlyPayment: 300,
+    //   lastPaymentDate: new Date('2025-01-01'),
+    //   balance: 5000,
+    //   sector: {
+    //     id: 3,
+    //     name: "Manufacturing", description: 'Manufacturing'
+    //   },
+    //   mannerOfPayment: { id: 1, name: 'Monthly', description: '' },
+    //   security: { id: 1, name: 'Salary', description: '' },
+    //   descriptionSecurity: 'Car - Toyota Hilux',
+    //   assetClass: { id: 2, name: 'Under Supervision', description: '' }
+    // });
 
-  formatSize(bytes) {
-    const k = 1024;
-    const dm = 3;
-    const sizes = this.config.translation.fileSizeTypes;
-    if (bytes === 0) {
-      return `0 ${sizes[0]}`;
+    this.creditData = this.route.snapshot.data['creditResolve']
+    console.log(this.creditData);
+    if (this.creditData) {
+      this.mapCreditToForm(this.creditData);
     }
 
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    const formattedSize = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+  }
 
-    return `${formattedSize} ${sizes[i]}`;
+  ngOnInit() {
+
+  }
+
+  mapCreditToForm(credit: any) {
+    this.isNew = false;
+    this.creditForm.setValue({
+      id: credit.id,
+      idNumber: credit.idNumber,
+      grantor: { id: credit.grantor.id, name: credit.grantor.name },
+      accountCreationDate: new Date(credit.accountCreationDate),
+      dueDate: new Date(credit.dueDate),
+      originalBalance: credit.originalBalance,
+      monthlyPayment: credit.monthlyPayment,
+      lastPaymentDate: new Date(credit.lastPaymentDate),
+      balance: credit.balance,
+      sector: { id: credit.sector.id, name: credit.sector.name },
+      mannerOfPayment: { id: credit.mannerOfPayment.id, name: credit.mannerOfPayment.name },
+      security: { id: credit.security.id, name: credit.security.name },
+      descriptionSecurity: credit.descriptionSecurity,
+      assetClass: { id: credit.assetClass.id, name: credit.assetClass.name }
+    });
+  }
+
+  save(form: FormGroup) {
+    console.log(form.value);
+
+    this.loading = true;
+    this.service.save(form.value).subscribe({
+      next: (response) => {
+        this.creditForm.reset();
+        this.setNotification(true, response);
+      },
+      error: (error) => {
+        this.loading = false;
+        this.setNotification(false, null, error);
+      },
+      complete: () => {
+        this.loading = false;
+        setTimeout(() => this.messageService.clear(), 3000)
+      }
+    });
+  }
+
+  update(form: FormGroup) {
+    this.loading = true;
+    this.service.updateById(this.creditData.id, form.value).subscribe({
+      next: (response) => {
+        this.setNotification(true, response);
+      },
+      error: (error) => {
+        this.loading = false;
+        this.setNotification(false, null, error);
+      },
+      complete: () => {
+        this.loading = false;
+        setTimeout(() => this.messageService.clear(), 3000)
+      }
+    });
+  }
+
+
+
+  private setNotification(isSuccess: boolean, credit?: any, error?: any) {
+    if (this.isNew) {
+      isSuccess ? this.messageService.add({ severity: 'success', summary: 'Credit Registered Successfully!', detail: `The Credit data ${credit.demographic.idNumber} has been registered.` }) :
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error });
+    } else {
+      isSuccess ? this.messageService.add({ severity: 'success', summary: 'Credit Updated Successfully!', detail: `The Credit data ${credit.demographic.idNumber} informations has been updated` }) :
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error });
+    }
+  }
+
+
+  /**
+ * Maps an array of objects to an array of objects with only id and name properties.
+ *
+ * @param array The array of objects to be mapped.
+ * @returns An array of objects with only id and name properties.
+ */
+  private mapToIdAndName(array: any[]): { id: number, name: string }[] {
+    return array.map(item => {
+      return {
+        id: item.id,
+        name: item.name
+      };
+    });
   }
 }

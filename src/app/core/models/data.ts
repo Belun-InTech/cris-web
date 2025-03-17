@@ -1,4 +1,4 @@
-import { City, Institution, MaritalStatus } from "./data-master";
+import { City, CreditClassification, FinancialInstitution, Institution, MannerPayment, MaritalStatus, Sector, TypeCollateral } from "./data-master";
 import { BeneficiaryType, Gender } from "./enum";
 
 export interface Demographic {
@@ -15,6 +15,7 @@ export interface Demographic {
     employmentHistory: Institution;
     phoneNumber: string;
     guarantee: Guarantee;
+    credits: Credit[];
 }
 
 export interface DemographicPage {
@@ -55,4 +56,32 @@ export interface Guarantee {
     birthDate: string;
     city: City;
     employmentHistory: Institution;
+}
+
+export interface Credit {
+    id: number;
+    idNumber: number;
+    demographic: Demographic;
+    grantor: FinancialInstitution;
+    accountCreationDate: Date;
+    dueDate: Date;
+    originalBalance: number;
+    monthlyPayment: number;
+    lastPaymentDate: Date;
+    balance: number;
+    sector: Sector;
+    mannerOfPayment: MannerPayment;
+    security: TypeCollateral;
+    descriptionSecurity: string;
+    assetClass: CreditClassification;
+}
+
+export interface CreditPage {
+    id: number;
+    idNumber: string;
+    grantorName: string;
+    dueDate: string;
+    monthlyPayment: number;
+    lastPaymentDate: string;
+    balance: number;
 }

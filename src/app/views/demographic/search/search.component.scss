@@ -1,3 +1,9 @@
 ::ng-deep.p-inputtext {
     min-height: 40px;
 }
+
+ul li:not(:last-child) {
+    border-bottom: .13rem solid;
+    border-color: var(--surface-border);
+    margin-bottom: 1.3rem;
+}
