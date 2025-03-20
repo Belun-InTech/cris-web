@@ -6,6 +6,7 @@ import { canActivateByRole, canActivateQueryParams } from 'src/app/core/security
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
 import { getCreditClassificationListResolver, getFinancialInstitutionListResolver, getMannerOfPaymentResolver, getSectorListResolver, getTypeCollateralListResolver } from 'src/app/core/resolvers/data-master.resolver';
+import { FormUploadComponent } from './form-upload/form-upload.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,17 @@ const routes: Routes = [
       typeCollateralListResolve: getTypeCollateralListResolver,
       creditClassificationListResolve: getCreditClassificationListResolver,
     },
+  },
+  {
+    path: 'upload',
+    component: FormUploadComponent,
+    resolve: {
+      grantorListResolve: getFinancialInstitutionListResolver,
+      sectorListResolve: getSectorListResolver,
+      mannerListResolve: getMannerOfPaymentResolver,
+      typeCollateralListResolve: getTypeCollateralListResolver,
+      creditClassificationListResolve: getCreditClassificationListResolver,
+    }
   },
   {
     path: ':id',

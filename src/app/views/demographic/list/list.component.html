@@ -12,9 +12,6 @@
                 <p-menu #menu [model]="items" [popup]="true" />
                 <p-button severity="info" [disabled]="demoData.length === 0" (onClick)="menu.toggle($event)" icon="pi pi-file-export" label="Export" />
             </div>
-            <div class="col-12 md:col-4 flex justify-content-end">
-                <p-button label="New Data" [outlined]="true" icon="pi pi-user-plus" (click)="openDialogNewData()" />
-            </div>
         </div>
         <div class="grid">
             <div class="col-12">

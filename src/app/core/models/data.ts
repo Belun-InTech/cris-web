@@ -85,3 +85,21 @@ export interface CreditPage {
     lastPaymentDate: string;
     balance: number;
 }
+
+export interface CreditExcel {
+    id: number;
+    idNumber: number;
+    grantor: FinancialInstitution;
+    accountCreationDate: string;
+    dueDate: string;
+    originalBalance: number;
+    monthlyPayment: number;
+    lastPaymentDate: string;
+    balance: number;
+    sector: Sector;
+    mannerOfPayment: MannerPayment;
+    security: TypeCollateral;
+    descriptionSecurity: string;
+    assetClass: CreditClassification;
+    valid: boolean;
+}

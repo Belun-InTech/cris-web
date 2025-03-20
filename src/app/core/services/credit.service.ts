@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, take } from 'rxjs';
+import { EMPTY, expand, Observable, reduce, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Credit } from '../models/data';
 
@@ -45,5 +45,31 @@ export class CreditService {
 
   updateById(id: number, formData: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${id}`, formData).pipe(take(1));
+  }
+
+  checkMissings(data: any[]): Observable<Credit[]> {
+    return this.http.post<Credit[]>(`${this.apiUrl}/missing-check`, data).pipe(take(1));
+  }
+
+  getAll(size: number = 50, initialPage: number = 0): Observable<any[]> {
+    let currentPage = initialPage;
+
+    return this.getPagination(currentPage, size).pipe(
+      expand(response => {
+        // Assuming the response has a property `content` (an array of items)
+        // If the current page returns as many items as the page size, we assume there is another page.
+        if (response.content && response.content.length === size) {
+          currentPage++;
+          return this.getPagination(currentPage, size);
+        } else {
+          return EMPTY;
+        }
+      }),
+      // Accumulate all the responses into a single array.
+      reduce((allItems, response) => {
+        // Concatenate the current page's items with all previously retrieved items.
+        return allItems.concat(response.content);
+      }, [])
+    );
   }
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { CreditClassification, FinancialInstitution, MannerPayment, Sector, TypeCollateral } from 'src/app/core/models/data-master';
+import { AuthenticationService } from 'src/app/core/services';
 import { CreditService } from 'src/app/core/services/credit.service';
 
 @Component({
@@ -28,6 +29,7 @@ export class FormComponent {
     protected _fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
+    private authService: AuthenticationService,
   ) {
     this.creditForm = this._fb.group({
       id: [undefined],
@@ -119,7 +121,10 @@ export class FormComponent {
       },
       complete: () => {
         this.loading = false;
-        setTimeout(() => this.messageService.clear(), 3000)
+        setTimeout(() => {
+          this.messageService.clear();
+          this.redirectBack();
+        }, 3000)
       }
     });
   }
@@ -136,9 +141,20 @@ export class FormComponent {
       },
       complete: () => {
         this.loading = false;
-        setTimeout(() => this.messageService.clear(), 3000)
+        setTimeout(() => {
+          this.messageService.clear();
+          this.redirectBack();
+        }, 3000)
       }
     });
+  }
+
+  redirectBack(): void {
+    if (this.authService.currentRole === 'ROLE_ADMIN') {
+      this.router.navigate(['/credit-informations']);
+    } else {
+      this.router.navigate(['/search']);
+    }
   }
 
 

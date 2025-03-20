@@ -18,7 +18,7 @@ export class ListComponent {
   size = 50;
   totalData = 0;
   columns = ['Credit Grantor', 'ID Number / TIN', 'Due Cate', 'Monthly Payment', 'Last Payment (Date)', 'Balance'];
-  filename = 'Demographic';
+  filename = 'Credit Info';
   dataIsFetching = false;
   inMemoryData: any[] = [];
   searchFormControl = new FormControl('', { updateOn: 'change' });
@@ -45,14 +45,18 @@ export class ListComponent {
         icon: 'pi pi-file-pdf',
         label: 'PDF',
         command: () => {
-          // this.messageService.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
+          if (this.creditData.length > 0) {
+            this.exportToPDF();
+          }
         }
       },
       {
         icon: 'pi pi-file-excel',
         label: 'Excel',
         command: () => {
-          // this.messageService.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
+          if (this.creditData.length > 0) {
+            this.exportToExcel();
+          }
         }
       },
     ];
@@ -81,6 +85,32 @@ export class ListComponent {
   routeToDetailPage(id: number, idNumber: string): void {
     this.router.navigate(['/credit-informations', id], {
       queryParams: { idNumber: idNumber, extraData: 'value' }
+    });
+  }
+
+  exportToPDF(): void {
+    this.dataIsFetching = true;
+    this.service.getAll().subscribe({
+      next: response => {
+        this.dataIsFetching = false;
+        this.excelService.exportCreditToPDF(this.columns, response, this.filename);
+      },
+      error: err => {
+        this.dataIsFetching = false;
+      },
+    });
+  }
+
+  exportToExcel(): void {
+    this.dataIsFetching = true;
+    this.service.getAll().subscribe({
+      next: response => {
+        this.dataIsFetching = false;
+        this.excelService.exportToExcel(response, this.filename);
+      },
+      error: err => {
+        this.dataIsFetching = false;
+      },
     });
   }
 }

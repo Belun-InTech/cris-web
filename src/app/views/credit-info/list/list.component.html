@@ -10,10 +10,6 @@
             <p-menu #menu [model]="items" [popup]="true" />
             <p-button severity="info" (onClick)="menu.toggle($event)" icon="pi pi-file-export" label="Export" />
         </div>
-        <div class="col-4 flex justify-content-end">
-            <p-button label="New Data" [outlined]="true" icon="pi pi-user-plus"
-                [routerLink]="['/credit-informations/form']" />
-        </div>
     </div>
     <div class="grid">
         <div class="col-12">

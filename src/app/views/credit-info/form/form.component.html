@@ -4,7 +4,7 @@
             <h4>
                 Credit Information Form
             </h4>
-            
+
             <p-messages />
 
             <form [formGroup]="creditForm">
@@ -93,11 +93,11 @@
                     <p-button label="Update" icon="pi pi-sync" [disabled]="!creditForm.valid" [loading]="loading"
                         (click)="update(creditForm)" [raised]="true" severity="warning" />
                     }
-                    <p-button label="Cancel" [routerLink]="['/credits']" routerLinkActive="router-link-active"
+                    <p-button label="Cancel" (click)="redirectBack()" routerLinkActive="router-link-active"
                         icon="pi pi-times" [raised]="true" severity="secondary" class="ml-3" />
                 </div>
             </div>
         </div>
     </div>
 </div>
-<p-toast position="bottom-right"/>
+<p-toast position="bottom-right" />

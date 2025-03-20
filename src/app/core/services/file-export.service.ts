@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
-import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { utils, writeFile } from "xlsx";
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,11 @@ export class FileExportService {
   constructor() { }
 
   exportToExcel(data: any[], filename: string): void {
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Dates");
+    const worksheet = utils.json_to_sheet(data);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Dates");
 
-    XLSX.writeFile(workbook, `${filename}.xlsx`, { compression: true });
+    writeFile(workbook, `${filename}.xlsx`, { compression: true });
   }
 
   exportToPDF(columns: any[], data: any[], filename: string): void {
@@ -30,6 +30,27 @@ export class FileExportService {
         value.city,
         value.birthDate,
         value.phoneNumber
+      ]);
+
+    autoTable(doc, {
+      head: [columns],
+      body: data
+    })
+
+    doc.save(`${filename}.pdf`)
+  }
+
+  exportCreditToPDF(columns: any[], data: any[], filename: string): void {
+    const doc = new jsPDF();
+    
+    data = data.map(value =>
+      [
+        value.grantorName,
+        value.idNumber,
+        value.dueDate,
+        value.monthlyPayment,
+        value.lastPaymentDate,
+        value.balance,
       ]);
 
     autoTable(doc, {
