@@ -103,3 +103,19 @@ export interface CreditExcel {
     assetClass: CreditClassification;
     valid: boolean;
 }
+
+export interface EmailConfig {
+    smtpHost: string;
+    smtpPort: number;
+    username: string;
+    password: string;
+    fromEmail: string;
+}
+
+export interface LdapConfig {
+    url: string;
+    baseDn: string
+    userDn: string;
+    password: string;
+    userSearchFilter: string;
+}

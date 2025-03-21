@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { Role } from './core/models/enum';
+import { getEmailConfigResolver, getLdapConfigResolver } from './core/resolvers/config.resolver';
+import { getFaqListResolver } from './core/resolvers/data-master.resolver';
+import { getTokenActivationResolver } from './core/resolvers/utilizador.resolver';
+import { authenticationCanActivate, canActivateByRole, loginGuard, validateGuard } from './core/security/route.guard';
 import { AppLayoutComponent } from "./layout/app.layout.component";
+import { ActivationComponent } from './views/activation/activation.component';
+import { ConfigurationComponent } from './views/configuration/configuration.component';
+import { SearchComponent } from './views/demographic/search/search.component';
 import { FaqComponent } from './views/faq/faq.component';
 import { LoginComponent } from './views/login/login.component';
-import { authenticationCanActivate, canActivateByRole, loginGuard, validateGuard } from './core/security/route.guard';
-import { getFaqListResolver } from './core/resolvers/data-master.resolver';
-import { ActivationComponent } from './views/activation/activation.component';
-import { getTokenActivationResolver } from './core/resolvers/utilizador.resolver';
-import { Role } from './core/models/enum';
 import { OtpComponent } from './views/otp/otp.component';
-import { SearchComponent } from './views/demographic/search/search.component';
 
 @NgModule({
     imports: [
@@ -91,7 +93,18 @@ import { SearchComponent } from './views/demographic/search/search.component';
                             role: [Role.admin]
                         }
                     },
-
+                    {
+                        path: 'configurations',
+                        component: ConfigurationComponent,
+                        canActivateChild: [canActivateByRole],
+                        data: {
+                            role: [Role.admin]
+                        },
+                        resolve: {
+                            emailConfigResolve: getEmailConfigResolver,
+                            ldapConfigResolve: getLdapConfigResolver,
+                        }
+                    },
                     {
                         path: 'data',
                         loadChildren: () => import('./views/data-master/data-master.module').then(m => m.DataMasterModule),

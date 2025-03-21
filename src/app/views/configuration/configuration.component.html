@@ -1,0 +1,77 @@
+<p-accordion [activeIndex]="0">
+    <!-- EMAIL -->
+    <p-accordionTab header="Email SMTP">
+        <div class="grid">
+            <div class="col-12">
+                <form class="" [formGroup]="emailForm">
+                    <p-floatLabel>
+                        <input pInputText id="smtpHost" placeholder="smtp.example.tl" formControlName="smtpHost"
+                            class="w-full" />
+                        <label for="smtpHost">Host</label>
+                    </p-floatLabel>
+                    <p-floatLabel>
+                        <input pInputText type="number" id="smtpPort" placeholder="25/587" formControlName="smtpPort"
+                            class="w-full" />
+                        <label for="smtpPort">Port</label>
+                    </p-floatLabel>
+                    <p-floatLabel>
+                        <input pInputText id="username" formControlName="username" class="w-full" />
+                        <label for="username">Username</label>
+                    </p-floatLabel>
+                    <p-floatLabel>
+                        <input pInputText type="password" id="password" formControlName="password" class="w-full" />
+                        <label for="password">Password</label>
+                    </p-floatLabel>
+                    <p-floatLabel>
+                        <input pInputText id="fromEmail" formControlName="fromEmail" class="w-full" />
+                        <label for="fromEmail">From Email</label>
+                    </p-floatLabel>
+                </form>
+                <div class="mt-5">
+                    <p-button label="Save" icon="pi pi-save" [disabled]="!emailForm.valid" [loading]="loading"
+                        (click)="submitEmail(emailForm)" [raised]="true" severity="warning" />
+                    <p-button label="Test" icon="pi pi-save" [disabled]="!emailForm.valid" [loading]="loading"
+                        (click)="submitEmail(emailForm)" [raised]="true" severity="success" class="ml-3" />
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+
+    <!-- LDAP/AD -->
+    <p-accordionTab header="LDAP/AD">
+        <div class="grid">
+            <div class="col-12">
+                <form class="" [formGroup]="ldapForm">
+                    <p-floatLabel>
+                        <input pInputText id="url" placeholder="ldap.example.tl:8080" formControlName="url"
+                            class="w-full" />
+                        <label for="url">URL/Host</label>
+                    </p-floatLabel>
+                    <p-floatLabel>
+                        <input pInputText id="baseDn" formControlName="baseDn" class="w-full" />
+                        <label for="baseDn">Base DN</label>
+                    </p-floatLabel>
+                    <p-floatLabel>
+                        <input pInputText id="userDn" formControlName="userDn" class="w-full" />
+                        <label for="userDn">User DN</label>
+                    </p-floatLabel>
+                    <p-floatLabel>
+                        <input pInputText type="password" id="password" formControlName="password" class="w-full" />
+                        <label for="password">Password</label>
+                    </p-floatLabel>
+                    <p-floatLabel>
+                        <input pInputText id="userSearchFilter" formControlName="userSearchFilter" class="w-full" />
+                        <label for="userSearchFilter">User Search Filter</label>
+                    </p-floatLabel>
+                </form>
+                <div class="mt-5">
+                    <p-button label="Save" icon="pi pi-save" [disabled]="!emailForm.valid" [loading]="loading"
+                        (click)="submitLdap(emailForm)" [raised]="true" severity="warning" />
+                    <p-button label="Test" icon="pi pi-sync" [disabled]="!emailForm.valid" [loading]="loading"
+                        (click)="submitEmail(emailForm)" [raised]="true" severity="success" class="ml-3" />
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<p-toast position="bottom-right" key="br" />

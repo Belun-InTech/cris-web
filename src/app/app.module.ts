@@ -7,22 +7,25 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputOtpModule } from 'primeng/inputotp';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessagesModule } from 'primeng/messages';
 import { PasswordModule } from 'primeng/password';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpErrorInterceptor } from './core/security/http-error.interceptor';
 import { AppLayoutModule } from './layout/app.layout.module';
 import { ActivationComponent } from './views/activation/activation.component';
+import { ConfigurationComponent } from './views/configuration/configuration.component';
 import { FaqComponent } from './views/faq/faq.component';
 import { LoginComponent } from './views/login/login.component';
 import { OtpComponent } from './views/otp/otp.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, FaqComponent, ActivationComponent, OtpComponent],
+  declarations: [AppComponent, LoginComponent, FaqComponent, ActivationComponent, OtpComponent, ConfigurationComponent],
   imports: [
     AppRoutingModule,
     AppLayoutModule,
@@ -42,6 +45,8 @@ import { OtpComponent } from './views/otp/otp.component';
     AccordionModule,
     InputOtpModule,
     ProgressSpinnerModule,
+    FloatLabelModule,
+    ToastModule,
   ],
   providers: [
     {

@@ -1,0 +1,7 @@
+::ng-deep.p-float-label {
+    margin-top: 25px;
+}
+
+::ng-deep.p-float-label:not(:first-child) {
+    margin-top: 0px !important;
+}

@@ -86,7 +86,7 @@ export const adminNavs: MenuItem[] = [
                     { label: 'Frequently Answers & Questions', icon: 'bi bi-fw bi-person-raised-hand', routerLink: ['/data/faqs'] },
                 ],
             },
-            { label: 'System', icon: 'bi bi-fw bi-gear-wide-connected', routerLink: ['/data/sistema'] },
+            { label: 'System', icon: 'bi bi-fw bi-gear-wide-connected', routerLink: ['/configurations'] },
         ]
     },
     {
