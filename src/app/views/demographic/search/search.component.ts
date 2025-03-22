@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { debounceTime, distinctUntilChanged, of, switchMap, tap } from 'rxjs';
 import { Demographic } from 'src/app/core/models/data';
-import { DemographicService } from 'src/app/core/services';
 import { DemoCreditService } from 'src/app/core/services/demo-credit.service';
+import { normalizeId } from 'src/app/core/utils/global-types';
 
 @Component({
   selector: 'app-search',
@@ -33,7 +32,7 @@ export class SearchComponent {
   searchData(formInput: FormControl): void {
     this.messageService.clear();
     this.dataIsFetching = true
-    this.service.searchByIdNumber(formInput.value)
+    this.service.searchByIdNumber(normalizeId(formInput.value))
       .subscribe({
         next: response => {
           this.demoData = response;

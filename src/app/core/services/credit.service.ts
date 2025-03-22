@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { EMPTY, expand, Observable, reduce, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Credit } from '../models/data';
+import { normalizeId } from '../utils/global-types';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class CreditService {
 
   getById(id: number, idNumber: string): Observable<Credit> {
     let params = new HttpParams();
-    params.append('idNumber', idNumber);
+    params.append('idNumber', normalizeId(idNumber));
     return this.http.get<Credit>(`${this.apiUrl}/${id}?idNumber=${idNumber}`).pipe(take(1));
   }
 

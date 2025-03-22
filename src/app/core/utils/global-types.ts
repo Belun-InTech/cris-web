@@ -90,3 +90,12 @@ export const beneficiaryTypeOpts: any[] = [
     { name: BeneficiaryType.company, value: BeneficiaryType.company.toLowerCase() },
     { name: BeneficiaryType.individual, value: BeneficiaryType.individual.toLowerCase() },
 ];
+
+
+export function normalizeId(id: string | null): string | null {
+    if (id === null) {
+        return null;
+    }
+    // Replace leading zeros unless the string is exactly "0"
+    return id.replace(/^0+(?!$)/, "");
+}

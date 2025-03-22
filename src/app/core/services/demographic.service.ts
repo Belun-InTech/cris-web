@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EMPTY, expand, Observable, reduce, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Demographic } from '../models/data';
+import { normalizeId } from '../utils/global-types';
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +62,7 @@ export class DemographicService {
   getByIdNumberAndType(idNumber: string, type: string): Observable<any> {
     const params = new HttpParams()
       .append('type', type.toUpperCase());
-    return this.http.get<any>(`${this.apiUrl}/${idNumber}`, { params }).pipe(take(1));
+    return this.http.get<any>(`${this.apiUrl}/${normalizeId(idNumber)}`, { params }).pipe(take(1));
   }
 
   /**
@@ -110,7 +110,7 @@ export class DemographicService {
   filterByParams(filters: any): Observable<any> {
     let params = new HttpParams()
       .append('fullName', filters.fullName[0].value)
-      .append('idNumber', filters.idNumber[0].value);
+      .append('idNumber', normalizeId(filters.idNumber[0].value));
     return this.http.get<any>(`${this.apiUrl}/filter`, { params }).pipe(take(1));
   }
 
