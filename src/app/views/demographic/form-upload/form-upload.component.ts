@@ -81,6 +81,9 @@ export class FormUploadComponent {
         this.mapAndValidateExcelTemplate(utils.sheet_to_json(worksheet, { raw: false }));
       };
       fileReader.readAsArrayBuffer(this.files[0]);
+      this.jsonData = [];
+      this.isAttributesValid = true;
+      this.messageService.clear();
     }
   }
 
@@ -481,6 +484,16 @@ export class FormUploadComponent {
     }
   }
 
+  /**
+   * Event handler for when the active index of the p-steps component changes.
+   * 
+   * Sets the activeTab property to the new index.
+   * 
+   * @param {number} index The new active index.
+   */
+  activeIndexChange(index: number) {
+    this.activeTab = index
+  }
 
   /**
    * Validates a date string in the format "YYYY-MM-DD".
@@ -580,11 +593,11 @@ export class FormUploadComponent {
   }
 
   onRemoveTemplatingFile(event, file, removeFileCallback, index) {
-    this.messageService.clear();
     removeFileCallback(event, index);
     this.totalSize -= parseInt(this.formatSize(file.size));
     this.totalSizePercent = this.totalSize / 10;
     this.jsonData = [];
+    this.isAttributesValid = true;
     this.messageService.clear();
   }
 
@@ -593,6 +606,7 @@ export class FormUploadComponent {
     this.totalSize = 0;
     this.totalSizePercent = 0;
     this.jsonData = [];
+    this.isAttributesValid = true;
     this.messageService.clear();
   }
 

@@ -57,6 +57,16 @@ export class FormUploadComponent {
 
   }
 
+  /**
+   * Event handler for when a file is selected. Gets the selected files,
+   * calculates the total size of the files in bytes, and then reads the file
+   * to get the JSON data from the Excel file.
+   *
+   * The JSON data is then modified to convert the birthDate column to a date
+   * string.
+   *
+   * @param event The event object containing the selected files.
+   */
   onSelectedFiles(event) {
     this.files = event.currentFiles;
     this.files.forEach((file) => {
@@ -75,9 +85,16 @@ export class FormUploadComponent {
         this.mapExcelTemplate(utils.sheet_to_json(worksheet, { raw: false }));
       };
       fileReader.readAsArrayBuffer(this.files[0]);
+      this.jsonData = [];
+      this.isAttributesValid = true;
+      this.messageService.clear();
     }
   }
 
+  /**
+   * Map Excel template to CreditExcel object
+   * @param data excel data from file upload
+   */
   mapExcelTemplate(data: any): void {
     this.jsonData = data.map((row, index) => {
       let newRow: CreditExcel;
@@ -129,6 +146,14 @@ export class FormUploadComponent {
     });
     console.log(this.jsonData);
   }
+
+  /**
+   * Validates the credit data attributes of a given row and sets the "valid" property of the row accordingly.
+   * If any required fields are missing or invalid, an error message is added to the message service.
+   * 
+   * @param row The row of credit data to be validated.
+   * @param index The index of the row being validated, used for error reporting.
+   */
 
   validateCreditData(row: CreditExcel, index: number): void {
     let errors: string[] = [];
@@ -184,6 +209,19 @@ export class FormUploadComponent {
     }
   }
 
+  /**
+   * Maps the data from the database to the given CreditExcel object and validates it.
+   * Searches for matching records in the financial institution, sector, manner of payment,
+   * type of collateral, and credit classification lists based on the provided object's properties.
+   * If a match is found, updates the object's ID or name fields accordingly.
+   * If a match is not found, appends an error message to the errors list.
+   * Displays error messages using the message service if there are any errors,
+   * marks the object as invalid, and sets the isAttributesValid flag to false.
+   * 
+   * @param obj The CreditExcel object to map and validate.
+   * @param index The index of the object in the dataset, used for error reporting.
+   */
+
   private mappingDataFromDB(obj: CreditExcel, index: number): void {
     let errors: string[] = [];
     const grantor = this.financialInsititutionList.find(item => item.name.toLowerCase() === obj.grantor.name.toLowerCase());
@@ -234,6 +272,15 @@ export class FormUploadComponent {
     }
   }
 
+  /**
+   * Saves the given credit data to the server.
+   * The given credit data is sent to the server using the CreditService.
+   * The loading indicator is set to true until the response is received from the server.
+   * If the response is successful, a success notification is displayed and the component is navigated to the credit information list page after 3 seconds.
+   * If the response is an error, an error notification is displayed with the error message received from the server.
+   * If the form is invalid, an error notification is displayed with the message 'Form is invalid'.
+   * @param data The credit data to be sent to the server.
+   */
   saveCreditData(data: any[]): void {
     this.messageService.clear();
     this.isSubmitting = true;
@@ -250,7 +297,7 @@ export class FormUploadComponent {
         setTimeout(() => {
           if (this.authService.currentRole === 'ROLE_ADMIN') {
             this.router.navigate(['/credit-informations']);
-          }else {
+          } else {
             this.router.navigate(['/search']);
           }
         }, 3000);
@@ -258,6 +305,12 @@ export class FormUploadComponent {
     });
   }
 
+  /**
+   * This function will check the given data if it has any missing value.
+   * The missing value will be stored in notFoundData variable.
+   * It will also display a message to the user.
+   * @param data The data to be check.
+   */
   checkJsonData(data: any[]): void {
     this.messageService.clear();
     this.isScanning = true;
@@ -277,10 +330,27 @@ export class FormUploadComponent {
     });
   }
 
+  /**
+   * Removes a specified item from the jsonData array and displays a success message.
+   * 
+   * This function filters out the given item from the jsonData array, effectively deleting it.
+   * After deletion, a success message is displayed to notify the user.
+   * 
+   * @param item The item to be removed from the jsonData array.
+   */
+
   deleteJsonData(item: any): void {
     this.jsonData = this.jsonData.filter((val) => val !== item);
     this.messageService.add({ key: 'deleteJson', severity: 'success', summary: 'Successful', detail: 'Data Deleted', life: 3000 });
   }
+
+  /**
+   * Determines whether submission is allowed.
+   *
+   * Submission is only permitted if JSON data has been checked and no missing data is found.
+   *
+   * @returns {boolean} True if submission is allowed, otherwise false.
+   */
 
   allowSubmit(): boolean {
     return this.isJsonDataChecked && this.notFoundData.length === 0;
@@ -316,22 +386,57 @@ export class FormUploadComponent {
     return `${formattedSize} ${sizes[i]}`;
   }
 
+  /**
+   * Handles the removal of a templating file and updates the relevant state.
+   *
+   * This method is triggered when a user decides to remove a file from the upload list.
+   * It performs the following operations:
+   * - Clears any existing messages.
+   * - Calls the provided callback to remove the file.
+   * - Updates the total size and percentage of the uploaded files.
+   * - Resets the JSON data and clears messages again.
+   *
+   * @param {Event} event - The event object associated with the file removal.
+   * @param {File} file - The file object to be removed.
+   * @param {Function} removeFileCallback - The callback function to execute for removing the file.
+   * @param {number} index - The index of the file in the list.
+   * @returns {void}
+   */
+
   onRemoveTemplatingFile(event, file, removeFileCallback, index) {
     this.messageService.clear();
     removeFileCallback(event, index);
     this.totalSize -= parseInt(this.formatSize(file.size));
     this.totalSizePercent = this.totalSize / 10;
     this.jsonData = [];
+    this.isAttributesValid = true;
     this.messageService.clear();
   }
+  /**
+   * Clears the uploaded file and resets the total size, total size percent, and
+   * JSON data.
+   *
+   * @param {() => void} clear - A callback function to clear the uploaded file.
+   * @returns {void}
+   */
 
   onClearTemplatingUpload(clear) {
     clear();
     this.totalSize = 0;
     this.totalSizePercent = 0;
     this.jsonData = [];
+    this.isAttributesValid = true;
     this.messageService.clear();
   }
+
+  /**
+   * Displays messages based on whether records are missing in the database.
+   * 
+   * If no records are missing, a success message is displayed indicating that the data is found in the database.
+   * If records are missing, a warning message is displayed indicating that the provided data is not found in the database.
+   * 
+   * @returns {void}
+   */
 
   showMissingMessages(): void {
     const hasMissingDatabase = this.notFoundData.length > 0;
@@ -351,6 +456,29 @@ export class FormUploadComponent {
     }
   }
 
+
+  /**
+   * Changes the active tab when a tab index is changed.
+   * 
+   * @param {number} index - The index of the tab to change to.
+   * @returns {void}
+   */
+  activeIndexChange(index: number) {
+    this.activeTab = index
+  }
+
+
+  /**
+   * Validates a date string in the format "YYYY-MM-DD".
+   * 
+   * If the date string is invalid, an error message is displayed and the function returns null.
+   * 
+   * If the date string is valid, the function returns the date string in the format "YYYY-MM-DD".
+   * 
+   * @param {string} dateStr - The date string to validate.
+   * @param {number} index - The row index of the date string in the Excel file.
+   * @returns {string | null} The validated date string or null if invalid.
+   */
   private showDateValidationMessage(dateStr: string, index: number): string | null {
     // Validate date format (DD-MM-YYYY)
     const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -393,16 +521,37 @@ export class FormUploadComponent {
     return formattedDate;
   }
 
+  /**
+   * Get the number of days in a given month.
+   * @param month - The month (1-12).
+   * @param year - The year.
+   * @returns The number of days in the given month.
+   */
   private getDaysInMonth(month: number, year: number): number {
     const daysInMonth = [31, (this.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     return daysInMonth[month - 1];
   }
 
+
+  /**
+   * Determines if the given year is a leap year.
+   * @param year - The year.
+   * @returns True if the given year is a leap year, false otherwise.
+   * 
+   * A leap year is a year that is divisible by 4, except for end-of-century years which must be divisible by 400.
+   * This means that the year 2000 was a leap year, although the years 1700, 1800, and 1900 were not.
+   */
   private isLeapYear(year: number): boolean {
     return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
   }
 
 
+  /**
+   * Maps an array of objects to an array of objects with only id and name properties.
+   * 
+   * @param array The array of objects to be mapped.
+   * @returns An array of objects with only id and name properties.
+   */
   private mapToIdAndName(array: any[]): { id: number, name: string }[] {
     return array.map(item => {
       return {

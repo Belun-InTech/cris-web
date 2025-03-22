@@ -4,7 +4,7 @@
             <div class="grid">
                 <div class="col-12">
 
-                    <p-accordion [activeIndex]="activeTab">
+                    <p-accordion (activeIndexChange)="activeIndexChange($event)" [activeIndex]="activeTab">
                         <!-- Upload File tab -->
                         <p-accordionTab header="Upload File">
                             <p-fileUpload name="myfile[]" [multiple]="false"
