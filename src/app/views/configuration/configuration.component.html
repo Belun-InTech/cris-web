@@ -3,6 +3,7 @@
     <p-accordionTab header="Email SMTP">
         <div class="grid">
             <div class="col-12">
+                <p-messages key="tm" />
                 <form class="" [formGroup]="emailForm">
                     <p-floatLabel>
                         <input pInputText id="smtpHost" placeholder="smtp.example.tl" formControlName="smtpHost"
@@ -19,19 +20,25 @@
                         <label for="username">Username</label>
                     </p-floatLabel>
                     <p-floatLabel>
-                        <input pInputText type="password" id="password" formControlName="password" class="w-full" />
+                        <p-password id="password" formControlName="password" [toggleMask]="true" />
                         <label for="password">Password</label>
                     </p-floatLabel>
                     <p-floatLabel>
                         <input pInputText id="fromEmail" formControlName="fromEmail" class="w-full" />
                         <label for="fromEmail">From Email</label>
                     </p-floatLabel>
+                    <p-floatLabel>
+                        <input pInputText id="toEmail" placeholder="For testing only" formControlName="toEmail"
+                            class="w-full" />
+                        <label for="toEmail">To Email</label>
+                    </p-floatLabel>
                 </form>
                 <div class="mt-5">
                     <p-button label="Save" icon="pi pi-save" [disabled]="!emailForm.valid" [loading]="loading"
                         (click)="submitEmail(emailForm)" [raised]="true" severity="warning" />
-                    <p-button label="Test" icon="pi pi-save" [disabled]="!emailForm.valid" [loading]="loading"
-                        (click)="submitEmail(emailForm)" [raised]="true" severity="success" class="ml-3" />
+                    <p-button label="Test" icon="pi pi-sync"
+                        [disabled]="!emailForm.valid || emailForm.get('toEmail').value === ''" [loading]="loadingTest"
+                        (click)="testEmailConfig()" [raised]="true" severity="success" class="ml-3" />
                 </div>
             </div>
         </div>
@@ -41,6 +48,7 @@
     <p-accordionTab header="LDAP/AD">
         <div class="grid">
             <div class="col-12">
+                <p-messages key="tl" />
                 <form class="" [formGroup]="ldapForm">
                     <p-floatLabel>
                         <input pInputText id="url" placeholder="ldap.example.tl:8080" formControlName="url"
@@ -56,7 +64,7 @@
                         <label for="userDn">User DN</label>
                     </p-floatLabel>
                     <p-floatLabel>
-                        <input pInputText type="password" id="password" formControlName="password" class="w-full" />
+                        <p-password id="password" formControlName="password" [toggleMask]="true"/>
                         <label for="password">Password</label>
                     </p-floatLabel>
                     <p-floatLabel>
@@ -66,9 +74,9 @@
                 </form>
                 <div class="mt-5">
                     <p-button label="Save" icon="pi pi-save" [disabled]="!emailForm.valid" [loading]="loading"
-                        (click)="submitLdap(emailForm)" [raised]="true" severity="warning" />
-                    <p-button label="Test" icon="pi pi-sync" [disabled]="!emailForm.valid" [loading]="loading"
-                        (click)="submitEmail(emailForm)" [raised]="true" severity="success" class="ml-3" />
+                        (click)="submitLdap(ldapForm)" [raised]="true" severity="warning" />
+                    <p-button label="Test" icon="pi pi-sync" [disabled]="!emailForm.valid" [loading]="loadingTest"
+                        (click)="testLdapConfig()" [raised]="true" severity="success" class="ml-3" />
                 </div>
             </div>
         </div>
