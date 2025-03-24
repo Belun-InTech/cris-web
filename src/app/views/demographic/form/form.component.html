@@ -169,6 +169,11 @@
                     <label for="float-label">Select a City</label>
                 </p-floatLabel>
                 <p-floatLabel>
+                    <p-dropdown inputId="float-label" [options]="maritalStatusList" formControlName="maritalStatus"
+                        optionLabel="name" [showClear]="true" />
+                    <label for="float-label">Select a Marital Status</label>
+                </p-floatLabel>
+                <p-floatLabel>
                     <p-dropdown inputId="float-label" [options]="institutionList" formControlName="employmentHistory"
                         optionLabel="name" [showClear]="true" />
                     <label for="float-label">Select the Company</label>

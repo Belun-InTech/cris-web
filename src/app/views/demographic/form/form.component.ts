@@ -62,6 +62,7 @@ export class FormComponent {
       address: ['', Validators.required],
       birthDate: ['', Validators.required],
       city: [undefined, Validators.required],
+      maritalStatus: [undefined, Validators.required],
       employmentHistory: [undefined],
       phoneNumber: ['', [Validators.required, Validators.minLength(3)]],
       useGuarantee: [undefined, Validators.required],
@@ -122,9 +123,15 @@ export class FormComponent {
       id: form.city.id,
       name: form.city.name,
     }
+    
     form.employmentHistory = {
       id: form.employmentHistory.id,
       name: form.employmentHistory.name,
+    }
+
+    form.maritalStatus = {
+      id: form.maritalStatus.id,
+      name: form.maritalStatus.name,
     }
 
     const birthDate = new Date(form.birthDate);
@@ -135,10 +142,6 @@ export class FormComponent {
       this.businessForm.get('birthDate')?.setValue(birthDate);
     } else {
       this.entityType.setValue(BeneficiaryType.individual.toLowerCase());
-      form.maritalStatus = {
-        id: form.maritalStatus.id,
-        name: form.maritalStatus.name,
-      }
       this.personForm.patchValue(form);
       this.personForm.get('birthDate')?.setValue(birthDate);
     }
