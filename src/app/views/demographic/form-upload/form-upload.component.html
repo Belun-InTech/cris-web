@@ -3,6 +3,12 @@
         <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
             <div class="grid">
                 <div class="col-12">
+                    <p-button severity="info" (onClick)="generateDemographicTemplate()"
+                        icon="pi pi-download" label="Demo Template" />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-12">
 
                     <p-accordion (activeIndexChange)="activeIndexChange($event)" [activeIndex]="activeTab">
                         <!-- Upload File tab -->

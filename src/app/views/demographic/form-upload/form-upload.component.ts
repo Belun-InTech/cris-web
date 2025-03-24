@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
-import { DemographicExcel, Guarantee } from 'src/app/core/models/data';
+import { DemographicExcel } from 'src/app/core/models/data';
 import { City, Institution, MaritalStatus } from 'src/app/core/models/data-master';
-import { BeneficiaryType } from 'src/app/core/models/enum';
 import { DemographicService } from 'src/app/core/services';
-import { read, utils } from "xlsx";
+import { read, utils, writeFile } from "xlsx";
 
 @Component({
   selector: 'app-form-upload',
@@ -489,6 +488,36 @@ export class FormUploadComponent {
    */
   activeIndexChange(index: number) {
     this.activeTab = index
+  }
+
+  generateDemographicTemplate() {
+    // Define the header row
+    const header = [
+      "Name", "ElectNo", "Beneficiary", "DOB", "Gender", "MStatus",
+      "SpouseName", "City", "Address", "EmpHist", "Telephone",
+      "Guarantee Name", "ElectNo (Guarantee)", "DOB (Guarantee)",
+      "City (Guarantee)", "EmpHist (Guarantee)"
+    ];
+
+    // Define one row of mock data
+    const mockRow = [
+      "Jose da Costa", "654321", "Company/Individual", "1990-01-01", "Male/Female", "Single/Married/Divorced",
+      "N/A", "Dili", "Nu'u Laran", "Timor Telecom", "77003245",
+      "Felizberto dos Santos", "78901942", "1980-05-05", "Dili", "Telemor"
+    ];
+
+    // Combine header and data rows into a 2D array
+    const data = [header, mockRow];
+
+    // Create a worksheet from the data array
+    const worksheet = utils.aoa_to_sheet(data);
+
+    // Create a new workbook and append the worksheet
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Demographic Template");
+
+    // Write the workbook to a file
+    writeFile(workbook, "Demographic_Template.xlsx");
   }
 
   /**

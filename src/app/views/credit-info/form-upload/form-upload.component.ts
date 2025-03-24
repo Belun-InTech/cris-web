@@ -5,7 +5,7 @@ import { CreditExcel } from 'src/app/core/models/data';
 import { CreditClassification, Institution, MannerPayment, Sector, TypeCollateral } from 'src/app/core/models/data-master';
 import { AuthenticationService } from 'src/app/core/services';
 import { CreditService } from 'src/app/core/services/credit.service';
-import { read, utils } from "xlsx";
+import { read, utils, writeFile } from "xlsx";
 
 @Component({
   selector: 'app-form-upload',
@@ -328,6 +328,38 @@ export class FormUploadComponent {
       }
     });
   }
+
+  generateCreditInfoTemplate() {
+    // Define the header row
+    const header = [
+      "NameCreditGrantor", "ElectNo", "DateAcctOpened", "DueDate",
+      "OrgBal", "MonthlyPaymt", "DateLastPaymt", "Balance",
+      "CreditbySector", "MannerofPaymt", "Security", "DescofCollateral",
+      "AssetClass"
+    ];
+
+    // Define one row of mock data
+    const mockRow = [
+      "John Doe", "123456", "2025-01-01", "2025-12-31",
+      "1000", "100", "2025-03-01", "900",
+      "1", "Overdraft", "Salary", "Description A",
+      "Standard"
+    ];
+
+    // Combine header and data rows into a 2D array
+    const data = [header, mockRow];
+
+    // Create a worksheet from the data array
+    const worksheet = utils.aoa_to_sheet(data);
+
+    // Create a new workbook and append the worksheet
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Credit Info Template");
+
+    // Write the workbook to a file
+    writeFile(workbook, "CreditInfo_Template.xlsx");
+  }
+
 
   /**
    * Removes a specified item from the jsonData array and displays a success message.
