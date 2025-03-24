@@ -1,39 +1,46 @@
 <div class="card">
+    <div class="grid" [formGroup]="dateTimeForm">
+        <div class="col-12 md:col-3">
+            <h4>
+                Authentication Log
+            </h4>
+        </div>
+        <div class="col-12 md:col-9 md:flex md:justify-content-end">
+            <div>
+                <p-floatLabel>
+                    <p-calendar formControlName="rangeDateTime" selectionMode="range" dateFormat="dd/mm/yy"
+                        inputId="rangeDateTime" class="w-full" />
+                    <label for="rangeDateTime">Filter by Range Date</label>
+                </p-floatLabel>
+            </div>
+        </div>
+    </div>
     <div class="grid">
         <div class="col-12">
             <p-table [value]="data" [tableStyle]="{'min-width': '50rem'}">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
                         <th>Timestamp</th>
-                        <th>Username</th>
-                        <th>Start time</th>
-                        <th>Duration</th>
-                    </tr>
-                    <tr>
-                        <th>
-                            <p-columnFilter type="date" field="date" placeholder="Search by Date"
-                                ariaLabel="Filter Date" />
-                        </th>
-                        <th>
-                            <p-columnFilter type="text" field="user" placeholder="Search by User"
-                                ariaLabel="Filter User" />
-                        </th>
-                        <th>
-                            <p-columnFilter type="date" field="startTime" placeholder="Search by Start Time"
-                                ariaLabel="Filter Start time" />
-                        </th>
-                        <th>
-                            <p-columnFilter type="numeric" field="startTime" placeholder="Search by Duration"
-                                ariaLabel="Filter Duration" />
-                        </th>
+                        <th>IP Address</th>
+                        <th>Outcome</th>
+                        <th>User</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product let-columns="columns">
+                <ng-template pTemplate="body" let-item let-columns="columns">
                     <tr>
                         <td>
-                            {{product.name}}
+                            {{item.timestamp |date:'dd MMM yyyy : HH:mm:ss'}}
                         </td>
                         <td>
+                            {{item.ipAddress}}
+                        </td>
+                        <td>
+                            <p-tag [value]="item.outcome" [severity]="getSeverity(item.outcome)" />
+                        </td>
+                        <td>
+                            {{item.username}}
+                        </td>
+                        <!-- <td>
                             {{product.price | currency:'USD'}}
                         </td>
                         <td>
@@ -48,7 +55,7 @@
                         </td>
                         <td>
                             <p-rating [(ngModel)]="product.rating" [readonly]="true" [cancel]="false" />
-                        </td>
+                        </td> -->
                     </tr>
                 </ng-template>
             </p-table>

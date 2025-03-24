@@ -144,7 +144,6 @@ export class FormUploadComponent {
 
       return newRow;
     });
-    console.log(this.jsonData);
   }
 
   /**

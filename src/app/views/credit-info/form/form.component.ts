@@ -75,7 +75,6 @@ export class FormComponent {
     // });
 
     this.creditData = this.route.snapshot.data['creditResolve']
-    console.log(this.creditData);
     if (this.creditData) {
       this.mapCreditToForm(this.creditData);
     }
@@ -107,8 +106,6 @@ export class FormComponent {
   }
 
   save(form: FormGroup) {
-    console.log(form.value);
-
     this.loading = true;
     this.service.save(form.value).subscribe({
       next: (response) => {

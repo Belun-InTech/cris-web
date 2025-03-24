@@ -48,8 +48,6 @@ export class FormUploadComponent {
     this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
     this.institutionList = this.mapToIdAndName(this.route.snapshot.data['institutionsListResolve']._embedded.institutions);
     this.maritalStatusList = this.mapToIdAndName(this.route.snapshot.data['maritalStatusListResolve']._embedded.maritalStatus);
-    console.log(this.institutionList);
-
   }
 
   /**
@@ -164,8 +162,6 @@ export class FormUploadComponent {
       }
       return newRow;
     });
-    console.log(this.jsonData);
-
   }
 
 
