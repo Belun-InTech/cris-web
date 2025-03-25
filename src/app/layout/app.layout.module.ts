@@ -18,6 +18,7 @@ import { AppMenuComponent } from './app.menu.component';
 import { AppMenuitemComponent } from './app.menuitem.component';
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppTopBarComponent } from './app.topbar.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
     declarations: [
@@ -42,6 +43,7 @@ import { AppTopBarComponent } from './app.topbar.component';
         RouterModule,
         ScrollTopModule,
         MenuModule,
+        NgxSpinnerModule,
     ],
     exports: [AppLayoutComponent]
 })

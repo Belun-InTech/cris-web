@@ -1,9 +1,10 @@
 import { Component, OnDestroy, Renderer2, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { LayoutService } from "./service/app.layout.service";
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppTopBarComponent } from './app.topbar.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-layout',
@@ -21,7 +22,9 @@ export class AppLayoutComponent implements OnDestroy {
 
     @ViewChild(AppTopBarComponent) appTopbar!: AppTopBarComponent;
 
-    constructor(public layoutService: LayoutService, public renderer: Renderer2, public router: Router) {
+    logo: string = `<img src="/assets/layout/images/bctl-logo.png" alt="logo">`;
+
+    constructor(public layoutService: LayoutService, public renderer: Renderer2, public router: Router, private spinner: NgxSpinnerService) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
@@ -55,7 +58,32 @@ export class AppLayoutComponent implements OnDestroy {
                 this.hideMenu();
                 this.hideProfileMenu();
             });
+
+
     }
+
+    ngOnInit(): void {
+        this.router.events.subscribe((event: Event) => {
+
+            switch (true) {
+                case event instanceof NavigationStart: {
+                    this.spinner.show();
+                    break;
+                }
+
+                case event instanceof NavigationEnd:
+                case event instanceof NavigationCancel:
+                case event instanceof NavigationError: {
+                    this.spinner.hide();
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        });
+    }
+
 
     hideMenu() {
         this.layoutService.state.overlayMenuActive = false;

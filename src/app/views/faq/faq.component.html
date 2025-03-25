@@ -1,46 +1,40 @@
-<h4>
-    Frequently Asked Questions
-</h4>
-<p-accordion [activeIndex]="0">
-    @for (item of dataList; track $index) {
-    @if ($index === 5) {
-        <h5>
-            Operations Of CRIS
-        </h5>
-    }
-    @if ($index === 8) {
-        <h5>
-            Type of Information Held By CRIS
-        </h5>
-    }
-    @if ($index === 12) {
-        <h5>
-            Access To CRIS Information
-        </h5>
-    }
-    @if ($index === 15) {
-        <h5>
-            Lending Decisions
-        </h5>
-    }
-    @if ($index === 19) {
-        <h5>
-            Rectifying Inaccurate Information In Your Credit Report
-        </h5>
-    }
-    <p-accordionTab [header]="($index+1) +'. '+ item.question" iconPos="end">
-        <div [innerHTML]="item.answer"></div>
-    </p-accordionTab>
-    }
+<div class="grid fadein animation-duration-1000">
+    <div class="col-12">
+        <h4>
+            Frequently Asked Questions
+        </h4>
+        <p-accordion [activeIndex]="0">
+            @for (item of dataList; track $index) {
+            @if ($index === 5) {
+            <h5>
+                Operations Of CRIS
+            </h5>
+            }
+            @if ($index === 8) {
+            <h5>
+                Type of Information Held By CRIS
+            </h5>
+            }
+            @if ($index === 12) {
+            <h5>
+                Access To CRIS Information
+            </h5>
+            }
+            @if ($index === 15) {
+            <h5>
+                Lending Decisions
+            </h5>
+            }
+            @if ($index === 19) {
+            <h5>
+                Rectifying Inaccurate Information In Your Credit Report
+            </h5>
+            }
+            <p-accordionTab [header]="($index+1) +'. '+ item.question" iconPos="end">
+                <div [innerHTML]="item.answer"></div>
+            </p-accordionTab>
+            }
+        </p-accordion>
 
-    <!-- <p-accordionTab header="Header II">
-        <p>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium...
-        </p>
-    </p-accordionTab>
-    <p-accordionTab header="Header III">
-        <p>
-            At vero eos et accusamus et iusto odio dignissimos...
-        </p>
-    </p-accordionTab> -->
-</p-accordion>
+    </div>
+</div>
