@@ -173,7 +173,7 @@ export class DataMasterComponent {
     this.messageService.clear();
     this.buttonLoading = true;
 
-    this.service.update(this.selectedData._links.self.href, form.value).subscribe({
+    this.service.update(this.selectedData.id, this.type, form.value).subscribe({
       next: response => {
         this.dataList[this.selectedData.index] = response
         this.setNotification(true, false);

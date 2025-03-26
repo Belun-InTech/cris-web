@@ -26,8 +26,8 @@ export class DataMasterService {
    * @returns An observable of the server response.
    */
 
-  update(url: string, form: any): Observable<any> {
-    return this.http.put<any>(url, form).pipe(take(1));
+  update(id: number, type: string, form: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${type}/${id}`, form).pipe(take(1));
   }
 
   //#region Bank 
@@ -196,7 +196,7 @@ export class DataMasterService {
   }
   //#endregion Marital Status
 
-  
+
   //region Manner of Payment
 
   /**
