@@ -9,6 +9,7 @@ import { TagModule } from 'primeng/tag';
 import { ActivitiesComponent } from './activities/activities.component';
 import { AuditRoutingModule } from './audit-routing.module';
 import { AuthenticationComponent } from './authentication/authentication.component';
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { AuthenticationComponent } from './authentication/authentication.compone
     TableModule,
     CalendarModule,
     TagModule,
+    PaginatorModule,
   ]
 })
 export class AuditModule { }

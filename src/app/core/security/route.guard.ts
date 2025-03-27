@@ -9,7 +9,7 @@ export const authenticationCanActivate: CanActivateFn = () => {
     const authService = inject(AuthenticationService);
     const location = inject(Location);
     const admin = authService.currentUserValue;
-    
+
     if (admin) {
         return true;
     } else {
@@ -68,7 +68,7 @@ export const validateGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     const router = inject(Router);
     const otp = otpService.isSessionActive();
     const username = route.queryParamMap.get('u');
-    
+
     if (otp && username) {
         return of(true);
     } else {
@@ -87,25 +87,63 @@ export const validateGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
  * @returns A boolean indicating whether the query parameters are valid. If invalid,
  *          navigates to the current URL with sanitized query parameters and returns false.
  */
-
 export const canActivateQueryParams: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const router = inject(Router);
 
     const page = route.queryParamMap.get('page');
     const size = route.queryParamMap.get('size');
+    const startDateTime = route.queryParamMap.get('startDateTime');
+    const endDateTime = route.queryParamMap.get('endDateTime');
 
-    const MAX_SIZE = 300;
-    const isValidNumber = (value: string | null): boolean => /^\d+$/.test(value ?? '');
+    const validatePagination = (page: string | null, size: string | null) => {
+        const MAX_SIZE = 300;
+        const isValidNumber = (value: string | null): boolean => /^\d+$/.test(value ?? '');
+        const toInteger = (value: string | null, defaultValue: number): number =>
+            isValidNumber(value) ? Math.min(parseInt(value!, 10), MAX_SIZE) : defaultValue;
 
-    const toInteger = (value: string | null, defaultValue: number): number =>
-        isValidNumber(value) ? Math.min(parseInt(value!, 10), MAX_SIZE) : defaultValue;
+        const safePage = toInteger(page, 0);
+        const safeSize = toInteger(size, 50);
+        const isValid = safePage.toString() === page && safeSize.toString() === size;
 
-    const safePage = toInteger(page, 0);
-    const safeSize = toInteger(size, 50);
-    if (safePage.toString() !== page || safeSize.toString() !== size) {
+        return { isValid, safePage, safeSize };
+    };
+
+    const validateDateRange = (start: string | null, end: string | null) => {
+        const isValidIsoDate = (value: string | null): boolean => {
+            if (!value) return false;
+            const date = new Date(value);
+            return !isNaN(date.getTime()) && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(value);
+        };
+
+        const defaultStart = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
+        const defaultEnd = new Date(); // now
+
+        const safeStart = isValidIsoDate(start) ? new Date(start!) : defaultStart;
+        const safeEnd = isValidIsoDate(end) ? new Date(end!) : defaultEnd;
+
+        const isValid = safeStart <= safeEnd;
+
+        return {
+            isValid,
+            safeStart,
+            safeEnd,
+            safeStartString: safeStart.toISOString(),
+            safeEndString: safeEnd.toISOString()
+        };
+    };
+
+    const pagination = validatePagination(page, size);
+    const dateRange = validateDateRange(startDateTime, endDateTime);
+
+    if (!pagination.isValid || !dateRange.isValid) {
         router.navigate([state.url], {
-            queryParams: { page: page ?? 0, size: size ?? 50 },
-            queryParamsHandling: 'merge' // Keeps other existing query params
+            queryParams: {
+                page: pagination.safePage,
+                size: pagination.safeSize,
+                sdt: dateRange.safeStartString,
+                edt: dateRange.safeEndString
+            },
+            queryParamsHandling: 'merge'
         });
         return false;
     }

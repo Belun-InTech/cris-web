@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ActivitiesComponent } from './activities/activities.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { getAllActivities, getLoginActivities } from 'src/app/core/resolvers/audit.resolver';
+import { canActivateQueryParams } from 'src/app/core/security/route.guard';
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
   {
     path: 'authentication',
     component: AuthenticationComponent,
+    canActivate: [canActivateQueryParams],
     resolve: {
       loginActivitiesResolve: getLoginActivities
     }

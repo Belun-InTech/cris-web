@@ -44,33 +44,29 @@ export class AuditService {
     }
   }
 
-  public getLoginActivities(startDateTime?: Date, endDateTime?: Date): Observable<any> {
-    if (startDateTime && endDateTime) {
-      const formattedStart = formatDate(startDateTime, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
-      const formattedEnd = formatDate(endDateTime, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
+  public getLoginActivities(startDateTime: Date, endDateTime: Date, page = 0, size = 50): Observable<any> {
+    const formattedStart = formatDate(startDateTime, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
+    const formattedEnd = formatDate(endDateTime, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
 
-      let params = new HttpParams();
-      params = params.set('startDateTime', formattedStart)
-      params = params.set('endDateTime', formattedEnd);
+    let params = new HttpParams();
+    params = params.set('startDateTime', formattedStart)
+    params = params.set('endDateTime', formattedEnd);
+    params = params.set('page', page);
+    params = params.set('size', size);
 
-      return this.http.get(`${this.apiUrl}/login`, { params }).pipe(take(1));
-    } else {
-      return this.http.get(`${this.apiUrl}/login`).pipe(take(1));
-    }
+    return this.http.get(`${this.apiUrl}/login`, { params }).pipe(take(1));
   }
 
-  public getLoginActivitiesByUsername(username: string, startDateTime?: Date, endDateTime?: Date): Observable<any> {
-    if (startDateTime && endDateTime) {
-      const formattedStart = formatDate(startDateTime, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
-      const formattedEnd = formatDate(endDateTime, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
+  public getLoginActivitiesByUsername(username: string, startDateTime: Date, endDateTime: Date, page = 0, size = 50): Observable<any> {
+    const formattedStart = formatDate(startDateTime, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
+    const formattedEnd = formatDate(endDateTime, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
 
-      let params = new HttpParams();
-      params = params.set('startDateTime', formattedStart)
-      params = params.set('endDateTime', formattedEnd);
+    let params = new HttpParams();
+    params = params.set('startDateTime', formattedStart)
+    params = params.set('endDateTime', formattedEnd);
+    params = params.set('page', page);
+    params = params.set('size', size);
 
-      return this.http.get(`${this.apiUrl}/login/${username}`, { params }).pipe(take(1));
-    } else {
-      return this.http.get(`${this.apiUrl}/login/${username}`).pipe(take(1));
-    }
+    return this.http.get(`${this.apiUrl}/login/${username}`, { params }).pipe(take(1));
   }
 }
