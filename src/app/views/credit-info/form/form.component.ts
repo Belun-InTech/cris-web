@@ -144,8 +144,9 @@ export class FormComponent {
   save(form: FormGroup) {
     this.loading = true;
     let formData = form.value;
+
+    formData.accountCreationDate = this.formatDate(formData.accountCreationDate);
     formData.dueDate = this.formatDate(formData.dueDate);
-    formData.monthlyPayment = this.formatDate(formData.monthlyPayment);
     formData.lastPaymentDate = this.formatDate(formData.lastPaymentDate);
 
     this.service.save(formData).subscribe({
