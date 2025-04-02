@@ -5,7 +5,7 @@ import { getCreditByIdResolver, getPageCreditResolver } from 'src/app/core/resol
 import { canActivateByRole, canActivateQueryParams } from 'src/app/core/security/route.guard';
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
-import { getCreditClassificationListResolver, getFinancialInstitutionListResolver, getMannerOfPaymentResolver, getSectorListResolver, getTypeCollateralListResolver } from 'src/app/core/resolvers/data-master.resolver';
+import { getCityResolver, getCreditClassificationListResolver, getFinancialInstitutionListResolver, getInstitutionResolver, getMannerOfPaymentResolver, getSectorListResolver, getTypeCollateralListResolver } from 'src/app/core/resolvers/data-master.resolver';
 import { FormUploadComponent } from './form-upload/form-upload.component';
 
 const routes: Routes = [
@@ -29,6 +29,8 @@ const routes: Routes = [
       mannerListResolve: getMannerOfPaymentResolver,
       typeCollateralListResolve: getTypeCollateralListResolver,
       creditClassificationListResolve: getCreditClassificationListResolver,
+      citiesListResolve: getCityResolver,
+      institutionsListResolve: getInstitutionResolver,
     },
   },
   {
@@ -40,6 +42,8 @@ const routes: Routes = [
       mannerListResolve: getMannerOfPaymentResolver,
       typeCollateralListResolve: getTypeCollateralListResolver,
       creditClassificationListResolve: getCreditClassificationListResolver,
+      citiesListResolve: getCityResolver,
+      institutionsListResolve: getInstitutionResolver,
     }
   },
   {
@@ -52,6 +56,8 @@ const routes: Routes = [
       mannerListResolve: getMannerOfPaymentResolver,
       typeCollateralListResolve: getTypeCollateralListResolver,
       creditClassificationListResolve: getCreditClassificationListResolver,
+      citiesListResolve: getCityResolver,
+      institutionsListResolve: getInstitutionResolver,
     },
   }
 ];

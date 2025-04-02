@@ -50,7 +50,6 @@ export class FormComponent {
       spouseName: [''],
       employmentHistory: [undefined],
       phoneNumber: ['', [Validators.required, , Validators.minLength(3)]],
-      useGuarantee: [undefined, Validators.required],
     });
 
     this.businessForm = this._fb.group({
@@ -65,7 +64,6 @@ export class FormComponent {
       maritalStatus: [undefined, Validators.required],
       employmentHistory: [undefined],
       phoneNumber: ['', [Validators.required, Validators.minLength(3)]],
-      useGuarantee: [undefined, Validators.required],
     });
 
     this.demoData = this.route.snapshot.data['demoData'];
@@ -94,22 +92,6 @@ export class FormComponent {
         this.businessForm.patchValue(this.demoData);
       });
     }
-
-    this.personForm.get('useGuarantee').valueChanges.subscribe(value => {
-      if (value) {
-        this.personForm.addControl('guarantee', this.createGuaranteeForm());
-      } else {
-        this.personForm.removeControl('guarantee');
-      }
-    });
-
-    this.businessForm.get('useGuarantee').valueChanges.subscribe(value => {
-      if (value) {
-        this.businessForm.addControl('guarantee', this.createGuaranteeForm());
-      } else {
-        this.businessForm.removeControl('guarantee');
-      }
-    });
   }
 
   /**
@@ -145,43 +127,8 @@ export class FormComponent {
       this.personForm.patchValue(form);
       this.personForm.get('birthDate')?.setValue(birthDate);
     }
-
-    if (this.demoData.guarantee) {
-      this.mapGuarantee(form.guarantee, form.beneficiary.toLowerCase())
-    } else {
-      this.personForm.get('useGuarantee').setValue(false);
-      this.businessForm.get('useGuarantee').setValue(false);
-    }
   }
 
-
-  /**
-   * Maps the guarantee object from the backend to the form controls,
-   * and adds the guarantee form control to the person form if it is not already present.
-   * @param guarantee The guarantee object to be mapped.
-   */
-  mapGuarantee(guarantee: any, beneficiaryType: string) {
-    guarantee.city = {
-      id: this.demoData.guarantee.city.id,
-      name: this.demoData.guarantee.city.name,
-    }
-    guarantee.employmentHistory = {
-      id: this.demoData.guarantee.employmentHistory.id,
-      name: this.demoData.guarantee.employmentHistory.name,
-    }
-
-    guarantee.birthDate = new Date(guarantee.birthDate);
-
-    if (beneficiaryType.toLowerCase() === BeneficiaryType.company.toLowerCase()) {
-      this.businessForm.get('useGuarantee').setValue(true);
-      this.businessForm.addControl('guarantee', this.createGuaranteeForm());
-      this.businessForm.get('guarantee').patchValue(guarantee);
-    } else {
-      this.personForm.get('useGuarantee').setValue(true);
-      this.personForm.addControl('guarantee', this.createGuaranteeForm());
-      this.personForm.get('guarantee').patchValue(guarantee);
-    }
-  }
 
   /**
    * Saves a demographic to the server.
@@ -203,12 +150,6 @@ export class FormComponent {
 
       // Convert birthDate to 'yyyy-MM-dd' format
       formData.birthDate = new Date(formData.birthDate).toISOString().split('T')[0]; // Extracts 'yyyy-MM-dd'
-
-      // For Guarantee
-      // if (formData.type === EntityType.person.toUpperCase()) {
-      //   formData.guarantee.birthDate = new Date(formData.guarantee.birthDate).toISOString().split('T')[0];
-      // }
-
 
       this.demographicService.save(formData).subscribe({
         next: (response) => {
@@ -250,11 +191,6 @@ export class FormComponent {
     if (form.valid) {
       let formData = form.value;
       
-      if (!formData.useGuarantee) {
-        formData.guarantee = null;
-        
-      }
-
       this.demographicService.updateById(this.demoData.id, formData).subscribe({
         next: (response) => {
           this.setNotification(true, response);
@@ -273,17 +209,6 @@ export class FormComponent {
     } else {
       this.setNotification(false, null, 'Form is invalid');
     }
-  }
-
-  createGuaranteeForm() {
-    return this._fb.group({
-      id: [''],
-      fullName: ['', [Validators.required, Validators.minLength(3)]],
-      electoralNumber: ['', [Validators.required, Validators.minLength(1)]],
-      birthDate: ['', Validators.required],
-      city: [undefined, Validators.required],
-      employmentHistory: [undefined, Validators.required],
-    });
   }
 
   /**

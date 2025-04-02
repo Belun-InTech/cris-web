@@ -1,8 +1,9 @@
+import { formatDate } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
-import { CreditClassification, FinancialInstitution, MannerPayment, Sector, TypeCollateral } from 'src/app/core/models/data-master';
+import { City, CreditClassification, FinancialInstitution, Institution, MannerPayment, Sector, TypeCollateral } from 'src/app/core/models/data-master';
 import { AuthenticationService } from 'src/app/core/services';
 import { CreditService } from 'src/app/core/services/credit.service';
 
@@ -22,6 +23,8 @@ export class FormComponent {
   mannerList: MannerPayment[] = [];
   typeCollateralList: TypeCollateral[] = [];
   creditClassificationList: CreditClassification[] = [];
+  institutionList: Institution[] = [];
+  cityList: City[] = [];
 
   constructor(
     private messageService: MessageService,
@@ -46,6 +49,7 @@ export class FormComponent {
       security: [undefined, Validators.required],
       descriptionSecurity: [''],
       assetClass: [undefined, Validators.required],
+      useGuarantee: [undefined, Validators.required],
     });
 
     this.financialInsititutionList = this.mapToIdAndName(this.route.snapshot.data['grantorListResolve']._embedded.financialInstitutions.filter(item => item.name.toLowerCase() !== 'internal'));
@@ -53,8 +57,10 @@ export class FormComponent {
     this.mannerList = this.mapToIdAndName(this.route.snapshot.data['mannerListResolve']._embedded.manners);
     this.typeCollateralList = this.mapToIdAndName(this.route.snapshot.data['typeCollateralListResolve']._embedded.typeCollateral);
     this.creditClassificationList = this.mapToIdAndName(this.route.snapshot.data['creditClassificationListResolve']._embedded.creditClassifications);
+    this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
+    this.institutionList = this.mapToIdAndName(this.route.snapshot.data['institutionsListResolve']._embedded.institutions);
 
-    // this.creditForm.setValue({
+    // this.creditForm.patchValue({
     //   id: null,
     //   idNumber: '123456789',
     //   grantor: { id: 2, name: 'Banco Nacional do Comercio de Timor-Leste', description: '' },
@@ -82,12 +88,18 @@ export class FormComponent {
   }
 
   ngOnInit() {
-
+    this.creditForm.get('useGuarantee').valueChanges.subscribe(value => {
+      if (value) {
+        this.creditForm.addControl('guarantee', this.createGuaranteeForm());
+      } else {
+        this.creditForm.removeControl('guarantee');
+      }
+    });
   }
 
   mapCreditToForm(credit: any) {
     this.isNew = false;
-    this.creditForm.setValue({
+    this.creditForm.patchValue({
       id: credit.id,
       idNumber: credit.idNumber,
       grantor: { id: credit.grantor.id, name: credit.grantor.name },
@@ -103,11 +115,40 @@ export class FormComponent {
       descriptionSecurity: credit.descriptionSecurity,
       assetClass: { id: credit.assetClass.id, name: credit.assetClass.name }
     });
+
+    if (credit.guarantee) {
+      this.mapGuarantee(credit.guarantee);
+    } else {
+      this.creditForm.get('useGuarantee').setValue(false);
+    }
+  }
+
+  mapGuarantee(guarantee: any) {
+    guarantee.city = {
+      id: this.creditData.guarantee.city.id,
+      name: this.creditData.guarantee.city.name,
+    }
+    guarantee.employmentHistory = {
+      id: this.creditData.guarantee.employmentHistory.id,
+      name: this.creditData.guarantee.employmentHistory.name,
+    }
+
+    guarantee.birthDate = new Date(guarantee.birthDate);
+
+    this.creditForm.get('useGuarantee').setValue(true);
+    this.creditForm.addControl('guarantee', this.createGuaranteeForm());
+    this.creditForm.get('guarantee').patchValue(guarantee);
+
   }
 
   save(form: FormGroup) {
     this.loading = true;
-    this.service.save(form.value).subscribe({
+    let formData = form.value;
+    formData.dueDate = this.formatDate(formData.dueDate);
+    formData.monthlyPayment = this.formatDate(formData.monthlyPayment);
+    formData.lastPaymentDate = this.formatDate(formData.lastPaymentDate);
+
+    this.service.save(formData).subscribe({
       next: (response) => {
         this.creditForm.reset();
         this.setNotification(true, response);
@@ -128,7 +169,18 @@ export class FormComponent {
 
   update(form: FormGroup) {
     this.loading = true;
-    this.service.updateById(this.creditData.id, form.value).subscribe({
+
+    let formData = form.value;
+
+    if (!formData.useGuarantee) {
+      formData.guarantee = null;
+    }
+
+    formData.accountCreationDate = this.formatDate(formData.accountCreationDate);
+    formData.dueDate = this.formatDate(formData.dueDate);
+    formData.lastPaymentDate = this.formatDate(formData.lastPaymentDate);
+
+    this.service.updateById(this.creditData.id, formData).subscribe({
       next: (response) => {
         this.setNotification(true, response);
       },
@@ -143,6 +195,17 @@ export class FormComponent {
           this.redirectBack();
         }, 3000)
       }
+    });
+  }
+
+  createGuaranteeForm() {
+    return this._fb.group({
+      id: [''],
+      fullName: ['', [Validators.required, Validators.minLength(3)]],
+      electoralNumber: ['', [Validators.required, Validators.minLength(1)]],
+      birthDate: ['', Validators.required],
+      city: [undefined, Validators.required],
+      employmentHistory: [undefined, Validators.required],
     });
   }
 
@@ -180,5 +243,9 @@ export class FormComponent {
         name: item.name
       };
     });
+  }
+
+  private formatDate(date: Date): string {
+    return formatDate(date, 'yyyy-MM-dd', 'en-US');
   }
 }

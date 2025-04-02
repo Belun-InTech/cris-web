@@ -92,33 +92,6 @@
     </p-fieldset>
 </div>
 
-@if(demoData.guarantee) {
-<!-- Card Guarantee -->
-<p-fieldset legend="Guarantee" [toggleable]="true">
-    <div class="grid">
-        <div class="col-3">
-            <h6>Name</h6>
-            <h6>Electoral Nº</h6>
-            <h6>Date of Birth</h6>
-            <h6>City</h6>
-            <h6>Employment History</h6>
-        </div>
-        <div class="col-6">
-            <h6>{{demoData.guarantee.fullName}}</h6>
-            <h6>{{demoData.guarantee.electoralNumber}}</h6>
-            <h6>
-                {{demoData.guarantee.birthDate |date:'dd MMM yyyy'}}
-            </h6>
-            <h6>
-                {{demoData.guarantee.city.name}}
-            </h6>
-            <h6>
-                {{demoData.guarantee.employmentHistory.name}}
-            </h6>
-        </div>
-    </div>
-</p-fieldset>
-}
 @if (demoData.credits.length > 0) {
 <p-fieldset legend="Credits" [toggleable]="true">
     <ul class="list-decimal">
@@ -184,6 +157,32 @@
                     </h6>
                 </div>
             </div>
+            @if(item.guarantee) {
+            <p-fieldset legend="Guarantee" [toggleable]="true">
+                <div class="grid">
+                    <div class="col-3">
+                        <h6>Name</h6>
+                        <h6>Electoral Nº</h6>
+                        <h6>Date of Birth</h6>
+                        <h6>City</h6>
+                        <h6>Employment History</h6>
+                    </div>
+                    <div class="col-6">
+                        <h6>{{item.guarantee.fullName}}</h6>
+                        <h6>{{item.guarantee.electoralNumber}}</h6>
+                        <h6>
+                            {{item.guarantee.birthDate |date:'dd MMM yyyy'}}
+                        </h6>
+                        <h6>
+                            {{item.guarantee.city.name}}
+                        </h6>
+                        <h6>
+                            {{item.guarantee.employmentHistory.name}}
+                        </h6>
+                    </div>
+                </div>
+            </p-fieldset>
+            }
         </li>
         }
     </ul>

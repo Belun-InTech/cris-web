@@ -102,22 +102,22 @@ export class FormUploadComponent {
       if (row) {
         let guarantee = undefined;
 
-        // Check if Guarantee exist
-        if (row['Guarantee Name']) {
-          guarantee = {
-            fullName: row['Guarantee Name'],
-            electoralNumber: row['ElectNo (Guarantee)'],
-            birthDate: row['DOB (Guarantee)'],
-            city: {
-              id: undefined,
-              name: row['City (Guarantee)'],
-            },
-            employmentHistory: {
-              id: undefined,
-              name: row['EmpHist (Guarantee)'],
-            }
-          }
-        }
+        // // Check if Guarantee exist
+        // if (row['Guarantee Name']) {
+        //   guarantee = {
+        //     fullName: row['Guarantee Name'],
+        //     electoralNumber: row['ElectNo (Guarantee)'],
+        //     birthDate: row['DOB (Guarantee)'],
+        //     city: {
+        //       id: undefined,
+        //       name: row['City (Guarantee)'],
+        //     },
+        //     employmentHistory: {
+        //       id: undefined,
+        //       name: row['EmpHist (Guarantee)'],
+        //     }
+        //   }
+        // }
 
         newRow = {
           id: undefined,
@@ -142,7 +142,6 @@ export class FormUploadComponent {
           },
           phoneNumber: row['Telephone'],
           valid: true,
-          guarantee: guarantee
         };
       }
       this.validateDemographicAttributes(newRow, index);
@@ -156,9 +155,9 @@ export class FormUploadComponent {
 
       this.mappingDataFromDB(newRow, index);
 
-      if (newRow.guarantee) {
-        this.mappingGuaranteeDataFromDB(newRow, index);
-      }
+      // if (newRow.guarantee) {
+      //   this.mappingGuaranteeDataFromDB(newRow, index);
+      // }
       return newRow;
     });
   }
@@ -201,20 +200,20 @@ export class FormUploadComponent {
       errors.push("Phone Number is required.");
     }
 
-    if (row.guarantee) {
-      if (!row.guarantee.electoralNumber || row.guarantee.electoralNumber.toString().length < 1) {
-        errors.push("Guarantee Electoral number is required.");
-      }
-      if (!row.guarantee.birthDate) {
-        errors.push("Guarantee Birth Date is required.");
-      }
-      if (!row.guarantee.city.name) {
-        errors.push("Guarantee City is required.");
-      }
-      if (!row.guarantee.employmentHistory.name) {
-        errors.push("Guarantee Employment History is required.");
-      }
-    }
+    // if (row.guarantee) {
+    //   if (!row.guarantee.electoralNumber || row.guarantee.electoralNumber.toString().length < 1) {
+    //     errors.push("Guarantee Electoral number is required.");
+    //   }
+    //   if (!row.guarantee.birthDate) {
+    //     errors.push("Guarantee Birth Date is required.");
+    //   }
+    //   if (!row.guarantee.city.name) {
+    //     errors.push("Guarantee City is required.");
+    //   }
+    //   if (!row.guarantee.employmentHistory.name) {
+    //     errors.push("Guarantee Employment History is required.");
+    //   }
+    // }
 
     if (errors.length > 0) {
       this.messageService.add({
@@ -276,40 +275,40 @@ export class FormUploadComponent {
 
   }
 
-  /**
-   * Maps the guarantee data from the database for the given DemographicExcel object
-   * @param obj The DemographicExcel object to map the guarantee data for
-   * @param index The index of the object in the array
-   */
-  mappingGuaranteeDataFromDB(obj: DemographicExcel, index: number) {
-    let errors: string[] = [];
+  // /**
+  //  * Maps the guarantee data from the database for the given DemographicExcel object
+  //  * @param obj The DemographicExcel object to map the guarantee data for
+  //  * @param index The index of the object in the array
+  //  */
+  // mappingGuaranteeDataFromDB(obj: DemographicExcel, index: number) {
+  //   let errors: string[] = [];
 
-    const city = this.cityList.find((city) => city.name.toLowerCase() === obj.guarantee.city.name.toLowerCase());
-    const employmentHistory = this.institutionList.find((institution) => institution.name.toLowerCase() === obj.guarantee.employmentHistory.name.toLowerCase());
+  //   const city = this.cityList.find((city) => city.name.toLowerCase() === obj.guarantee.city.name.toLowerCase());
+  //   const employmentHistory = this.institutionList.find((institution) => institution.name.toLowerCase() === obj.guarantee.employmentHistory.name.toLowerCase());
 
-    if (city === undefined) {
-      errors.push("City is not found (Guarantee)");
-    } else {
-      obj.guarantee.city.id = city.id;
-    }
+  //   if (city === undefined) {
+  //     errors.push("City is not found (Guarantee)");
+  //   } else {
+  //     obj.guarantee.city.id = city.id;
+  //   }
 
-    if (employmentHistory === undefined) {
-      errors.push("Employment History is not found (Guarantee)");
-    } else {
-      obj.guarantee.employmentHistory.id = employmentHistory.id;
-    }
+  //   if (employmentHistory === undefined) {
+  //     errors.push("Employment History is not found (Guarantee)");
+  //   } else {
+  //     obj.guarantee.employmentHistory.id = employmentHistory.id;
+  //   }
 
-    if (errors.length > 0) {
-      this.messageService.add({
-        severity: 'error',
-        summary: `Row ${index + 1}: Invalid Data`,
-        detail: errors.join(" "),
-      });
-      obj.valid = false;
-      this.isAttributesValid = false;
-    }
+  //   if (errors.length > 0) {
+  //     this.messageService.add({
+  //       severity: 'error',
+  //       summary: `Row ${index + 1}: Invalid Data`,
+  //       detail: errors.join(" "),
+  //     });
+  //     obj.valid = false;
+  //     this.isAttributesValid = false;
+  //   }
 
-  }
+  // }
 
   /**
    * Converts a given number of bytes into a human-readable format.

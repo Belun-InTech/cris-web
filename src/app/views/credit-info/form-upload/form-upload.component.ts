@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { CreditExcel } from 'src/app/core/models/data';
-import { CreditClassification, Institution, MannerPayment, Sector, TypeCollateral } from 'src/app/core/models/data-master';
+import { City, CreditClassification, Institution, MannerPayment, Sector, TypeCollateral } from 'src/app/core/models/data-master';
 import { AuthenticationService } from 'src/app/core/services';
 import { CreditService } from 'src/app/core/services/credit.service';
 import { read, utils, writeFile } from "xlsx";
@@ -28,6 +28,8 @@ export class FormUploadComponent {
   typeCollateralList: TypeCollateral[] = [];
   descriptionSecurity: string;
   creditClassificationList: CreditClassification[] = [];
+  cityList: City[] = [];
+  institutionList: Institution[] = [];
 
   disabledTab = true;
   isJsonDataChecked = false;
@@ -51,6 +53,9 @@ export class FormUploadComponent {
     this.mannerList = this.mapToIdAndName(this.route.snapshot.data['mannerListResolve']._embedded.manners);
     this.typeCollateralList = this.mapToIdAndName(this.route.snapshot.data['typeCollateralListResolve']._embedded.typeCollateral);
     this.creditClassificationList = this.mapToIdAndName(this.route.snapshot.data['creditClassificationListResolve']._embedded.creditClassifications);
+    
+    this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
+    this.institutionList = this.mapToIdAndName(this.route.snapshot.data['institutionsListResolve']._embedded.institutions)
   }
 
   ngOnInit(): void {
@@ -100,6 +105,24 @@ export class FormUploadComponent {
       let newRow: CreditExcel;
 
       if (row) {
+        let guarantee = undefined
+        // Check if Guarantee exist
+        if (row['Guarantee Name']) {
+          guarantee = {
+            fullName: row['Guarantee Name'],
+            electoralNumber: row['ElectNo (Guarantee)'],
+            birthDate: row['DOB (Guarantee)'],
+            city: {
+              id: undefined,
+              name: row['City (Guarantee)'],
+            },
+            employmentHistory: {
+              id: undefined,
+              name: row['EmpHist (Guarantee)'],
+            }
+          }
+        }
+        
         newRow = {
           id: undefined,
           grantor: {
@@ -130,6 +153,7 @@ export class FormUploadComponent {
             id: undefined,
             name: row['AssetClass']
           },
+          guarantee: guarantee,
           valid: true
         }
       }
@@ -141,7 +165,9 @@ export class FormUploadComponent {
       newRow.lastPaymentDate = this.showDateValidationMessage(newRow.lastPaymentDate, index);
 
       this.mappingDataFromDB(newRow, index);
-
+      if (newRow.guarantee) {
+        this.mappingGuaranteeDataFromDB(newRow, index);
+      }
       return newRow;
     });
   }
@@ -195,6 +221,21 @@ export class FormUploadComponent {
     // }
     if (!row.assetClass.name) {
       errors.push("AssetClass is required");
+    }
+
+    if (row.guarantee) {
+      if (!row.guarantee.electoralNumber || row.guarantee.electoralNumber.toString().length < 1) {
+        errors.push("Guarantee Electoral number is required.");
+      }
+      if (!row.guarantee.birthDate) {
+        errors.push("Guarantee Birth Date is required.");
+      }
+      if (!row.guarantee.city.name) {
+        errors.push("Guarantee City is required.");
+      }
+      if (!row.guarantee.employmentHistory.name) {
+        errors.push("Guarantee Employment History is required.");
+      }
     }
 
     if (errors.length > 0) {
@@ -269,6 +310,41 @@ export class FormUploadComponent {
       obj.valid = false;
       this.isAttributesValid = false;
     }
+  }
+
+  /**
+   * Maps the guarantee data from the database for the given DemographicExcel object
+   * @param obj The DemographicExcel object to map the guarantee data for
+   * @param index The index of the object in the array
+   */
+  mappingGuaranteeDataFromDB(obj: CreditExcel, index: number) {
+    let errors: string[] = [];
+
+    const city = this.cityList.find((city) => city.name.toLowerCase() === obj.guarantee.city.name.toLowerCase());
+    const employmentHistory = this.institutionList.find((institution) => institution.name.toLowerCase() === obj.guarantee.employmentHistory.name.toLowerCase());
+    
+    if (city === undefined) {
+      errors.push("City is not found (Guarantee)");
+    } else {
+      obj.guarantee.city.id = city.id;
+    }
+
+    if (employmentHistory === undefined) {
+      errors.push("Employment History is not found (Guarantee)");
+    } else {
+      obj.guarantee.employmentHistory.id = employmentHistory.id;
+    }
+
+    if (errors.length > 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: `Row ${index + 1}: Invalid Data`,
+        detail: errors.join(" "),
+      });
+      obj.valid = false;
+      this.isAttributesValid = false;
+    }
+
   }
 
   /**

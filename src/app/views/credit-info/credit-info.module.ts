@@ -22,6 +22,7 @@ import { CreditInfoRoutingModule } from './credit-info-routing.module';
 import { FormUploadComponent } from './form-upload/form-upload.component';
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { ListComponent } from './list/list.component';
     StepperModule,
     AccordionModule,
     TabViewModule,
+    RadioButtonModule,
   ]
 })
 export class CreditInfoModule { }

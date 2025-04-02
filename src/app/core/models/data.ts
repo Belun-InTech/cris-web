@@ -14,7 +14,6 @@ export interface Demographic {
     address: string;
     employmentHistory: Institution;
     phoneNumber: string;
-    guarantee: Guarantee;
     credits: Credit[];
 }
 
@@ -47,7 +46,6 @@ export interface DemographicExcel {
     employmentHistory: Institution;
     phoneNumber: string;
     valid: boolean;
-    guarantee: Guarantee;
 }
 
 export interface Guarantee {
@@ -74,6 +72,7 @@ export interface Credit {
     security: TypeCollateral;
     descriptionSecurity: string;
     assetClass: CreditClassification;
+    guarantee: Guarantee;
 }
 
 export interface CreditPage {
@@ -102,6 +101,7 @@ export interface CreditExcel {
     descriptionSecurity: string;
     assetClass: CreditClassification;
     valid: boolean;
+    guarantee: Guarantee;
 }
 
 export interface EmailConfig {
