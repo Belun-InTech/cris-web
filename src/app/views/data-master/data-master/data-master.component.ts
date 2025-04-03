@@ -88,7 +88,6 @@ export class DataMasterComponent {
         break;
       case 'cities':
       case 'manners':
-      case 'institutions':
         this.dataList = this.route.snapshot.data[`${type}ListResolve`]._embedded[type];
         this.cols = [
           { field: 'name', header: 'Name' },

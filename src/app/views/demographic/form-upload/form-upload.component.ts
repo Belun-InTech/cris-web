@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { DemographicExcel } from 'src/app/core/models/data';
 import { City, Institution, MaritalStatus } from 'src/app/core/models/data-master';
+import { BeneficiaryType } from 'src/app/core/models/enum';
 import { DemographicService } from 'src/app/core/services';
 import { read, utils, writeFile } from "xlsx";
 
@@ -22,7 +23,6 @@ export class FormUploadComponent {
   activeTab = 0;
   isAttributesValid = true;
   cityList: City[] = [];
-  institutionList: Institution[] = [];
   maritalStatusList: MaritalStatus[] = [];
 
   disabledTab = true;
@@ -45,7 +45,6 @@ export class FormUploadComponent {
     this.columns = ['Name', 'Electoral Nº/Taxpayer ID (TIN)', 'Beneficiary', 'Date of Birth', 'Gender', 'City - Address', 'Employment History', 'Telephone Nº', 'Actions'];
 
     this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
-    this.institutionList = this.mapToIdAndName(this.route.snapshot.data['institutionsListResolve']._embedded.institutions);
     this.maritalStatusList = this.mapToIdAndName(this.route.snapshot.data['maritalStatusListResolve']._embedded.maritalStatus);
   }
 
@@ -100,24 +99,6 @@ export class FormUploadComponent {
     this.jsonData = data.map((row, index) => {
       let newRow: DemographicExcel;
       if (row) {
-        let guarantee = undefined;
-
-        // // Check if Guarantee exist
-        // if (row['Guarantee Name']) {
-        //   guarantee = {
-        //     fullName: row['Guarantee Name'],
-        //     electoralNumber: row['ElectNo (Guarantee)'],
-        //     birthDate: row['DOB (Guarantee)'],
-        //     city: {
-        //       id: undefined,
-        //       name: row['City (Guarantee)'],
-        //     },
-        //     employmentHistory: {
-        //       id: undefined,
-        //       name: row['EmpHist (Guarantee)'],
-        //     }
-        //   }
-        // }
 
         newRow = {
           id: undefined,
@@ -136,29 +117,38 @@ export class FormUploadComponent {
             name: row['City']
           },
           address: row['Address'],
-          employmentHistory: {
-            id: undefined,
-            name: row['EmpHist']
-          },
+          employmentHistory: row['EmpHist'],
           phoneNumber: row['Telephone'],
           valid: true,
         };
       }
-      this.validateDemographicAttributes(newRow, index);
 
-      if (newRow.birthDate) {
-        newRow.birthDate = this.showDateValidationMessage(newRow.birthDate, index);
+      if (!newRow.beneficiary) {
+        this.messageService.add({
+          severity: 'error',
+          summary: `Error: `,
+          detail: 'Beneficiary is required.',
+        });
+        return null;
+      } else {
+        this.validateDemographicAttributes(newRow, index);
+
+        if (newRow.birthDate) {
+          newRow.birthDate = this.showDateValidationMessage(newRow.birthDate, index);
+        }
+
+        if (newRow.gender) {
+          newRow.gender = newRow.gender.toLowerCase();
+        }
+
+        if (newRow.beneficiary.toLowerCase() === BeneficiaryType.company.toLowerCase()) {
+          newRow.maritalStatus = null;
+        }
+
+        this.mappingDataFromDB(newRow, index);
+
+        return newRow;
       }
-      if (newRow.gender) {
-        newRow.gender = newRow.gender.toLowerCase();
-      }
-
-      this.mappingDataFromDB(newRow, index);
-
-      // if (newRow.guarantee) {
-      //   this.mappingGuaranteeDataFromDB(newRow, index);
-      // }
-      return newRow;
     });
   }
 
@@ -178,42 +168,30 @@ export class FormUploadComponent {
     if (!row.fullName) {
       errors.push("Full Name is required.");
     }
-    if (!row.beneficiary) {
-      errors.push("Beneficiary is required.");
-    }
-    if (!row.gender) {
-      errors.push("Gender is required.");
-    }
-    if (!row.address) {
-      errors.push("Address is required.");
-    }
     if (!row.birthDate) {
       errors.push("Birth Date is required.");
     }
     if (!row.city.name) {
       errors.push("City is required.");
     }
-    if (!row.employmentHistory.name) {
-      errors.push("Employment History is required.");
+    if (!row.address) {
+      errors.push("Address is required.");
     }
     if (!row.phoneNumber) {
       errors.push("Phone Number is required.");
     }
 
-    // if (row.guarantee) {
-    //   if (!row.guarantee.electoralNumber || row.guarantee.electoralNumber.toString().length < 1) {
-    //     errors.push("Guarantee Electoral number is required.");
-    //   }
-    //   if (!row.guarantee.birthDate) {
-    //     errors.push("Guarantee Birth Date is required.");
-    //   }
-    //   if (!row.guarantee.city.name) {
-    //     errors.push("Guarantee City is required.");
-    //   }
-    //   if (!row.guarantee.employmentHistory.name) {
-    //     errors.push("Guarantee Employment History is required.");
-    //   }
-    // }
+    if (row.beneficiary.toLowerCase() === BeneficiaryType.individual.toLowerCase()) {
+      if (!row.gender) {
+        errors.push("Gender is required.");
+      }
+      if (!row.maritalStatus) {
+        errors.push("Marital Status is required.");
+      }
+      if (!row.employmentHistory) {
+        errors.push("Employment History is required.");
+      }
+    }
 
     if (errors.length > 0) {
       this.messageService.add({
@@ -240,14 +218,15 @@ export class FormUploadComponent {
     let errors: string[] = [];
 
     const city = this.cityList.find((city) => city.name.toLowerCase() === obj.city.name.toLowerCase());
-    const employmentHistory = this.institutionList.find((institution) => institution.name.toLowerCase() === obj.employmentHistory.name.toLowerCase());
 
-    if (obj.maritalStatus) {
-      const maritalStatus = this.maritalStatusList.find((maritalStatus) => maritalStatus.name.toLowerCase() === obj.maritalStatus.name.toLowerCase());
-      if (maritalStatus === undefined) {
-        errors.push("Marital Status is not found.");
-      } else {
-        obj.maritalStatus.id = maritalStatus.id;
+    if (obj.beneficiary.toLowerCase() === BeneficiaryType.individual.toLowerCase()) {
+      if (obj.maritalStatus) {
+        const maritalStatus = this.maritalStatusList.find((maritalStatus) => maritalStatus.name.toLowerCase() === obj.maritalStatus.name.toLowerCase());
+        if (maritalStatus === undefined) {
+          errors.push("Marital Status is not found.");
+        } else {
+          obj.maritalStatus.id = maritalStatus.id;
+        }
       }
     }
 
@@ -255,12 +234,6 @@ export class FormUploadComponent {
       errors.push("City is not found.");
     } else {
       obj.city.id = city.id;
-    }
-
-    if (employmentHistory === undefined) {
-      errors.push("Employment History is not found.");
-    } else {
-      obj.employmentHistory.id = employmentHistory.id;
     }
 
     if (errors.length > 0) {
@@ -274,41 +247,6 @@ export class FormUploadComponent {
     }
 
   }
-
-  // /**
-  //  * Maps the guarantee data from the database for the given DemographicExcel object
-  //  * @param obj The DemographicExcel object to map the guarantee data for
-  //  * @param index The index of the object in the array
-  //  */
-  // mappingGuaranteeDataFromDB(obj: DemographicExcel, index: number) {
-  //   let errors: string[] = [];
-
-  //   const city = this.cityList.find((city) => city.name.toLowerCase() === obj.guarantee.city.name.toLowerCase());
-  //   const employmentHistory = this.institutionList.find((institution) => institution.name.toLowerCase() === obj.guarantee.employmentHistory.name.toLowerCase());
-
-  //   if (city === undefined) {
-  //     errors.push("City is not found (Guarantee)");
-  //   } else {
-  //     obj.guarantee.city.id = city.id;
-  //   }
-
-  //   if (employmentHistory === undefined) {
-  //     errors.push("Employment History is not found (Guarantee)");
-  //   } else {
-  //     obj.guarantee.employmentHistory.id = employmentHistory.id;
-  //   }
-
-  //   if (errors.length > 0) {
-  //     this.messageService.add({
-  //       severity: 'error',
-  //       summary: `Row ${index + 1}: Invalid Data`,
-  //       detail: errors.join(" "),
-  //     });
-  //     obj.valid = false;
-  //     this.isAttributesValid = false;
-  //   }
-
-  // }
 
   /**
    * Converts a given number of bytes into a human-readable format.

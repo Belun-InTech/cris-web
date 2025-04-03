@@ -29,7 +29,6 @@ export class FormUploadComponent {
   descriptionSecurity: string;
   creditClassificationList: CreditClassification[] = [];
   cityList: City[] = [];
-  institutionList: Institution[] = [];
 
   disabledTab = true;
   isJsonDataChecked = false;
@@ -53,9 +52,8 @@ export class FormUploadComponent {
     this.mannerList = this.mapToIdAndName(this.route.snapshot.data['mannerListResolve']._embedded.manners);
     this.typeCollateralList = this.mapToIdAndName(this.route.snapshot.data['typeCollateralListResolve']._embedded.typeCollateral);
     this.creditClassificationList = this.mapToIdAndName(this.route.snapshot.data['creditClassificationListResolve']._embedded.creditClassifications);
-    
+
     this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
-    this.institutionList = this.mapToIdAndName(this.route.snapshot.data['institutionsListResolve']._embedded.institutions)
   }
 
   ngOnInit(): void {
@@ -116,13 +114,10 @@ export class FormUploadComponent {
               id: undefined,
               name: row['City (Guarantee)'],
             },
-            employmentHistory: {
-              id: undefined,
-              name: row['EmpHist (Guarantee)'],
-            }
+            employmentHistory: row['EmpHist (Guarantee)'],
           }
         }
-        
+
         newRow = {
           id: undefined,
           grantor: {
@@ -233,7 +228,7 @@ export class FormUploadComponent {
       if (!row.guarantee.city.name) {
         errors.push("Guarantee City is required.");
       }
-      if (!row.guarantee.employmentHistory.name) {
+      if (!row.guarantee.employmentHistory) {
         errors.push("Guarantee Employment History is required.");
       }
     }
@@ -321,18 +316,11 @@ export class FormUploadComponent {
     let errors: string[] = [];
 
     const city = this.cityList.find((city) => city.name.toLowerCase() === obj.guarantee.city.name.toLowerCase());
-    const employmentHistory = this.institutionList.find((institution) => institution.name.toLowerCase() === obj.guarantee.employmentHistory.name.toLowerCase());
-    
+
     if (city === undefined) {
       errors.push("City is not found (Guarantee)");
     } else {
       obj.guarantee.city.id = city.id;
-    }
-
-    if (employmentHistory === undefined) {
-      errors.push("Employment History is not found (Guarantee)");
-    } else {
-      obj.guarantee.employmentHistory.id = employmentHistory.id;
     }
 
     if (errors.length > 0) {

@@ -123,10 +123,8 @@
                             <label for="float-label">Select a City</label>
                         </p-floatLabel>
                         <p-floatLabel>
-                            <p-dropdown inputId="float-label" [filter]="true" filterBy="name"
-                                [options]="institutionList" formControlName="employmentHistory" optionLabel="name"
-                                [showClear]="true" />
-                            <label for="float-label">Select the Employer (Institution/Organization)</label>
+                            <input pInputText id="employmentHistory" formControlName="employmentHistory" class="w-full" />
+                            <label for="employmentHistory">Employment History</label>
                         </p-floatLabel>
                     </p-fieldset>
                 </div>

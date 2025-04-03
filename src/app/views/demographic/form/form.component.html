@@ -60,9 +60,8 @@
                 </p-floatLabel>
 
                 <p-floatLabel>
-                    <p-dropdown inputId="float-label" [filter]="true" filterBy="name" [options]="institutionList"
-                        formControlName="employmentHistory" optionLabel="name" [showClear]="true" />
-                    <label for="float-label">Select the Employer (Institution/Organization)</label>
+                    <input pInputText id="employmentHistory" formControlName="employmentHistory" class="w-full" />
+                    <label for="employmentHistory">Employment History</label>
                 </p-floatLabel>
                 <p-floatLabel>
                     <input pInputText id="phoneNumber" formControlName="phoneNumber" class="w-full" />
@@ -90,10 +89,6 @@
                     <input pInputText id="fullName" formControlName="fullName" class="w-full" />
                     <label for="fullName">Full Name</label>
                 </p-floatLabel>
-                <div class="my-5">
-                    <p-selectButton [options]="genderOpts" formControlName="gender" optionLabel="viewValue"
-                        optionValue="value" />
-                </div>
                 <p-floatLabel>
                     <input pInputText id="idNumber" formControlName="idNumber" class="w-full" />
                     <label for="idNumber">TIN Number</label>
@@ -117,16 +112,6 @@
                     <p-dropdown inputId="float-label" [options]="cityList" formControlName="city" optionLabel="name"
                         [showClear]="true" />
                     <label for="float-label">Select a City</label>
-                </p-floatLabel>
-                <p-floatLabel>
-                    <p-dropdown inputId="float-label" [options]="maritalStatusList" formControlName="maritalStatus"
-                        optionLabel="name" [showClear]="true" />
-                    <label for="float-label">Select a Marital Status</label>
-                </p-floatLabel>
-                <p-floatLabel>
-                    <p-dropdown inputId="float-label" [options]="institutionList" [filter]="true" filterBy="name"
-                        formControlName="employmentHistory" optionLabel="name" [showClear]="true" />
-                    <label for="float-label">Select the Company</label>
                 </p-floatLabel>
                 <p-floatLabel>
                     <input pInputText id="phoneNumber" formControlName="phoneNumber" class="w-full" />

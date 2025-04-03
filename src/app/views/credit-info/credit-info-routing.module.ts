@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Role } from 'src/app/core/models/enum';
 import { getCreditByIdResolver, getPageCreditResolver } from 'src/app/core/resolvers/credit.resolver';
+import { getCityResolver, getCreditClassificationListResolver, getFinancialInstitutionListResolver, getMannerOfPaymentResolver, getSectorListResolver, getTypeCollateralListResolver } from 'src/app/core/resolvers/data-master.resolver';
 import { canActivateByRole, canActivateQueryParams } from 'src/app/core/security/route.guard';
+import { FormUploadComponent } from './form-upload/form-upload.component';
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
-import { getCityResolver, getCreditClassificationListResolver, getFinancialInstitutionListResolver, getInstitutionResolver, getMannerOfPaymentResolver, getSectorListResolver, getTypeCollateralListResolver } from 'src/app/core/resolvers/data-master.resolver';
-import { FormUploadComponent } from './form-upload/form-upload.component';
 
 const routes: Routes = [
   {
@@ -30,7 +30,6 @@ const routes: Routes = [
       typeCollateralListResolve: getTypeCollateralListResolver,
       creditClassificationListResolve: getCreditClassificationListResolver,
       citiesListResolve: getCityResolver,
-      institutionsListResolve: getInstitutionResolver,
     },
   },
   {
@@ -43,7 +42,6 @@ const routes: Routes = [
       typeCollateralListResolve: getTypeCollateralListResolver,
       creditClassificationListResolve: getCreditClassificationListResolver,
       citiesListResolve: getCityResolver,
-      institutionsListResolve: getInstitutionResolver,
     }
   },
   {
@@ -57,7 +55,6 @@ const routes: Routes = [
       typeCollateralListResolve: getTypeCollateralListResolver,
       creditClassificationListResolve: getCreditClassificationListResolver,
       citiesListResolve: getCityResolver,
-      institutionsListResolve: getInstitutionResolver,
     },
   }
 ];

@@ -33,11 +33,6 @@ export const getCityResolver: ResolveFn<any> = () => {
     return service.getListCity();
 }
 
-export const getInstitutionResolver: ResolveFn<any> = () => {
-    const service = inject(DataMasterService);
-    return service.getListInstitution();
-}
-
 export const getMaritalStatusResolver: ResolveFn<any> = () => {
     const service = inject(DataMasterService);
     return service.getListMaritalStatus();

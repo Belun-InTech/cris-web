@@ -23,7 +23,6 @@ export class FormComponent {
   mannerList: MannerPayment[] = [];
   typeCollateralList: TypeCollateral[] = [];
   creditClassificationList: CreditClassification[] = [];
-  institutionList: Institution[] = [];
   cityList: City[] = [];
 
   constructor(
@@ -58,27 +57,6 @@ export class FormComponent {
     this.typeCollateralList = this.mapToIdAndName(this.route.snapshot.data['typeCollateralListResolve']._embedded.typeCollateral);
     this.creditClassificationList = this.mapToIdAndName(this.route.snapshot.data['creditClassificationListResolve']._embedded.creditClassifications);
     this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
-    this.institutionList = this.mapToIdAndName(this.route.snapshot.data['institutionsListResolve']._embedded.institutions);
-
-    // this.creditForm.patchValue({
-    //   id: null,
-    //   idNumber: '123456789',
-    //   grantor: { id: 2, name: 'Banco Nacional do Comercio de Timor-Leste', description: '' },
-    //   accountCreationDate: new Date('2025-01-01'),
-    //   dueDate: new Date('2025-01-01'),
-    //   originalBalance: 10000,
-    //   monthlyPayment: 300,
-    //   lastPaymentDate: new Date('2025-01-01'),
-    //   balance: 5000,
-    //   sector: {
-    //     id: 3,
-    //     name: "Manufacturing", description: 'Manufacturing'
-    //   },
-    //   mannerOfPayment: { id: 1, name: 'Monthly', description: '' },
-    //   security: { id: 1, name: 'Salary', description: '' },
-    //   descriptionSecurity: 'Car - Toyota Hilux',
-    //   assetClass: { id: 2, name: 'Under Supervision', description: '' }
-    // });
 
     this.creditData = this.route.snapshot.data['creditResolve']
     if (this.creditData) {
@@ -127,10 +105,6 @@ export class FormComponent {
     guarantee.city = {
       id: this.creditData.guarantee.city.id,
       name: this.creditData.guarantee.city.name,
-    }
-    guarantee.employmentHistory = {
-      id: this.creditData.guarantee.employmentHistory.id,
-      name: this.creditData.guarantee.employmentHistory.name,
     }
 
     guarantee.birthDate = new Date(guarantee.birthDate);

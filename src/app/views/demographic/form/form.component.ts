@@ -26,7 +26,6 @@ export class FormComponent {
   genderOpts: any[] = genderOpts;
   selectedGender: any;
   cityList: City[] = [];
-  institutionList: Institution[] = [];
   maritalStatusList: MaritalStatus[] = [];
 
   constructor(
@@ -57,19 +56,15 @@ export class FormComponent {
       beneficiary: [BeneficiaryType.company.toUpperCase()],
       idNumber: ['', [Validators.required, Validators.minLength(1), Validators.pattern(/^[A-Za-z0-9]+$/)]],
       fullName: ['', [Validators.required, Validators.minLength(3)]],
-      gender: ['', Validators.required],
       address: ['', Validators.required],
       birthDate: ['', Validators.required],
       city: [undefined, Validators.required],
-      maritalStatus: [undefined, Validators.required],
-      employmentHistory: [undefined],
       phoneNumber: ['', [Validators.required, Validators.minLength(3)]],
     });
 
     this.demoData = this.route.snapshot.data['demoData'];
 
     this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
-    this.institutionList = this.mapToIdAndName(this.route.snapshot.data['institutionsListResolve']._embedded.institutions);
     this.maritalStatusList = this.mapToIdAndName(this.route.snapshot.data['maritalStatusListResolve']._embedded.maritalStatus);
 
     if (this.demoData) {
@@ -105,16 +100,6 @@ export class FormComponent {
       id: form.city.id,
       name: form.city.name,
     }
-    
-    form.employmentHistory = {
-      id: form.employmentHistory.id,
-      name: form.employmentHistory.name,
-    }
-
-    form.maritalStatus = {
-      id: form.maritalStatus.id,
-      name: form.maritalStatus.name,
-    }
 
     const birthDate = new Date(form.birthDate);
 
@@ -123,6 +108,10 @@ export class FormComponent {
       this.businessForm.patchValue(form);
       this.businessForm.get('birthDate')?.setValue(birthDate);
     } else {
+      form.maritalStatus = {
+        id: form.maritalStatus.id,
+        name: form.maritalStatus.name,
+      }
       this.entityType.setValue(BeneficiaryType.individual.toLowerCase());
       this.personForm.patchValue(form);
       this.personForm.get('birthDate')?.setValue(birthDate);
@@ -190,7 +179,7 @@ export class FormComponent {
     this.loading = true;
     if (form.valid) {
       let formData = form.value;
-      
+
       this.demographicService.updateById(this.demoData.id, formData).subscribe({
         next: (response) => {
           this.setNotification(true, response);
