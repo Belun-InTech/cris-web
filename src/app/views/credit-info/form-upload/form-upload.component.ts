@@ -36,6 +36,7 @@ export class FormUploadComponent {
   isSubmitting = false;
 
   notFoundData: any[] = [];
+  duplicatesDateLastPaymentAndBalance: CreditExcel[] = [];
 
   constructor(
     private config: PrimeNGConfig,
@@ -61,14 +62,14 @@ export class FormUploadComponent {
   }
 
   /**
-   * Event handler for when a file is selected. Gets the selected files,
-   * calculates the total size of the files in bytes, and then reads the file
-   * to get the JSON data from the Excel file.
-   *
-   * The JSON data is then modified to convert the birthDate column to a date
-   * string.
-   *
-   * @param event The event object containing the selected files.
+   * Handles the event when files are selected for upload.
+   * 
+   * This method processes the selected files, calculates their total size,
+   * and reads the first file to extract JSON data from an Excel file.
+   * It also resets the JSON data and clears any existing messages.
+   * 
+   * @param {Event} event - The event object containing the selected files.
+   * @returns {void}
    */
   onSelectedFiles(event) {
     this.files = event.currentFiles;
@@ -98,7 +99,7 @@ export class FormUploadComponent {
    * Map Excel template to CreditExcel object
    * @param data excel data from file upload
    */
-  mapExcelTemplate(data: any): void {
+  mapExcelTemplate(data: any[]): void {
     this.jsonData = data.map((row, index) => {
       let newRow: CreditExcel;
 
@@ -211,9 +212,6 @@ export class FormUploadComponent {
     if (!row.security.name) {
       errors.push("Security is required");
     }
-    // if (!row.descriptionSecurity) {
-    //   errors.push("DescofCollateral is required");
-    // }
     if (!row.assetClass.name) {
       errors.push("AssetClass is required");
     }
@@ -259,41 +257,41 @@ export class FormUploadComponent {
 
   private mappingDataFromDB(obj: CreditExcel, index: number): void {
     let errors: string[] = [];
-    const grantor = this.financialInsititutionList.find(item => item.name.toLowerCase() === obj.grantor.name.toLowerCase());
-    const sector = this.sectorList.find(item => item.id === +obj.sector.id);
-    const mannerOfPayment = this.mannerList.find(item => item.name.toLowerCase() === obj.mannerOfPayment.name.toLowerCase());
-    const security = this.typeCollateralList.find(item => item.name.toLowerCase() === obj.security.name.toLowerCase());
-    const assetClass = this.creditClassificationList.find(item => item.name.toLowerCase() === obj.assetClass.name.toLowerCase());
 
-
-    if (grantor === undefined) {
-      errors.push("Grantor is not found.");
-    } else {
-      obj.grantor.id = grantor.id;
+    if (obj.grantor.name) {
+      const financialInstitution = this.financialInsititutionList.find(({ name }) => name.toLowerCase() === obj.grantor.name.toLowerCase());
+      if (!financialInstitution) {
+        errors.push("Grantor is not found.");
+      } else {
+        obj.grantor.id = financialInstitution.id;
+      }
     }
 
-    if (sector === undefined) {
-      errors.push("Sector is not found.");
-    } else {
-      obj.sector.name = sector.name;
+    if (obj.sector.id) {
+      const sector = this.sectorList.find(({ id }) => id === +obj.sector.id);
+      if (!sector) {
+        errors.push("Sector is not found.");
+      } else {
+        obj.sector.name = sector.name;
+      }
     }
 
-    if (mannerOfPayment === undefined) {
-      errors.push("Manner of Payment is not found.");
-    } else {
-      obj.mannerOfPayment.id = mannerOfPayment.id;
+    if (obj.mannerOfPayment.name) {
+      const manner = this.mannerList.find(({ name }) => name.toLowerCase() === obj.mannerOfPayment.name.toLowerCase());
+      if (!manner) {
+        errors.push("Manner of Payment is not found.");
+      } else {
+        obj.mannerOfPayment.id = manner.id;
+      }
     }
 
-    if (security === undefined) {
-      errors.push("Security is not found.");
-    } else {
-      obj.security.id = security.id;
-    }
-
-    if (assetClass === undefined) {
-      errors.push("Asset Class is not found.");
-    } else {
-      obj.assetClass.id = assetClass.id;
+    if (obj.assetClass.name) {
+      const assetClass = this.creditClassificationList.find(({ name }) => name.toLowerCase() === obj.assetClass.name.toLowerCase());
+      if (!assetClass) {
+        errors.push("Asset Class is not found.");
+      } else {
+        obj.assetClass.id = assetClass.id;
+      }
     }
 
     if (errors.length > 0) {
@@ -315,12 +313,13 @@ export class FormUploadComponent {
   mappingGuaranteeDataFromDB(obj: CreditExcel, index: number) {
     let errors: string[] = [];
 
-    const city = this.cityList.find((city) => city.name.toLowerCase() === obj.guarantee.city.name.toLowerCase());
-
-    if (city === undefined) {
-      errors.push("City is not found (Guarantee)");
-    } else {
-      obj.guarantee.city.id = city.id;
+    if (obj.guarantee.city.name) {
+      const city = this.cityList.find((city) => city.name.toLowerCase() === obj.guarantee.city.name.toLowerCase());
+      if (!city) {
+        errors.push("City is not found (Guarantee)");
+      } else {
+        obj.guarantee.city.id = city.id;
+      }
     }
 
     if (errors.length > 0) {
@@ -369,6 +368,39 @@ export class FormUploadComponent {
   }
 
   /**
+   * This function will check the given data if it has any duplicate date and balance records.
+   * The duplicate records will be stored in duplicatesDateLastPaymentAndBalance variable.
+   * @param data The data to be check.
+   */
+  getDuplicateDateBalanceRecords(data: CreditExcel[]): CreditExcel[] {
+    const seen = new Map();
+    const duplicates = [];
+
+    for (const item of data) {
+      const id = item.idNumber;
+      const key = `${item.lastPaymentDate}|${item.balance}`;
+
+      if (!seen.has(id)) {
+        seen.set(id, new Map());
+      }
+
+      const innerMap = seen.get(id);
+
+      if (innerMap.has(key)) {
+        if (!innerMap.get(key).moved) {
+          duplicates.push(innerMap.get(key).item);
+          innerMap.set(key, { ...innerMap.get(key), moved: true });
+        }
+        duplicates.push(item);
+      } else {
+        innerMap.set(key, { item, moved: false });
+      }
+    }
+
+    return duplicates;
+  }
+
+  /**
    * This function will check the given data if it has any missing value.
    * The missing value will be stored in notFoundData variable.
    * It will also display a message to the user.
@@ -378,10 +410,13 @@ export class FormUploadComponent {
     this.messageService.clear();
     this.isScanning = true;
 
+    this.duplicatesDateLastPaymentAndBalance = this.getDuplicateDateBalanceRecords(data);
+
     this.service.checkMissings(data).subscribe({
       next: response => {
         this.notFoundData = response;
         this.showMissingMessages();
+        this.showDuplicateMessages();
       },
       error: err => {
         this.isScanning = false;
@@ -393,6 +428,12 @@ export class FormUploadComponent {
     });
   }
 
+  /**
+   * Generate a template Excel file for credit info upload.
+   * This file will have the same column headers as the upload file,
+   * and one row of mock data.
+   * The file will be saved as "CreditInfo_Template.xlsx" in the current directory.
+   */
   generateCreditInfoTemplate() {
     // Define the header row
     const header = [
@@ -448,7 +489,7 @@ export class FormUploadComponent {
    */
 
   allowSubmit(): boolean {
-    return this.isJsonDataChecked && this.notFoundData.length === 0;
+    return this.isJsonDataChecked && this.notFoundData.length === 0 && this.duplicatesDateLastPaymentAndBalance.length === 0;
   }
 
 
@@ -539,14 +580,31 @@ export class FormUploadComponent {
     if (!hasMissingDatabase) {
       this.messageService.add({
         severity: 'success',
-        summary: 'Data is found in database',
-        detail: 'The database contains this record.'
+        summary: 'ElectNo are found in database',
+        detail: 'The database contains these record.'
       });
     } else {
       this.messageService.add({
         severity: 'warn',
         summary: 'No records found!',
         detail: 'The provided data is not found in the database'
+      });
+    }
+  }
+
+  showDuplicateMessages(): void {
+    const hasDuplicate = this.duplicatesDateLastPaymentAndBalance.length > 0;
+    if (hasDuplicate) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Duplicate Records Found',
+        detail: 'There are duplicate records in the data based on DateLastPaymt and Balance.'
+      });
+    } else {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'No Duplicate Records',
+        detail: 'No duplicate records found based on DateLastPaymt and Balance.'
       });
     }
   }
