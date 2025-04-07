@@ -46,7 +46,7 @@ export class FormUploadComponent {
     private route: ActivatedRoute,
     private authService: AuthenticationService,
   ) {
-    this.columnsExcel = ['NameCreditGrantor', 'ElectNo', 'DateAcctOpened', 'DueDate', 'OrgBal', 'MonthlyPaymt', 'DateLastPaymt', 'Balance', 'CreditbySector', 'MannerofPaymt', 'Security', 'DescofCollateral', 'AssetClass'];
+    this.columnsExcel = ['NameCreditGrantor', 'ElectNo', 'DateAcctOpened', 'DueDate', 'OrgBal', 'MonthlyPaymt', 'DateLastPaymt', 'Balance', 'CreditbySector', 'MannerofPaymt', 'Security', 'DescofCollateral', 'AssetClass', 'Guarantee Name', 'ElectNo (Guarantee)', 'DOB (Guarantee)', 'City (Guarantee)', 'EmpHist (Guarantee)'];
     this.columns = ['Credit Grantor', 'ID Number / TIN', 'Due Cate', 'Monthly Payment', 'Last Payment (Date)', 'Balance'];
     this.financialInsititutionList = this.mapToIdAndName(this.route.snapshot.data['grantorListResolve']._embedded.financialInstitutions.filter(item => item.name.toLowerCase() !== 'internal'));
     this.sectorList = this.mapToIdAndName(this.route.snapshot.data['sectorListResolve']._embedded.sectors);
@@ -128,12 +128,12 @@ export class FormUploadComponent {
           idNumber: row['ElectNo'],
           accountCreationDate: row['DateAcctOpened'],
           dueDate: row['DueDate'],
-          originalBalance: row['OrgBal'],
-          monthlyPayment: row['MonthlyPaymt'],
+          originalBalance: +row['OrgBal'],
+          monthlyPayment: +row['MonthlyPaymt'],
           lastPaymentDate: row['DateLastPaymt'],
-          balance: row['Balance'],
+          balance: +row['Balance'],
           sector: {
-            id: row['CreditbySector'],
+            id: +row['CreditbySector'],
             name: undefined
           },
           mannerOfPayment: {
@@ -162,6 +162,7 @@ export class FormUploadComponent {
 
       this.mappingDataFromDB(newRow, index);
       if (newRow.guarantee) {
+        newRow.guarantee.birthDate = this.showDateValidationMessage(newRow.guarantee.birthDate, index);
         this.mappingGuaranteeDataFromDB(newRow, index);
       }
       return newRow;
@@ -191,16 +192,16 @@ export class FormUploadComponent {
     if (!row.dueDate) {
       errors.push("DueDate is required");
     }
-    if (!row.originalBalance) {
+    if (row.originalBalance === null || row.originalBalance === undefined) {
       errors.push("OrgBal is required");
     }
-    if (!row.monthlyPayment) {
+    if (row.monthlyPayment === null || row.monthlyPayment === undefined) {
       errors.push("MonthlyPaymt is required");
     }
     if (!row.lastPaymentDate) {
       errors.push("DateLastPaymt is required");
     }
-    if (!row.balance) {
+    if (row.balance === null || row.balance === undefined) {
       errors.push("Balance is required");
     }
     if (!row.sector.id) {
@@ -418,7 +419,7 @@ export class FormUploadComponent {
    * It will also display a message to the user.
    * @param data The data to be check.
    */
-  checkJsonData(data: any[]): void {
+  checkJsonData(data: CreditExcel[]): void {
     this.messageService.clear();
     this.isScanning = true;
 
