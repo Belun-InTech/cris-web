@@ -9,6 +9,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormComponent } from './form/form.component';
 import { ReportsRoutingModule } from './reports-routing.module';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { ReportsRoutingModule } from './reports-routing.module';
     CheckboxModule,
     ChartModule,
     HighchartsChartModule,
+    FloatLabelModule,
+    TableModule,
   ]
 })
 export class ReportsModule { }

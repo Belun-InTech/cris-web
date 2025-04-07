@@ -8,4 +8,5 @@ export * from './file-export.service';
 export * from './role.service';
 export * from './user.service';
 export * from './audit.service';
+export * from './report.service';
 

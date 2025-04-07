@@ -61,11 +61,10 @@ export const pieChartOptions: Highcharts.Options = {
 };
 
 export const tipuRelatoriuList = [
-    { name: 'Large Credit Exposores', code: '' },
-    { name: 'Credit Sectors by Values', code: '' },
-    { name: 'Credit Sectors by Values (by Bank)', code: '' },
-    { name: ' Credit by Sectors', code: '' },
-    { name: 'Summary Report on Type of Collaterals', code: '' },
+    { name: 'Asset Classification Reports', code: 'asset' },
+    { name: 'Credit by Sector Reports', code: 'sector' },
+    { name: 'Individual or Company Credit Reports', code: 'credit' },
+    { name: ' Demographics Data Report', code: 'demo' },
 ]
 
 export const tipuEleitorTuanList = [

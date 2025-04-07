@@ -119,3 +119,14 @@ export interface LdapConfig {
     password: string;
     userSearchFilter: string;
 }
+
+export interface CreditFilter {
+    grantorId: number;
+    lastPaymentDateFrom: Date;
+    lastPaymentDateTo: Date;
+    sectorId: number;
+    assetClassId: number;
+    demographicGender: Gender;
+    demographicBeneficiary: BeneficiaryType;
+    demographicCityId: number;
+}

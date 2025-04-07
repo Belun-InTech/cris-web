@@ -13,14 +13,14 @@ export class FileExportService {
   exportToExcel(data: any[], filename: string): void {
     const worksheet = utils.json_to_sheet(data);
     const workbook = utils.book_new();
-    utils.book_append_sheet(workbook, worksheet, "Dates");
+    utils.book_append_sheet(workbook, worksheet, filename);
 
     writeFile(workbook, `${filename}.xlsx`, { compression: true });
   }
 
   exportToPDF(columns: any[], data: any[], filename: string): void {
     const doc = new jsPDF();
-    
+
     data = data.map(value =>
       [
         value.fullName,
@@ -42,7 +42,7 @@ export class FileExportService {
 
   exportCreditToPDF(columns: any[], data: any[], filename: string): void {
     const doc = new jsPDF();
-    
+
     data = data.map(value =>
       [
         value.grantorName,
