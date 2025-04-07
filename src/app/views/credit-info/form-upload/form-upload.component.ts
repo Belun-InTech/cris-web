@@ -368,32 +368,35 @@ export class FormUploadComponent {
   }
 
   /**
-   * This function will check the given data if it has any duplicate date and balance records.
-   * The duplicate records will be stored in duplicatesDateLastPaymentAndBalance variable.
-   * @param data The data to be check.
+   * Gets the duplicate records based on the Last Payment Date and Balance from the given data.
+   * @param data The array of CreditExcel objects to check for duplicates.
+   * @returns An array of CreditExcel objects that are duplicates.
    */
   getDuplicateDateBalanceRecords(data: CreditExcel[]): CreditExcel[] {
-    const seen = new Map();
-    const duplicates = [];
+    const seen = new Map<string, Map<string, { item: CreditExcel, moved: boolean }>>();
+    const duplicates: CreditExcel[] = [];
 
     for (const item of data) {
-      const id = item.idNumber;
-      const key = `${item.lastPaymentDate}|${item.balance}`;
+      const grantorId = item.grantor?.id;
+      const idNumber = item.idNumber;
+      const key1 = `${grantorId}|${idNumber}`;
+      const key2 = `${item.lastPaymentDate}|${item.balance}`;
 
-      if (!seen.has(id)) {
-        seen.set(id, new Map());
+      if (!seen.has(key1)) {
+        seen.set(key1, new Map());
       }
 
-      const innerMap = seen.get(id);
+      const innerMap = seen.get(key1)!;
 
-      if (innerMap.has(key)) {
-        if (!innerMap.get(key).moved) {
-          duplicates.push(innerMap.get(key).item);
-          innerMap.set(key, { ...innerMap.get(key), moved: true });
+      if (innerMap.has(key2)) {
+        const existing = innerMap.get(key2)!;
+        if (!existing.moved) {
+          duplicates.push(existing.item);
+          existing.moved = true;
         }
         duplicates.push(item);
       } else {
-        innerMap.set(key, { item, moved: false });
+        innerMap.set(key2, { item, moved: false });
       }
     }
 
