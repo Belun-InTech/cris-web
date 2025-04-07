@@ -285,6 +285,15 @@ export class FormUploadComponent {
       }
     }
 
+    if (obj.security.name) {
+      const security = this.typeCollateralList.find(({ name }) => name.toLowerCase() === obj.security.name.toLowerCase());
+      if (!security) {
+        errors.push("Security is not found.");
+      } else {
+        obj.security.id = security.id;
+      }
+    }
+
     if (obj.assetClass.name) {
       const assetClass = this.creditClassificationList.find(({ name }) => name.toLowerCase() === obj.assetClass.name.toLowerCase());
       if (!assetClass) {
