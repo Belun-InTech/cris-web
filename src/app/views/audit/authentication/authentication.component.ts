@@ -75,7 +75,7 @@ export class AuthenticationComponent {
     this.size = event.rows;
     this.getLoginData(this.startDateTime, this.endDateTime, this.page, this.size); }
 
-  getSeverity(outcome: string): string {
-    return outcome === 'SUCCESS' ? 'success' : 'danger';
+  getSeverity(outcome: string): "success" | "info" | "warning" | "danger" | "secondary" | "contrast" {
+    return outcome === 'SUCCESS' ? "success" : "danger";
   }
 }

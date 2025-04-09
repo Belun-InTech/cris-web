@@ -19,7 +19,7 @@ export class ListComponent {
     });
   }
 
-  getSeverity(status: string): string {
+  getSeverity(status: string): "success" | "info" | "warning" | "danger" | "secondary" | "contrast" {
     switch (status) {
       case 'active':
         return 'success'; // Green tag

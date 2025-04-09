@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { DemographicExcel } from 'src/app/core/models/data';
-import { City, Institution, MaritalStatus } from 'src/app/core/models/data-master';
+import { City, MaritalStatus } from 'src/app/core/models/data-master';
 import { BeneficiaryType } from 'src/app/core/models/enum';
 import { DemographicService } from 'src/app/core/services';
 import { read, utils, writeFile } from "xlsx";
@@ -20,7 +20,7 @@ export class FormUploadComponent {
   jsonData: DemographicExcel[] = [];
   columnsExcel: string[];
   columns: string[];
-  activeTab = 0;
+  activeTab: number | number[] = 0;
   isAttributesValid = true;
   cityList: City[] = [];
   maritalStatusList: MaritalStatus[] = [];
@@ -423,7 +423,7 @@ export class FormUploadComponent {
    * 
    * @param {number} index The new active index.
    */
-  activeIndexChange(index: number) {
+  activeIndexChange(index: number | number[]) {
     this.activeTab = index
   }
 
@@ -570,6 +570,11 @@ export class FormUploadComponent {
     this.jsonData = [];
     this.isAttributesValid = true;
     this.messageService.clear();
+  }
+
+  getInputValue(event: Event): string {
+    const input = event.target as HTMLInputElement;
+    return input.value;
   }
 
   /**

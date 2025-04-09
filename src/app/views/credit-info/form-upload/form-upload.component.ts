@@ -20,7 +20,7 @@ export class FormUploadComponent {
   jsonData: CreditExcel[] = [];
   columnsExcel: string[];
   columns: string[];
-  activeTab = 0;
+  activeTab: number | number[] = 0;
   isAttributesValid = true;
   financialInsititutionList: Institution[] = [];
   sectorList: Sector[] = [];
@@ -521,7 +521,7 @@ export class FormUploadComponent {
    * @param {number} bytes - The number of bytes to be converted.
    * @returns {string} A string containing the formatted size (e.g. 1.23 KB).
    */
-  private formatSize(bytes) {
+  formatSize(bytes) {
     const k = 1024;
     const dm = 3;
     const sizes = this.config.translation.fileSizeTypes;
@@ -629,7 +629,7 @@ export class FormUploadComponent {
    * @param {number} index - The index of the tab to change to.
    * @returns {void}
    */
-  activeIndexChange(index: number) {
+  activeIndexChange(index: number | number[]) {
     this.activeTab = index
   }
 
@@ -685,6 +685,11 @@ export class FormUploadComponent {
     const formattedDate = new Date(Date.UTC(year, month - 1, day)).toISOString().split("T")[0];
 
     return formattedDate;
+  }
+
+  getInputValue(event: Event): string {
+    const input = event.target as HTMLInputElement;
+    return input.value;
   }
 
   /**

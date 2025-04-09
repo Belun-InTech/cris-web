@@ -83,7 +83,7 @@
                                         <div class="col-6">
                                             <p-floatLabel>
                                                 <input pInputText id="search" class="w-full"
-                                                    (input)="jd.filterGlobal($event.target.value, 'contains')" />
+                                                    (input)="jd.filterGlobal(getInputValue($event), 'contains')" />
                                                 <label for="search">Search</label>
                                             </p-floatLabel>
                                         </div>
@@ -207,7 +207,7 @@
                                             <div class="col-6">
                                                 <p-floatLabel>
                                                     <input pInputText id="search" class="w-full"
-                                                        (input)="jd.filterGlobal($event.target.value, 'contains')" />
+                                                        (input)="jd.filterGlobal(getInputValue($event), 'contains')" />
                                                     <label for="search">Search</label>
                                                 </p-floatLabel>
                                             </div>
@@ -399,8 +399,6 @@
                                 </tr>
                             </ng-template>
                         </p-table>
-                        <p-paginator (onPageChange)="onPageChange($event)" [rows]="size" [totalRecords]="totalData"
-                            [rowsPerPageOptions]="[50, 150, 250]" />
                     </p-tabPanel>
 
                     <p-tabPanel [disabled]="notFoundData.length === 0" header="Missing Records not found in Database">
@@ -490,8 +488,6 @@
                                 </tr>
                             </ng-template>
                         </p-table>
-                        <p-paginator (onPageChange)="onPageChange($event)" [rows]="size" [totalRecords]="totalData"
-                            [rowsPerPageOptions]="[50, 150, 250]" />
                     </p-tabPanel>
                 </p-tabView>
             </div>
