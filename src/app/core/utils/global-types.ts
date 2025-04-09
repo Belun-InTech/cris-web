@@ -64,7 +64,7 @@ export const tipuRelatoriuList = [
     { name: 'Asset Classification Reports', code: 'asset' },
     { name: 'Credit by Sector Reports', code: 'sector' },
     { name: 'Individual or Company Credit Reports', code: 'credit' },
-    { name: ' Demographics Data Report', code: 'demo' },
+    { name: 'Demographics Data Report', code: 'demo' },
 ]
 
 export const tipuEleitorTuanList = [
@@ -98,3 +98,9 @@ export function normalizeId(id: string | null): string | null {
     // Replace leading zeros unless the string is exactly "0"
     return id.replace(/^0+(?!$)/, "");
 }
+
+export const operatorOpts: any[] = [
+    { name: 'Greater than - >', value: '>' },
+    { name: 'Less than - <', value: '<' },
+    { name: 'Equal - =', value: '=' },
+]

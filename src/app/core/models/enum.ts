@@ -44,3 +44,9 @@ export enum BeneficiaryType {
     individual = 'Individual',
     company = 'Company'
 }
+
+export enum MathOperator {
+    greater = '>',
+    less = '<',
+    equal = '=',
+}

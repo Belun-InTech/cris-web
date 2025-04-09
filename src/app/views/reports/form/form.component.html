@@ -26,9 +26,10 @@
     </form>
 
     @if (selectedTipuRelatoriu) {
-    @if (selectedTipuRelatoriu.code === 'asset') {
     <form [formGroup]="reportForm" class="mt-4">
         <div class="grid">
+            @switch (selectedTipuRelatoriu.code) {
+            @case ('asset') {
             <div class="col-12 md:col-3">
                 <div class="p-fluid">
                     <p-dropdown formControlName="assetClassId" [options]="assetClassificationList" [showClear]="true"
@@ -42,6 +43,38 @@
                     </p-dropdown>
                 </div>
             </div>
+            }
+            @case ('sector') {
+            <div class="col-12 md:col-3">
+                <div class="p-fluid">
+                    <p-dropdown formControlName="sectorId" [options]="sectorList" [showClear]="true"
+                        placeholder="Choose Sector" class="pb-2">
+                        <ng-template let-item pTemplate="selectedItem">
+                            {{ item.name }}
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            {{ item.name }}
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+            </div>
+            }
+            @case ('credit') {
+            <div class="col-12 md:col-3">
+                <div class="p-fluid">
+                    <p-dropdown formControlName="demographicBeneficiary" [options]="beneficiaryList" [showClear]="true"
+                        placeholder="Select a Beneficiary" class="pb-2">
+                        <ng-template let-item pTemplate="selectedItem">
+                            {{ item.name }}
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            {{ item.name }}
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+            </div>
+            }
+            }
             <div class="col-12 md:col-3">
                 <div class="p-fluid">
                     <p-dropdown formControlName="grantorId" [options]="financialInstitutionList" [showClear]="true"
@@ -74,10 +107,17 @@
                 </div>
             </div>
             <div class="col-12 md:col-3">
+                @if (selectedTipuRelatoriu.code !== 'credit') {
                 <div class="p-fluid">
                     <p-dropdown [options]="beneficiaryList" formControlName="demographicBeneficiary" optionLabel="name"
                         [showClear]="true" placeholder="Select a Beneficiary" />
                 </div>
+                }@else {
+                <div class="flex align-items-center">
+                    <p-checkbox label="Guarantee" formControlName="getGuarantee" [binary]="true"
+                        inputId="getGuarantee" />
+                </div>
+                }
             </div>
             <div class="col-12 md:col-3">
                 <div class="p-fluid">
@@ -86,8 +126,24 @@
                 </div>
             </div>
         </div>
+        @if (selectedTipuRelatoriu.code === 'credit') {
+        <div class="grid">
+            <div class="col-12 md:col-3">
+                <div class="p-fluid">
+                    <p-dropdown [options]="operatorList" formControlName="mathOperator" optionLabel="name"
+                        [showClear]="true" placeholder="Select an operator" />
+                </div>
+            </div>
+            <div class="col-12 md:col-3">
+                <p-floatLabel>
+                    <p-inputNumber mode="currency" currency="USD" inputId="originalBalance"
+                        formControlName="originalBalance" class="w-full" />
+                    <label for="originalBalance">Original Balance</label>
+                </p-floatLabel>
+            </div>
+        </div>
+        }
     </form>
-    }
     }
 
     <div class="grid">
@@ -95,15 +151,16 @@
             <p-button (onClick)="generateReport(reportForm)" [disabled]="!reportForm.valid" label="Generate"
                 icon="pi pi-chart-line" [raised]="true" severity="success" class="mr-2" />
             @if (!hideClearButton) {
-            <p-button (onClick)="reportForm.reset();dataReports=[];" label="Clear" icon="pi pi-times" size="small"
-                [raised]="true" severity="secondary" />
+            <p-button (onClick)="clearFilter()" label="Clear" icon="pi pi-times" size="small" [raised]="true"
+                severity="secondary" />
             }
         </div>
     </div>
 
     <div class="grid">
         <div class="col-12 md:col-6">
-            <p-button (onClick)="exportToExcel()" [disabled]="!reportForm.valid || dataReports.length === 0" label="Export to Excel"
+            <p-button (onClick)="exportToExcel(selectedTipuRelatoriu)"
+                [disabled]="!reportForm.valid || dataReports.length === 0" label="Export to Excel"
                 icon="pi pi-file-excel" [raised]="true" severity="success" class="mr-2" />
         </div>
     </div>
@@ -111,6 +168,11 @@
     @if (dataReports.length > 0) {
     <div class="grid">
         <div class="col-12">
+
+            @switch (selectedTipuRelatoriu.code) {
+
+            <!-- Asset Classification Report Table -->
+            @case ('asset') {
             <p-table #demo [value]="dataReports" [scrollable]="true" [columns]="columnsAsset" scrollHeight="500px"
                 [rowHover]="true">
                 <ng-template pTemplate="header" let-columns>
@@ -175,8 +237,230 @@
                     </tr>
                 </ng-template>
             </p-table>
+            }
+
+            <!-- Sector Report Table -->
+            @case ('sector') {
+            <p-table #sector [value]="dataReports" [scrollable]="true" [columns]="columnsSector" scrollHeight="500px"
+                [rowHover]="true">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        @for (item of columns; track $index) {
+                        <th>
+                            {{item}}
+                        </th>
+                        }
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-columns="columns">
+                    <tr>
+                        <td>
+                            {{item.grantor.name}}
+                        </td>
+                        <td>
+                            {{item.sector.name}}
+                        </td>
+                        <td>{{item.idNumber}}</td>
+                        <td>
+                            {{item.demographic.fullName}}
+                        </td>
+                        <td>{{item.demographic.beneficiary |titlecase}}</td>
+                        <td>
+                            {{item.demographic.birthDate |date:'dd MMM yyyy'}}
+                        </td>
+                        <td>
+                            {{item.demographic.gender |titlecase}}
+                        </td>
+                        <td>
+                            {{item.demographic.city.name}}
+                        </td>
+                        <td>
+                            {{item.accountCreationDate |date:'dd MMM yyyy'}}
+                        </td>
+                        <td>
+                            {{item.dueDate |date:'dd MMM yyyy'}}
+                        </td>
+                        <td>
+                            {{item.originalBalance |currency}}
+                        </td>
+                        <td>
+                            {{item.monthlyPayment |currency}}
+                        </td>
+                        <td>
+                            {{item.lastPaymentDate |date:'dd MMM yyyy'}}
+                        </td>
+                        <td>
+                            {{item.balance |currency}}
+                        </td>
+                        <td>{{item.assetClass.name}}</td>
+                        <td>
+                            {{item.mannerOfPayment.name}}
+                        </td>
+                        <td>
+                            {{item.security.name}}
+                        </td>
+                        <td>
+                            {{item.descriptionSecurity}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            }
+
+            <!-- Credit Report Table -->
+            @case ('credit') {
+            <p-table #sector [value]="dataReports" [scrollable]="true" [columns]="columnsCredit" scrollHeight="500px"
+                [rowHover]="true">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        @for (item of columns; track $index) {
+                        <th>
+                            {{item}}
+                        </th>
+                        }
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-columns="columns">
+                    <tr>
+                        <td>
+                            {{item.grantor.name}}
+                        </td>
+                        <td>{{item.idNumber}}</td>
+                        <td>
+                            {{item.demographic.fullName}}
+                        </td>
+                        <td>{{item.demographic.beneficiary |titlecase}}</td>
+                        <td>
+                            {{item.demographic.birthDate |date:'dd MMM yyyy'}}
+                        </td>
+                        <td>
+                            {{item.demographic.gender |titlecase}}
+                        </td>
+                        <td>
+                            {{item.demographic.city.name}}
+                        </td>
+                        <td>
+                            {{item.accountCreationDate |date:'dd MMM yyyy'}}
+                        </td>
+                        <td>
+                            {{item.dueDate |date:'dd MMM yyyy'}}
+                        </td>
+                        <td>
+                            {{item.originalBalance |currency}}
+                        </td>
+                        <td>
+                            {{item.monthlyPayment |currency}}
+                        </td>
+                        <td>
+                            {{item.lastPaymentDate |date:'dd MMM yyyy'}}
+                        </td>
+                        <td>
+                            {{item.balance |currency}}
+                        </td>
+                        <td>
+                            {{item.sector.name}}
+                        </td>
+                        <td>
+                            {{item.mannerOfPayment.name}}
+                        </td>
+                        <td>
+                            {{item.security.name}}
+                        </td>
+                        <td>
+                            {{item.descriptionSecurity}}
+                        </td>
+                        <td>{{item.assetClass.name}}</td>
+                        @if (item.guarantee) {
+                        <td>
+                            {{item.guarantee.fullName}}
+                        </td>
+                        <td>
+                            {{item.guarantee.electoralNumber}}
+                        </td>
+                        <td>
+                            {{item.guarantee.birthDate}}
+                        </td>
+                        <td>
+                            {{item.guarantee.city.name}}
+                        </td>
+                        <td>
+                            {{item.guarantee.employmentHistory}}
+                        </td>
+                        }
+                    </tr>
+                </ng-template>
+            </p-table>
+            }
+
+            <!-- Demographic Report Table -->
+            @case ('demo') {
+            <p-table #demo [value]="dataReports" [scrollable]="true" [columns]="columnsDemographic" scrollHeight="500px"
+                [rowHover]="true">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        @for (item of columns; track $index) {
+                        <th>
+                            {{item}}
+                        </th>
+                        }
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-columns="columns">
+                    <tr>
+                        <td>
+                            {{item.fullName}}
+                        </td>
+                        <td>{{item.beneficiary |titlecase}}</td>
+                        <td>
+                            @if (item.idNumber) {
+                            {{item.idNumber}}
+                            }@else {
+                            {{item.tinNumber}}
+                            }
+                        </td>
+                        <td>
+                            {{item.gender |titlecase}}
+                        </td>
+                        <td>
+                            {{item.address}} - {{item.city.name}}
+                        </td>
+                        <td>
+                            {{item.birthDate |date:'dd MMM yyyy'}}
+                        </td>
+                        <td>
+                            {{item.phoneNumber}}
+                        </td>
+                        <td>
+                            @if (item.maritalStatus) {
+                            {{item.maritalStatus.name |titlecase}}
+                            }
+                        </td>
+                        <td>
+                            @if (item.spouseName) {
+                            {{item.spouseName}}
+                            }
+                        </td>
+                        <td>
+                            @if (item.employmentHistory) {
+                            {{item.employmentHistory}}
+
+                            }
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            }
+
+            }
         </div>
     </div>
 
+    }
+    @else {
+    <div class="grid">
+        <div class="col-12">
+            <p-messages />
+        </div>
+    </div>
     }
 </div>

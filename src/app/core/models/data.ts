@@ -1,5 +1,5 @@
 import { City, CreditClassification, FinancialInstitution, Institution, MannerPayment, MaritalStatus, Sector, TypeCollateral } from "./data-master";
-import { BeneficiaryType, Gender } from "./enum";
+import { BeneficiaryType, Gender, MathOperator } from "./enum";
 
 export interface Demographic {
     id: number;
@@ -91,10 +91,10 @@ export interface CreditExcel {
     grantor: FinancialInstitution;
     accountCreationDate: string;
     dueDate: string;
-    originalBalance: number;
-    monthlyPayment: number;
+    originalBalance: number | string;
+    monthlyPayment: number | string;
     lastPaymentDate: string;
-    balance: number;
+    balance: number | string;
     sector: Sector;
     mannerOfPayment: MannerPayment;
     security: TypeCollateral;
@@ -129,4 +129,14 @@ export interface CreditFilter {
     demographicGender: Gender;
     demographicBeneficiary: BeneficiaryType;
     demographicCityId: number;
+    originalBalance: number;
+    mathOperator: MathOperator;
+    getGuarantee: boolean;
+}
+
+export interface DemographicFilter {
+    beneficiary: BeneficiaryType;
+    financialInstitutionId: number;
+    gender: string;
+    cityId: number;
 }
