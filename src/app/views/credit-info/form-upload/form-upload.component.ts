@@ -128,10 +128,10 @@ export class FormUploadComponent {
           idNumber: row['ElectNo'],
           accountCreationDate: row['DateAcctOpened'],
           dueDate: row['DueDate'],
-          originalBalance: +row['OrgBal'],
-          monthlyPayment: +row['MonthlyPaymt'],
+          originalBalance: row['OrgBal'],
+          monthlyPayment: row['MonthlyPaymt'],
           lastPaymentDate: row['DateLastPaymt'],
-          balance: +row['Balance'],
+          balance: row['Balance'],
           sector: {
             id: +row['CreditbySector'],
             name: undefined
@@ -153,6 +153,12 @@ export class FormUploadComponent {
           valid: true
         }
       }
+
+      // Convert string values to numbers
+      newRow.originalBalance = typeof newRow.originalBalance === 'string' ? parseFloat(newRow.originalBalance.replace(/,/g, '')) : newRow.originalBalance;
+      newRow.monthlyPayment = typeof newRow.monthlyPayment === 'string' ? parseFloat(newRow.monthlyPayment.replace(/,/g, '')) : newRow.monthlyPayment;
+      newRow.balance = typeof newRow.balance === 'string' ? parseFloat(newRow.balance.replace(/,/g, '')) : newRow.balance;
+
 
       this.validateCreditData(newRow, index);
 
