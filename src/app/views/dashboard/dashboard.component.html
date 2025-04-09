@@ -11,7 +11,9 @@
                         Demographics Data
                     </span>
                 </div>
-                <div class="text-900 font-medium text-xl lg:text-3xl text-blue-500">152</div>
+                <div class="text-900 font-medium text-xl lg:text-3xl text-blue-500">
+                    {{data.totalDemographic}}
+                </div>
             </div>
         </div>
     </div>
@@ -27,7 +29,9 @@
                         Credit Informations
                     </span>
                 </div>
-                <div class="text-900 font-medium text-xl lg:text-3xl text-orange-500">231</div>
+                <div class="text-900 font-medium text-xl lg:text-3xl text-orange-500">
+                    {{data.totalCredit}}
+                </div>
             </div>
         </div>
     </div>
@@ -40,10 +44,12 @@
                         <i class="bi bi-bank text-cyan-500 text-xl"></i>
                     </div>
                     <span class="block  font-medium">
-                        Banks
+                        Financial Institution
                     </span>
                 </div>
-                <div class="text-900 font-medium text-xl lg:text-3xl text-cyan-500">31</div>
+                <div class="text-900 font-medium text-xl lg:text-3xl text-cyan-500">
+                    {{data.totalFinancialInstitution}}
+                </div>
             </div>
         </div>
     </div>
@@ -65,4 +71,24 @@
     </div>
 
 
+</div>
+
+<div class="grid fadein animation-duration-1000">
+    <div class="col-12 lg:col-8 xl:col-8">
+        <app-bar-chart [title]="'Total Credit (Monthly)'" [data]="monthlyCreditData"></app-bar-chart>
+    </div>
+    <div class="col-12 lg:col-4 xl:col-4">
+        <app-pie-chart [title]="'Demographic Beneficiary'" [data]="beneficiaryData">
+        </app-pie-chart>
+    </div>
+</div>
+
+<div class="grid fadein animation-duration-1000">
+    <div class="col-12 lg:col-12 xl:col-12">
+        <app-financial-bar-chart [title]="'Total Original Balance (Monthly)'" [data]="monthlyInstitutionBalanceData"></app-financial-bar-chart>
+    </div>
+    <div class="col-12 lg:col-6 xl:col-4">
+        <app-pie-chart [title]="'Demographic Gender'" [data]="genderData">
+        </app-pie-chart>
+    </div>
 </div>

@@ -140,3 +140,27 @@ export interface DemographicFilter {
     gender: string;
     cityId: number;
 }
+
+interface MonthlyCreditCount {
+    month: number;
+    count: number;
+}
+
+interface MonthlyInstitutionBalance {
+    month: number;
+    financialInstitution: string;
+    totalOriginalBalance: number;
+}
+
+export interface Dashboard {
+    totalDemographic: number;
+    totalCredit: number;
+    totalFinancialInstitution: number;
+    totalDemographicMale: number;
+    totalDemographicFemale: number;
+    totalDemographicIndividual: number;
+    totalDemographicCompany: number;
+    totalLoginUsers: number;
+    monthlyCreditCountList: MonthlyCreditCount[];
+    monthlyInstitutionBalanceList: MonthlyInstitutionBalance[];
+}

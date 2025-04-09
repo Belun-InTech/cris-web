@@ -11,6 +11,10 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { TableModule } from 'primeng/table';
 import { DashboardsRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
+import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { HighchartsChartModule } from 'highcharts-angular';
+import { FinancialBarChartComponent } from './financial-bar-chart/financial-bar-chart.component';
 
 @NgModule({
     imports: [
@@ -25,9 +29,13 @@ import { DashboardComponent } from './dashboard.component';
         DashboardsRoutingModule,
         CalendarModule,
         DropdownModule,
+        HighchartsChartModule,
     ],
     declarations: [
         DashboardComponent,
+        PieChartComponent,
+        BarChartComponent,
+        FinancialBarChartComponent,
     ]
 })
 export class DashboardModule { }
