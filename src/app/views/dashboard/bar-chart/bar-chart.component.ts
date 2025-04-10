@@ -48,7 +48,7 @@ export class BarChartComponent {
         }
       },
       xAxis: {
-        categories: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Desembro'],
+        categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         crosshair: true,
         accessibility: {
           description: 'Meses'

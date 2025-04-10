@@ -74,6 +74,7 @@ export class PieChartComponent {
       series: [
         {
           type: 'pie',
+          name: this.title,
           innerSize: '75%',
           data: this.data
         },
