@@ -34,12 +34,12 @@ export class DashboardComponent {
         this.beneficiaryData = [
             {
                 name: 'Company',
-                y: this.data.totalDemographicFemale,
+                y: this.data.totalDemographicCompany,
                 color: '#EDAE49'
             },
             {
                 name: 'Individual',
-                y: this.data.totalDemographicMale,
+                y: this.data.totalDemographicIndividual,
                 color: '#00798C'
             }
         ];
