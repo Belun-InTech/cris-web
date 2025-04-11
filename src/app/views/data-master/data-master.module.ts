@@ -5,11 +5,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MessagesModule } from 'primeng/messages';
 import { TableModule } from 'primeng/table';
 import { DataMasterRoutingModule } from './data-master-routing.module';
 import { DataMasterComponent } from './data-master/data-master.component';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { DataMasterComponent } from './data-master/data-master.component';
     InputTextareaModule,
     MessagesModule,
     EditorModule,
+    FloatLabelModule,
+    InputNumberModule,
   ]
 })
 export class DataMasterModule { }

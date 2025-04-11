@@ -217,4 +217,12 @@ export class DataMasterService {
   }
   //#endregion Manner of Payment
 
+  //region Searching Fees
+
+  getFirstSearchingFees(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/fees/search/first`).pipe(take(1));
+  }
+
+  //endregion Searching Fees
+
 }

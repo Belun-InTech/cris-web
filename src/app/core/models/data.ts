@@ -121,6 +121,11 @@ export interface LdapConfig {
     userSearchFilter: string;
 }
 
+interface SearchingFee {
+    id: number;
+    fee: number;
+}
+
 export interface Log {
     id: number
     operation: string;
@@ -129,6 +134,7 @@ export interface Log {
     timestamp: Date;
     financialInstitution: FinancialInstitution;
     user: User;
+    searchingFee: SearchingFee;
 }
 
 export interface CreditFilter {

@@ -42,3 +42,8 @@ export const getMannerOfPaymentResolver: ResolveFn<any> = () => {
     const service = inject(DataMasterService);
     return service.getListMannerOfPayment();
 }
+
+export const getSearchingFeesResolver: ResolveFn<any> = () => {
+    const service = inject(DataMasterService);
+    return service.getFirstSearchingFees();
+}

@@ -479,7 +479,7 @@ export class FormComponent {
       "FullName": `${item.user.firstName} ${item.user.lastName}`,
       "FinancialInstitution": item.financialInstitution.name,
       "ActionTaken": item.operation,
-      "SearchingFee": 0.5,
+      "SearchingFee": item.searchingFee.fee,
       "Date": formatDate(new Date(item.timestamp), 'yyyy-MM-dd', 'en-US'),
       "Time": formatDate(new Date(item.timestamp), 'HH:mm:ss', 'en-US'),
     }));

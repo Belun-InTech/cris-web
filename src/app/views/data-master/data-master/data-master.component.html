@@ -1,10 +1,39 @@
+@if (type === 'fees') {
+<div class="card fadein animation-duration-1000">
+    <div class="grid">
+        <div class="col-12">
+            <h5>
+                Searching Fees
+            </h5>
+        </div>
+    </div>
+    <div class="pb-3">
+        <p-messages />
+    </div>
+    <div class="grid">
+        <div class="col-5">
+            <form [formGroup]="dataForm">
+                <p-floatLabel>
+                    <p-inputNumber mode="currency" currency="USD" inputId="fees" formControlName="fee" class="w-full" />
+                    <label for="fees">Fee</label>
+                </p-floatLabel>
+                <div class="mt-3">
+                    <p-button label="Update" icon="pi pi-sync" [disabled]="!dataForm.valid" [loading]="buttonLoading"
+                        (click)="updateData(dataForm)" [raised]="true" severity="warning" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+}@else {
 <div class="card fadein animation-duration-1000">
     <div class="grid">
         <!-- <div class="col-5"> -->
         <!-- <p-floatLabel>
-                <input pInputText id="search" class="w-full" />
-                <label for="search">Search</label>
-            </p-floatLabel> -->
+                    <input pInputText id="search" class="w-full" />
+                    <label for="search">Search</label>
+                </p-floatLabel> -->
         <!-- </div> -->
         <div class="col-7">
             <p-button label="New" [outlined]="true" icon="pi pi-plus" (click)="openDialogNewData(type)" />
@@ -44,6 +73,7 @@
         </div>
     </div>
 </div>
+}
 
 <!-- Edit Dialog -->
 

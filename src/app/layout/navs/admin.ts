@@ -83,6 +83,7 @@ export const adminNavs: MenuItem[] = [
                     { label: 'Martial Status', icon: 'bi bi-fw bi-list-task', routerLink: ['/data/marital-status'] },
                     { label: 'Manner of Payment', icon: 'bi bi-fw bi-credit-card', routerLink: ['/data/manners'] },
                     { label: 'Frequently Answers & Questions', icon: 'bi bi-fw bi-person-raised-hand', routerLink: ['/data/faqs'] },
+                    { label: 'Searching Fees', icon: 'bi bi-fw bi-currency-dollar', routerLink: ['/data/searching-fees'] },
                 ],
             },
             { label: 'System', icon: 'bi bi-fw bi-gear-wide-connected', routerLink: ['/configurations'] },

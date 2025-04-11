@@ -19,6 +19,7 @@ export class DataMasterComponent {
   buttonLoading = false;
   isNew = false;
   selectedData: any;
+  searchingFeesData: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -107,6 +108,15 @@ export class DataMasterComponent {
           answer: ['', [Validators.required, Validators.minLength(1)]],
         });
         break;
+      case 'fees':
+        this.searchingFeesData = this.route.snapshot.data['searchingFeesResolve'];
+        this.selectedData = this.searchingFeesData;
+        this.dataForm = this._fb.group({
+          id: [this.selectedData.id],
+          fee: [this.searchingFeesData.fee],
+        });
+        break;
+
     }
   }
 
@@ -174,7 +184,11 @@ export class DataMasterComponent {
 
     this.service.update(this.selectedData.id, this.type, form.value).subscribe({
       next: response => {
-        this.dataList[this.selectedData.index] = response
+        if (this.type === 'fees') {
+          this.searchingFeesData = response;
+        } else {
+          this.dataList[this.selectedData.index] = response
+        }
         this.setNotification(true, false);
       },
       error: error => {
@@ -182,7 +196,9 @@ export class DataMasterComponent {
       },
       complete: () => {
         this.buttonLoading = false;
-        this.closeDialog();
+        if (this.type !== 'fees') {
+          this.closeDialog();
+        }
       }
     })
   }
@@ -198,7 +214,7 @@ export class DataMasterComponent {
     const summary = isSuccess ? (isNew ? 'Data Registered Successfully!' : 'Data Updated Successfully!') : 'Error';
     const detail = isSuccess ? (isNew ? `The data has been registered` : `The data has been updated`) : error;
 
-    this.messageService.add({ severity: isSuccess ? 'success' : 'error', summary, detail });
+    this.messageService.add({ severity: isSuccess ? 'success' : 'error', summary, detail, life: 3000 });
   }
 
 }
