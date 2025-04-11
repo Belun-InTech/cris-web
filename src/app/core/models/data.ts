@@ -1,5 +1,6 @@
 import { City, CreditClassification, FinancialInstitution, Institution, MannerPayment, MaritalStatus, Sector, TypeCollateral } from "./data-master";
 import { BeneficiaryType, Gender, MathOperator } from "./enum";
+import { User } from "./user";
 
 export interface Demographic {
     id: number;
@@ -120,6 +121,16 @@ export interface LdapConfig {
     userSearchFilter: string;
 }
 
+export interface Log {
+    id: number
+    operation: string;
+    idNumber: string;
+    username: string;
+    timestamp: Date;
+    financialInstitution: FinancialInstitution;
+    user: User;
+}
+
 export interface CreditFilter {
     grantorId: number;
     lastPaymentDateFrom: Date;
@@ -139,6 +150,12 @@ export interface DemographicFilter {
     financialInstitutionId: number;
     gender: string;
     cityId: number;
+}
+
+export interface LogFilter {
+    financialInstitutionId: number;
+    fromDate: Date | string;
+    toDate: Date | string;
 }
 
 interface MonthlyCreditCount {

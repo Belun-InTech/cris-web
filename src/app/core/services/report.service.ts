@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { CreditFilter, DemographicFilter } from '../models/data';
+import { CreditFilter, DemographicFilter, Log, LogFilter } from '../models/data';
 import { Observable } from 'rxjs';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -57,5 +58,21 @@ export class ReportService {
    */
   getDemographicReport(filter: DemographicFilter): Observable<any[]> {
     return this.http.post<any[]>(`${this.apiUrl}/demographics`, filter);
+  }
+
+  /**
+   * Generates a report of log activities, filtered by the specified parameters.
+   * Formats the `fromDate` and `toDate` fields if they are provided.
+   * 
+   * @param filter A `LogFilter` object containing the criteria for filtering log activities.
+   * @returns An observable of the report, which is an array of `Log` objects.
+   */
+
+  getLogActivitiesReport(filter: LogFilter): Observable<Log[]> {
+    if (filter.fromDate && filter.toDate) {
+      filter.fromDate = formatDate(filter.fromDate, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
+      filter.toDate = formatDate(filter.toDate, "yyyy-MM-dd'T'HH:mm:ss", 'en-US');
+    }
+    return this.http.post<Log[]>(`${this.apiUrl}/logs`, filter);
   }
 }

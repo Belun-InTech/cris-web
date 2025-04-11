@@ -1,8 +1,9 @@
+import { formatDate } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { CreditFilter, DemographicFilter } from 'src/app/core/models/data';
+import { CreditFilter, DemographicFilter, Log, LogFilter } from 'src/app/core/models/data';
 import { City, CreditClassification, FinancialInstitution, Sector } from 'src/app/core/models/data-master';
 import { FileExportService, ReportService } from 'src/app/core/services';
 import { beneficiaryTypeOpts, genderOpts, operatorOpts, tipuRelatoriuList, yearsList } from 'src/app/core/utils/global-types';
@@ -24,6 +25,7 @@ export class FormComponent {
   dataReports: any[] = [];
   creditFilter: CreditFilter;
   demoFilter: DemographicFilter;
+  logFilter: LogFilter;
   assetClassificationForm: FormGroup;
   sectorForm: FormGroup;
   assetClassificationList: CreditClassification[] = [];
@@ -37,6 +39,7 @@ export class FormComponent {
   columnsSector = ['NameCreditGrantor', 'CreditBySector', 'ElectNo', 'Name', 'Beneficiary', 'DOB', 'Gender', 'City', 'DateAcctOpened', 'DueDate', 'OrgBalance', 'MonthlyPaymt', 'DateLastPaymt', 'Balance', 'MannerOfPaymt', 'Security', 'DescOfCollaterlal', 'AssetClass'];
   columnsCredit = ['NameCreditGrantor', 'ElectNo', 'Name', 'Beneficiary', 'DOB', 'Gender', 'City', 'DateAcctOpened', 'DueDate', 'OrgBalance', 'MonthlyPaymt', 'DateLastPaymt', 'Balance', 'CreditBySector', 'MannerOfPaymt', 'Security', 'DescOfCollaterlal', 'AssetClass', 'Guarantee Name', 'ElectNo (Guarantee)', 'DOB (Guarantee)', 'City (Guarantee)', 'EmpHist (Guarantee)'];
   columnsDemographic = ['Name', 'Beneficiary', 'ElectNo', 'Gender', 'Address - City', 'DOB', 'PhoneNumber', 'MaritalStatus', 'SpouseName', 'EmploymentHistory'];
+  columnsLogs = ['LoginName', 'FullName', 'FinancialInstitution', 'ActionTaken', 'SearchingFee', 'Date', 'Time'];
 
   constructor(
     private _fb: FormBuilder,
@@ -57,6 +60,9 @@ export class FormComponent {
       originalBalance: [null],
       mathOperator: [null],
       getGuarantee: [false],
+      financialInstitutionId: [null],
+      fromDate: [null],
+      toDate: [null]
     });
 
     this.defaultFormValue = this.reportForm.value;
@@ -79,56 +85,82 @@ export class FormComponent {
   }
 
 
-  /**
-   * Generates a report based on the selected report type and form data.
-   *
-   * This method clears any existing messages and determines the type of report
-   * to generate based on the selectedTipuRelatoriu. If the report type is
-   * 'demo', a demographic filter is created using the form data, and a
-   * demographic report is requested from the report service. If the report type
-   * is not 'demo', a credit filter is created, and a credits report is requested.
-   * The resulting data is stored in the dataReports array, and a message is
-   * displayed if no data is available for the selected report.
-   *
-   * @param form The form group containing the report filters and options.
-   */
+
+/**
+ * Generates a report based on the selected report type and form values.
+ * Clears previous messages before generating the report. Depending on the
+ * `selectedTipuRelatoriu.code`, different filters are applied to fetch the
+ * appropriate report data using the report service.
+ *
+ * @param form The FormGroup containing the report filter criteria.
+ *
+ * The cases:
+ * - 'demo': Fetches demographic report data using demographic filter criteria.
+ * - 'asset', 'sector', 'credit': Fetches credit report data using credit filter criteria.
+ * - 'logs': Fetches log activities report data using log filter criteria.
+ *
+ * Adds an informational message if no data is available for the selected report.
+ */
 
   generateReport(form: FormGroup) {
     this.messageService.clear();
 
-    if (this.selectedTipuRelatoriu.code === 'demo') {
-      this.demoFilter = {
-        beneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary.value : null,
-        financialInstitutionId: form.value.grantorId ? form.value.grantorId.id : null,
-        gender: form.value.demographicGender ? form.value.demographicGender.value : null,
-        cityId: form.value.demographicCityId ? form.value.demographicCityId.id : null,
-      }
-      this.reportService.getDemographicReport(this.demoFilter).subscribe({
-        next: (res) => {
-          this.dataReports = res;
-          this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' })
+    switch (this.selectedTipuRelatoriu.code) {
+      case 'demo':
+        this.demoFilter = {
+          beneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary.value : null,
+          financialInstitutionId: form.value.grantorId ? form.value.grantorId.id : null,
+          gender: form.value.demographicGender ? form.value.demographicGender.value : null,
+          cityId: form.value.demographicCityId ? form.value.demographicCityId.id : null,
         }
-      });
-    } else {
-      this.creditFilter = {
-        grantorId: form.value.grantorId ? form.value.grantorId.id : null,
-        assetClassId: form.value.assetClassId ? form.value.assetClassId.id : null,
-        lastPaymentDateFrom: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[0] : null,
-        lastPaymentDateTo: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[1] : null,
-        demographicBeneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary.value : null,
-        demographicCityId: form.value.demographicCityId ? form.value.demographicCityId.id : null,
-        demographicGender: form.value.demographicGender ? form.value.demographicGender.value : null,
-        sectorId: form.value.sectorId ? form.value.sectorId.id : null,
-        originalBalance: form.value.originalBalance ? form.value.originalBalance : null,
-        mathOperator: form.value.mathOperator ? form.value.mathOperator.value : null,
-        getGuarantee: form.value.getGuarantee
-      }
-      this.reportService.getCreditsReport(this.creditFilter).subscribe({
-        next: (res) => {
-          this.dataReports = res;
-          this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' })
+        this.reportService.getDemographicReport(this.demoFilter).subscribe({
+          next: (res) => {
+            this.dataReports = res;
+            this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' })
+          }
+        });
+        break;
+      case 'asset':
+      case 'sector':
+      case 'credit':
+        this.creditFilter = {
+          grantorId: form.value.grantorId ? form.value.grantorId.id : null,
+          assetClassId: form.value.assetClassId ? form.value.assetClassId.id : null,
+          lastPaymentDateFrom: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[0] : null,
+          lastPaymentDateTo: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[1] : null,
+          demographicBeneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary.value : null,
+          demographicCityId: form.value.demographicCityId ? form.value.demographicCityId.id : null,
+          demographicGender: form.value.demographicGender ? form.value.demographicGender.value : null,
+          sectorId: form.value.sectorId ? form.value.sectorId.id : null,
+          originalBalance: form.value.originalBalance ? form.value.originalBalance : null,
+          mathOperator: form.value.mathOperator ? form.value.mathOperator.value : null,
+          getGuarantee: form.value.getGuarantee
         }
-      });
+        this.reportService.getCreditsReport(this.creditFilter).subscribe({
+          next: (res) => {
+            this.dataReports = res;
+            this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' })
+          }
+        });
+        break;
+      case 'logs':
+        this.logFilter = {
+          financialInstitutionId: form.value.grantorId ? form.value.grantorId.id : null,
+          fromDate: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[0] : null,
+          toDate: null,
+        }
+        const toDate: Date = form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[1] : null;
+        if (toDate) {
+          toDate.setHours(23, 59, 59, 0);
+          this.logFilter.toDate = toDate;
+        }
+        this.reportService.getLogActivitiesReport(this.logFilter).subscribe({
+          next: (res) => {
+            this.dataReports = res;
+            this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' })
+          }
+        });
+        break;
     }
   }
 
@@ -151,6 +183,9 @@ export class FormComponent {
         break;
       case 'demo':
         this.exportDemographicReport();
+        break;
+      case 'logs':
+        this.exportLogsActivitiesReport();
         break;
     }
   }
@@ -423,6 +458,51 @@ export class FormComponent {
     const reportName = this.reportForm.get('tipu').value.name;
     this.excelService.exportToExcel(mappedData, reportName);
   }
+
+  /**
+   * Exports the logs activities report to an Excel file.
+   *
+   * Maps the dataReports to a custom set of columns representing the
+   * login name, full name, financial institution name, action taken,
+   * searching fee, date, and time for each log activity. The report
+   * name is retrieved from the form and the data is exported to an
+   * Excel file using the excelService. A totals row is calculated and
+   * added to the end of the data with the total searching fee.
+   */
+  private exportLogsActivitiesReport(): void {
+    
+    let mappedData: any[], totalsRow: any;
+    
+    // Map the data to custom columns.
+    mappedData = this.dataReports.map((item: Log) => ({
+      "LoginName": item.user.username,
+      "FullName": `${item.user.firstName} ${item.user.lastName}`,
+      "FinancialInstitution": item.financialInstitution.name,
+      "ActionTaken": item.operation,
+      "SearchingFee": 0.5,
+      "Date": new Date(item.timestamp).getDate(),
+      "Time": new Date(item.timestamp).getHours(),
+    }));
+
+    const totalFee = mappedData.reduce((sum, record) => sum + record["SearchingFee"], 0);
+
+    totalsRow = {
+      "LoginName": 'Total',
+      "FullName": null,
+      "FinancialInstitution": null,
+      "ActionTaken": null,
+      "SearchingFee": totalFee,
+      "Date": null,
+      "Time": null,
+    }
+
+    mappedData.push(totalsRow);
+
+    // Get the report name from the form and export the data.
+    const reportName = this.reportForm.get('tipu').value.name;
+    this.excelService.exportToExcel(mappedData, reportName);
+  }
+  // columnsLogs = ['LoginName', 'FullName', 'FinancialInstitution', 'ActionTaken', 'SearchingFee', 'Date', 'Time'];
 
   /**
 * Maps an array of objects to an array of objects with only id and name properties.

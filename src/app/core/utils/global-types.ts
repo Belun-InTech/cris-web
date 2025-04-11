@@ -65,6 +65,7 @@ export const tipuRelatoriuList = [
     { name: 'Credit by Sector Reports', code: 'sector' },
     { name: 'Individual or Company Credit Reports', code: 'credit' },
     { name: 'Demographics Data Report', code: 'demo' },
+    { name: 'Log Activities Report', code: 'logs' },
 ]
 
 export const tipuEleitorTuanList = [
