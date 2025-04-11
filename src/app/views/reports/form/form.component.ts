@@ -86,21 +86,21 @@ export class FormComponent {
 
 
 
-/**
- * Generates a report based on the selected report type and form values.
- * Clears previous messages before generating the report. Depending on the
- * `selectedTipuRelatoriu.code`, different filters are applied to fetch the
- * appropriate report data using the report service.
- *
- * @param form The FormGroup containing the report filter criteria.
- *
- * The cases:
- * - 'demo': Fetches demographic report data using demographic filter criteria.
- * - 'asset', 'sector', 'credit': Fetches credit report data using credit filter criteria.
- * - 'logs': Fetches log activities report data using log filter criteria.
- *
- * Adds an informational message if no data is available for the selected report.
- */
+  /**
+   * Generates a report based on the selected report type and form values.
+   * Clears previous messages before generating the report. Depending on the
+   * `selectedTipuRelatoriu.code`, different filters are applied to fetch the
+   * appropriate report data using the report service.
+   *
+   * @param form The FormGroup containing the report filter criteria.
+   *
+   * The cases:
+   * - 'demo': Fetches demographic report data using demographic filter criteria.
+   * - 'asset', 'sector', 'credit': Fetches credit report data using credit filter criteria.
+   * - 'logs': Fetches log activities report data using log filter criteria.
+   *
+   * Adds an informational message if no data is available for the selected report.
+   */
 
   generateReport(form: FormGroup) {
     this.messageService.clear();
@@ -470,9 +470,9 @@ export class FormComponent {
    * added to the end of the data with the total searching fee.
    */
   private exportLogsActivitiesReport(): void {
-    
+
     let mappedData: any[], totalsRow: any;
-    
+
     // Map the data to custom columns.
     mappedData = this.dataReports.map((item: Log) => ({
       "LoginName": item.user.username,
@@ -480,8 +480,8 @@ export class FormComponent {
       "FinancialInstitution": item.financialInstitution.name,
       "ActionTaken": item.operation,
       "SearchingFee": 0.5,
-      "Date": new Date(item.timestamp).getDate(),
-      "Time": new Date(item.timestamp).getHours(),
+      "Date": formatDate(new Date(item.timestamp), 'yyyy-MM-dd', 'en-US'),
+      "Time": formatDate(new Date(item.timestamp), 'HH:mm:ss', 'en-US'),
     }));
 
     const totalFee = mappedData.reduce((sum, record) => sum + record["SearchingFee"], 0);
