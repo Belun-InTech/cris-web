@@ -175,7 +175,7 @@
 
     <div class="grid">
         <div class="col-12 md:col-6">
-            <p-button (onClick)="generateReport(reportForm)" [disabled]="!reportForm.valid" label="Generate"
+            <p-button (onClick)="generateReport(reportForm)" [loading]="btnLoading" [disabled]="!reportForm.valid" label="Generate"
                 icon="pi pi-chart-line" [raised]="true" severity="success" class="mr-2" />
             @if (!hideClearButton) {
             <p-button (onClick)="clearFilter()" label="Clear" icon="pi pi-times" size="small" [raised]="true"

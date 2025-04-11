@@ -40,6 +40,7 @@ export class FormComponent {
   columnsCredit = ['NameCreditGrantor', 'ElectNo', 'Name', 'Beneficiary', 'DOB', 'Gender', 'City', 'DateAcctOpened', 'DueDate', 'OrgBalance', 'MonthlyPaymt', 'DateLastPaymt', 'Balance', 'CreditBySector', 'MannerOfPaymt', 'Security', 'DescOfCollaterlal', 'AssetClass', 'Guarantee Name', 'ElectNo (Guarantee)', 'DOB (Guarantee)', 'City (Guarantee)', 'EmpHist (Guarantee)'];
   columnsDemographic = ['Name', 'Beneficiary', 'ElectNo', 'Gender', 'Address - City', 'DOB', 'PhoneNumber', 'MaritalStatus', 'SpouseName', 'EmploymentHistory'];
   columnsLogs = ['LoginName', 'FullName', 'FinancialInstitution', 'ActionTaken', 'SearchingFee', 'Date', 'Time'];
+  btnLoading = false;
 
   constructor(
     private _fb: FormBuilder,
@@ -104,6 +105,7 @@ export class FormComponent {
 
   generateReport(form: FormGroup) {
     this.messageService.clear();
+    this.btnLoading = true;
 
     switch (this.selectedTipuRelatoriu.code) {
       case 'demo':
@@ -116,7 +118,8 @@ export class FormComponent {
         this.reportService.getDemographicReport(this.demoFilter).subscribe({
           next: (res) => {
             this.dataReports = res;
-            this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' })
+            this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' });
+            this.btnLoading = false;
           }
         });
         break;
@@ -139,7 +142,8 @@ export class FormComponent {
         this.reportService.getCreditsReport(this.creditFilter).subscribe({
           next: (res) => {
             this.dataReports = res;
-            this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' })
+            this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' });
+            this.btnLoading = false;
           }
         });
         break;
@@ -157,7 +161,8 @@ export class FormComponent {
         this.reportService.getLogActivitiesReport(this.logFilter).subscribe({
           next: (res) => {
             this.dataReports = res;
-            this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' })
+            this.messageService.add({ severity: 'info', summary: 'No Data!', detail: 'No data available for the selected report.' });
+            this.btnLoading = false;
           }
         });
         break;
