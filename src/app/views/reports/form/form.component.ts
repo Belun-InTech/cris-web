@@ -131,7 +131,7 @@ export class FormComponent {
           assetClassId: form.value.assetClassId ? form.value.assetClassId.id : null,
           lastPaymentDateFrom: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[0] : null,
           lastPaymentDateTo: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[1] : null,
-          demographicBeneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary.value : null,
+          demographicBeneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary : null,
           demographicCityId: form.value.demographicCityId ? form.value.demographicCityId.id : null,
           demographicGender: form.value.demographicGender ? form.value.demographicGender.value : null,
           sectorId: form.value.sectorId ? form.value.sectorId.id : null,
@@ -454,7 +454,7 @@ export class FormComponent {
       "Address": item.address,
       "City": item.city.name,
       "PhoneNumber": item.phoneNumber,
-      "MaritalStatus": item.maritalStatus.name,
+      "MaritalStatus": item.maritalStatus ? item.maritalStatus.name : null,
       "SpouseName": item.spouseName,
       "EmploymentHistory": item.employmentHistory,
     }));
