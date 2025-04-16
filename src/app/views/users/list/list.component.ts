@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs';
 import { FinancialInstitution } from 'src/app/core/models/data-master';
 import { UserService } from 'src/app/core/services';
 
@@ -13,13 +14,16 @@ export class ListComponent {
   users: any[] = [];
   financialInstitutionList: FinancialInstitution[];
   financialInstitutionFormControl: FormControl;
+  searchFormControl: FormControl;
   cacheData: any[] = [];
+  dataIsFetching = false;
 
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
   ) {
     this.financialInstitutionFormControl = new FormControl(null);
+    this.searchFormControl = new FormControl('', { updateOn: 'change' });
     this.users = this.route.snapshot.data['pageUserResolve'].content;
     this.financialInstitutionList = this.mapToIdAndName(this.route.snapshot.data['financialInstitutionList']._embedded.financialInstitutions);
   }
@@ -37,6 +41,34 @@ export class ListComponent {
         this.getUsers();
       }
     });
+
+    this.searchFormControl.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        tap(() => this.dataIsFetching = true),
+        switchMap(value => {
+          const trimmedValue = value.trim();
+          if (trimmedValue === '') {
+            // If query is empty, return the original unfiltered data
+            return this.userService.getPagination().pipe(
+              map(response => response.content)
+            );
+          } else {
+            // Perform filtered search
+            return this.userService.filterByQuery(trimmedValue);
+          }
+        })
+      )
+      .subscribe({
+        next: response => {
+          this.users = response;
+          this.dataIsFetching = false;
+        },
+        error: err => {
+          this.dataIsFetching = false;
+        }
+      });
   }
 
   private getUsers() {
