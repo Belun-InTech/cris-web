@@ -102,7 +102,7 @@
             <div class="col-12 md:col-3">
                 <div class="p-fluid">
                     <p-dropdown formControlName="grantorId" [options]="financialInstitutionList" [showClear]="true"
-                        placeholder="Choose Financial Institution" class="pb-2">
+                        placeholder="Choose Financial Institution" class="pb-2" (onClear)="userList = []">
                         <ng-template let-item pTemplate="selectedItem">
                             {{ item.name }}
                         </ng-template>
