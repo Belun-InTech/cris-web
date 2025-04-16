@@ -73,4 +73,20 @@ export class CreditService {
       }, [])
     );
   }
+
+  /**
+   * Retrieves a list of credit records that match the given search query.
+   *
+   * This method makes a GET request to the server's /search endpoint with the
+   * query parameter set to the given query. The server will return a list of
+   * credit records that match the query.
+   *
+   * @param query The query string to search for.
+   * @returns An observable of the server response.
+   */
+  filterByQuery(query: any): Observable<any> {
+    let params = new HttpParams()
+      .append('query', query)
+    return this.http.get<any>(`${this.apiUrl}/search`, { params }).pipe(take(1));
+  }
 }

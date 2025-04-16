@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs';
 import { CreditPage } from 'src/app/core/models/data';
 import { FileExportService } from 'src/app/core/services';
 import { CreditService } from 'src/app/core/services/credit.service';
@@ -60,6 +61,34 @@ export class ListComponent {
         }
       },
     ];
+
+    this.searchFormControl.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        tap(() => this.dataIsFetching = true),
+        switchMap(value => {
+          const trimmedValue = value.trim();
+          if (trimmedValue === '') {
+            // If query is empty, return the original unfiltered data
+            return this.service.getPagination().pipe(
+              map(response => response.content)
+            );
+          } else {
+            // Perform filtered search
+            return this.service.filterByQuery(trimmedValue);
+          }
+        })
+      )
+      .subscribe({
+        next: response => {
+          this.creditData = response;
+          this.dataIsFetching = false;
+        },
+        error: err => {
+          this.dataIsFetching = false;
+        }
+      });
   }
 
   getData(page: number, size: number): void {
