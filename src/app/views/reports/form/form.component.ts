@@ -110,7 +110,7 @@ export class FormComponent {
     switch (this.selectedTipuRelatoriu.code) {
       case 'demo':
         this.demoFilter = {
-          beneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary.value : null,
+          beneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary : null,
           financialInstitutionId: form.value.grantorId ? form.value.grantorId.id : null,
           gender: form.value.demographicGender ? form.value.demographicGender.value : null,
           cityId: form.value.demographicCityId ? form.value.demographicCityId.id : null,
@@ -129,8 +129,8 @@ export class FormComponent {
         this.creditFilter = {
           grantorId: form.value.grantorId ? form.value.grantorId.id : null,
           assetClassId: form.value.assetClassId ? form.value.assetClassId.id : null,
-          lastPaymentDateFrom: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[0] : null,
-          lastPaymentDateTo: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[1] : null,
+          lastPaymentDateFrom: form.value.lastPaymentrangeDate ? formatDate(new Date(form.value.lastPaymentrangeDate[0]), 'yyyy-MM-dd', 'en-US') : null,
+          lastPaymentDateTo: form.value.lastPaymentrangeDate ? formatDate(new Date(form.value.lastPaymentrangeDate[1]), 'yyyy-MM-dd', 'en-US') : null,
           demographicBeneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary : null,
           demographicCityId: form.value.demographicCityId ? form.value.demographicCityId.id : null,
           demographicGender: form.value.demographicGender ? form.value.demographicGender.value : null,

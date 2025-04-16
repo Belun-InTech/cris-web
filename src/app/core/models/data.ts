@@ -139,8 +139,8 @@ export interface Log {
 
 export interface CreditFilter {
     grantorId: number;
-    lastPaymentDateFrom: Date;
-    lastPaymentDateTo: Date;
+    lastPaymentDateFrom: Date | string;
+    lastPaymentDateTo: Date | string;
     sectorId: number;
     assetClassId: number;
     demographicGender: Gender;
