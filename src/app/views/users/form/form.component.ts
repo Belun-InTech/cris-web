@@ -76,7 +76,7 @@ export class FormComponent {
 
     this.roleListExternal = this.mapToIdAndName(this.route.snapshot.data['roleList']._embedded.roles).filter(values => values.name === 'ROLE_CLIENT');
 
-    this.financialInstitutionList = this.mapToIdAndName(this.route.snapshot.data['financialInstitutionList']._embedded.financialInstitutions).filter(values => values.name.toLowerCase() !== 'internal');
+    this.financialInstitutionList = this.mapToIdAndName(this.route.snapshot.data['financialInstitutionList']._embedded.financialInstitutions).filter(values => values.name.toLowerCase() !== 'BCTL');
 
 
     this.userData = this.route.snapshot.data['userData'];

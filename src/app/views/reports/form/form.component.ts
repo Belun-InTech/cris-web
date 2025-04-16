@@ -3,9 +3,10 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { User } from 'src/app/core/models';
 import { CreditFilter, DemographicFilter, Log, LogFilter } from 'src/app/core/models/data';
 import { City, CreditClassification, FinancialInstitution, Sector } from 'src/app/core/models/data-master';
-import { FileExportService, ReportService } from 'src/app/core/services';
+import { FileExportService, ReportService, UserService } from 'src/app/core/services';
 import { beneficiaryTypeOpts, genderOpts, operatorOpts, tipuRelatoriuList, yearsList } from 'src/app/core/utils/global-types';
 
 @Component({
@@ -35,6 +36,7 @@ export class FormComponent {
   genderList: any[] = genderOpts;
   beneficiaryList: any[] = beneficiaryTypeOpts;
   operatorList: any[] = operatorOpts;
+  userList: User[] = [];
   columnsAsset = ['NameCreditGrantor', 'AssetClass', 'ElectNo', 'Name', 'Beneficiary', 'DOB', 'Gender', 'City', 'DateAcctOpened', 'DueDate', 'OrgBalance', 'MonthlyPaymt', 'DateLastPaymt', 'Balance', 'CreditBySector', 'MannerOfPaymt', 'Security', 'DescOfCollaterlal'];
   columnsSector = ['NameCreditGrantor', 'CreditBySector', 'ElectNo', 'Name', 'Beneficiary', 'DOB', 'Gender', 'City', 'DateAcctOpened', 'DueDate', 'OrgBalance', 'MonthlyPaymt', 'DateLastPaymt', 'Balance', 'MannerOfPaymt', 'Security', 'DescOfCollaterlal', 'AssetClass'];
   columnsCredit = ['NameCreditGrantor', 'ElectNo', 'Name', 'Beneficiary', 'DOB', 'Gender', 'City', 'DateAcctOpened', 'DueDate', 'OrgBalance', 'MonthlyPaymt', 'DateLastPaymt', 'Balance', 'CreditBySector', 'MannerOfPaymt', 'Security', 'DescOfCollaterlal', 'AssetClass', 'Guarantee Name', 'ElectNo (Guarantee)', 'DOB (Guarantee)', 'City (Guarantee)', 'EmpHist (Guarantee)'];
@@ -48,6 +50,7 @@ export class FormComponent {
     private route: ActivatedRoute,
     private excelService: FileExportService,
     private messageService: MessageService,
+    private userService: UserService,
   ) {
     this.reportForm = this._fb.group({
       tipu: [null, [Validators.required]],
@@ -63,7 +66,8 @@ export class FormComponent {
       getGuarantee: [false],
       financialInstitutionId: [null],
       fromDate: [null],
-      toDate: [null]
+      toDate: [null],
+      username: [null]
     });
 
     this.defaultFormValue = this.reportForm.value;
@@ -82,7 +86,20 @@ export class FormComponent {
       const areEqual = keys.every(key => this.defaultFormValue[key] === item[key]);
       this.hideClearButton = areEqual;
       this.dataReports = [];
+
+      if (this.selectedTipuRelatoriu && this.selectedTipuRelatoriu.code === 'logs') {
+        this.reportForm.get('grantorId').valueChanges.subscribe((value) => {
+          this.reportForm.get('username').reset();
+          this.userService.getByFinancialInstitutionId(value.id).subscribe({
+            next: response => {
+              console.log(response);
+              this.userList = response;
+            }
+          })
+        });
+      }
     });
+
   }
 
 
@@ -152,6 +169,7 @@ export class FormComponent {
           financialInstitutionId: form.value.grantorId ? form.value.grantorId.id : null,
           fromDate: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[0] : null,
           toDate: null,
+          username: form.value.username? form.value.username.username: null
         }
         const toDate: Date = form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[1] : null;
         if (toDate) {

@@ -66,6 +66,26 @@ export class UserService {
     }
   }
 
+  /**
+   * Makes a GET request to the users endpoint with the
+   * /financial-institution/{id} path to retrieve a list of users
+   * associated with a financial institution by its ID.
+   *
+   * @param id The ID of the financial institution
+   * @returns An observable of the server response.
+   */
+  getByFinancialInstitutionId(id: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/financial-institution/${id}`).pipe(take(1));
+  }
+
+  /**
+   * Makes a POST request to the users endpoint with the
+   * /activate?token={token} path to activate a user by their token.
+   *
+   * @param token The token of the user to be activated.
+   * @param form The object containing the user's new password and confirm password.
+   * @returns An observable of the server response.
+   */
   activate(token: string, form: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/activate?token=${token}`, form);
   }

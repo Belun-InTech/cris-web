@@ -162,6 +162,7 @@ export interface LogFilter {
     financialInstitutionId: number;
     fromDate: Date | string;
     toDate: Date | string;
+    username: string;
 }
 
 interface MonthlyCreditCount {

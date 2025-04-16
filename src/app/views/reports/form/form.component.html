@@ -114,6 +114,19 @@
             </div>
             <div class="col-12 md:col-3">
                 <div class="p-fluid">
+                    <p-dropdown formControlName="username" [options]="userList" [showClear]="true"
+                        placeholder="Choose User" class="pb-2">
+                        <ng-template let-item pTemplate="selectedItem">
+                            {{ item.firstName }} {{ item.lastName }} - {{ item.username }}
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            {{ item.firstName }} {{ item.lastName }} - {{ item.username }}
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="col-12 md:col-3">
+                <div class="p-fluid">
                     <p-floatLabel>
                         <p-calendar formControlName="lastPaymentrangeDate" selectionMode="range" dateFormat="dd/mm/yy"
                             inputId="lastPaymentrangeDate" class="w-full" />
