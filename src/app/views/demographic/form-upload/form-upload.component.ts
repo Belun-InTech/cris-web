@@ -431,16 +431,13 @@ export class FormUploadComponent {
     // Define the header row
     const header = [
       "Name", "ElectNo", "Beneficiary", "DOB", "Gender", "MStatus",
-      "SpouseName", "City", "Address", "EmpHist", "Telephone",
-      "Guarantee Name", "ElectNo (Guarantee)", "DOB (Guarantee)",
-      "City (Guarantee)", "EmpHist (Guarantee)"
+      "SpouseName", "City", "Address", "EmpHist", "Telephone"
     ];
 
     // Define one row of mock data
     const mockRow = [
       "Jose da Costa", "654321", "Company/Individual", "1990-01-01", "Male/Female", "Single/Married/Divorced",
       "N/A", "Dili", "Nu'u Laran", "Timor Telecom", "77003245",
-      "Felizberto dos Santos", "78901942", "1980-05-05", "Dili", "Telemor"
     ];
 
     // Combine header and data rows into a 2D array

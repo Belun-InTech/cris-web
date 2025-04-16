@@ -106,16 +106,16 @@ export class FormUploadComponent {
       if (row) {
         let guarantee = undefined
         // Check if Guarantee exist
-        if (row['Guarantee Name']) {
+        if (row['GuaranteeName']) {
           guarantee = {
-            fullName: row['Guarantee Name'],
-            electoralNumber: row['ElectNo (Guarantee)'],
-            birthDate: row['DOB (Guarantee)'],
+            fullName: row['GuaranteeName'],
+            electoralNumber: row['GuaranteeElectNo'],
+            birthDate: row['GuaranteeDOB'],
             city: {
               id: undefined,
-              name: row['City (Guarantee)'],
+              name: row['GuaranteeCity'],
             },
-            employmentHistory: row['EmpHist (Guarantee)'],
+            employmentHistory: row['GuaranteeEmpHist'],
           }
         }
 
@@ -453,15 +453,15 @@ export class FormUploadComponent {
       "NameCreditGrantor", "ElectNo", "DateAcctOpened", "DueDate",
       "OrgBal", "MonthlyPaymt", "DateLastPaymt", "Balance",
       "CreditbySector", "MannerofPaymt", "Security", "DescofCollateral",
-      "AssetClass"
+      "AssetClass", "GuaranteeName", "GuaranteeElectNo", "GuaranteeDOB", "GuaranteeCity", "GuaranteeEmpHist"
     ];
 
     // Define one row of mock data
     const mockRow = [
-      "John Doe", "123456", "2025-01-01", "2025-12-31",
+      "BNCTL", "123456", "2025-01-01", "2025-12-31",
       "1000", "100", "2025-03-01", "900",
       "1", "Overdraft", "Salary", "Description A",
-      "Standard"
+      "Standard", "Jane Doe", "654321", "1990-01-01", "Dili", "WHO"
     ];
 
     // Combine header and data rows into a 2D array
