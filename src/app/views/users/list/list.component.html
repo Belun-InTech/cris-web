@@ -1,12 +1,25 @@
 <div class="card fadein animation-duration-1000">
     <div class="grid">
-        <div class="col-5">
+        <div class="col-3">
             <p-floatLabel>
                 <input pInputText id="search" class="w-full" />
                 <label for="search">Search</label>
             </p-floatLabel>
         </div>
-        <div class="col-7 flex justify-content-end">
+        <div class="col-3">
+            <div class="p-fluid">
+                <p-dropdown [formControl]="financialInstitutionFormControl" [options]="financialInstitutionList"
+                    [showClear]="true" placeholder="Choose Financial Institution" class="pb-2">
+                    <ng-template let-item pTemplate="selectedItem">
+                        {{ item.name }}
+                    </ng-template>
+                    <ng-template let-item pTemplate="item">
+                        {{ item.name }}
+                    </ng-template>
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-6 flex justify-content-end">
             <p-button label="New User" [outlined]="true" icon="pi pi-user-plus" [routerLink]="['/users/form']"
                 routerLinkActive="router-link-active" />
         </div>
@@ -19,6 +32,7 @@
                         <th>Name</th>
                         <th>Username</th>
                         <th>Email</th>
+                        <th>Financial Institution</th>
                         <th>Role</th>
                         <th>Status</th>
                     </tr>
@@ -33,6 +47,9 @@
                         </td>
                         <td>
                             {{user.email}}
+                        </td>
+                        <td>
+                            {{user.financialInstitution.name}}
                         </td>
                         <td>
                             {{user.role.name.replace('ROLE_', '')}}

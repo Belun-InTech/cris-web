@@ -1,15 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ListComponent } from './list/list.component';
-import { FormComponent } from './form/form.component';
-import { getRoleListResolver } from 'src/app/core/resolvers/role.resolver';
-import { getUserByUsernameResolver } from 'src/app/core/resolvers/utilizador.resolver';
 import { getFinancialInstitutionListResolver } from 'src/app/core/resolvers/data-master.resolver';
+import { getRoleListResolver } from 'src/app/core/resolvers/role.resolver';
+import { getPageUserResolver, getUserByUsernameResolver } from 'src/app/core/resolvers/utilizador.resolver';
+import { FormComponent } from './form/form.component';
+import { ListComponent } from './list/list.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: ListComponent
+    component: ListComponent,
+    resolve: {
+      pageUserResolve: getPageUserResolver,
+      financialInstitutionList: getFinancialInstitutionListResolver,
+    }
   },
   {
     path: 'form',
