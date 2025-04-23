@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { MenuItem } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs';
 import { FinancialInstitution } from 'src/app/core/models/data-master';
-import { UserService } from 'src/app/core/services';
+import { FileExportService, UserService } from 'src/app/core/services';
 
 @Component({
   selector: 'app-list',
@@ -17,24 +18,53 @@ export class ListComponent {
   searchFormControl: FormControl;
   cacheData: any[] = [];
   dataIsFetching = false;
+  items: MenuItem[] | undefined;
+  columns: string[] = ['Name', 'Username', 'Email', 'Financial Institution', 'Role', 'Status'];
+  filename = 'Users';
 
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
+    private excelService: FileExportService,
   ) {
     this.financialInstitutionFormControl = new FormControl(null);
     this.searchFormControl = new FormControl('', { updateOn: 'change' });
     this.users = this.route.snapshot.data['pageUserResolve'].content;
     this.financialInstitutionList = this.mapToIdAndName(this.route.snapshot.data['financialInstitutionList']._embedded.financialInstitutions);
+``
+    this.items = [
+      {
+        icon: 'pi pi-file-pdf',
+        label: 'PDF',
+        command: () => {
+          // this.messageService.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
+          if (this.users.length > 0) {
+            this.exportToPDF();
+          }
+        }
+      },
+      {
+        icon: 'pi pi-file-excel',
+        label: 'Excel',
+        command: () => {
+          // this.messageService.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
+          if (this.users.length > 0) {
+            this.exportToExcel();
+          }
+        }
+      },
+    ];
   }
 
 
   ngOnInit(): void {
     this.financialInstitutionFormControl.valueChanges.subscribe(value => {
       if (value) {
+        this.dataIsFetching = true;
         this.userService.getByFinancialInstitutionId(value.id).subscribe({
           next: response => {
             this.users = response;
+            this.dataIsFetching = false;
           }
         });
       } else {
@@ -72,8 +102,10 @@ export class ListComponent {
   }
 
   private getUsers() {
+    this.dataIsFetching = true;
     this.userService.getPagination().subscribe(data => {
       this.users = data.content;
+      this.dataIsFetching = false;
     });
   }
 
@@ -105,6 +137,28 @@ export class ListComponent {
       return {
         id: item.id,
         name: item.name
+      };
+    });
+  }
+
+  private exportToExcel(): void {
+    this.excelService.exportToExcel(this.mapUserList(this.users), this.filename);
+  }
+  // ['fullName', 'gender', 'idNumber', 'city', 'brithDate', 'phoneNumber']
+
+  private exportToPDF(): void {
+    this.excelService.exportUsersToPDF(this.columns, this.mapUserList(this.users), this.filename);
+  }
+
+  private mapUserList(users: any[]): any[] {
+    return users.map(user => {
+      return {
+        ['Name']: `${user.firstName} ${user.lastName}`,
+        ['Username']: user.username,
+        ['Email']: user.email,
+        ['Financial Institution']: user.financialInstitution.name,
+        ['Role']: user.role.name.replace('ROLE_', ''),
+        ['Status']: user.status,
       };
     });
   }

@@ -2,7 +2,8 @@
     <div class="grid">
         <div class="col-3">
             <p-floatLabel>
-                <input pInputText id="search" [formControl]="searchFormControl" class="w-full" placeholder="Username/Name/Email" />
+                <input pInputText id="search" [formControl]="searchFormControl" class="w-full"
+                    placeholder="Username/Name/Email" />
                 <label for="search">Search</label>
             </p-floatLabel>
         </div>
@@ -19,14 +20,18 @@
                 </p-dropdown>
             </div>
         </div>
-        <div class="col-6 flex justify-content-end">
+        <div class="col-3">
+            <p-menu #menu [model]="items" [popup]="true" />
+            <p-button severity="info" [disabled]="users.length === 0" (onClick)="menu.toggle($event)" icon="pi pi-file-export" label="Export" />
+        </div>
+        <div class="col-3 flex justify-content-end">
             <p-button label="New User" [outlined]="true" icon="pi pi-user-plus" [routerLink]="['/users/form']"
                 routerLinkActive="router-link-active" />
         </div>
     </div>
     <div class="grid">
         <div class="col-12">
-            <p-table [value]="users" [tableStyle]="{'min-width': '50rem'}">
+            <p-table [value]="users" [tableStyle]="{'min-width': '50rem'}" [loading]="dataIsFetching">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
                         <th>Name</th>

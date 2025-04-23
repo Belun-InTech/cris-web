@@ -71,6 +71,45 @@ export class FileExportService {
     doc.save(`${filename}.pdf`)
   }
 
+
+  /**
+   * Export an array of user data to a PDF file.
+   * 
+   * The user data is expected to be an array of objects, each
+   * containing the following properties: Name, Username, Email,
+   * Financial Institution, Role, and Status.
+   * 
+   * The columns parameter is an array of strings, each string being a
+   * column header for the PDF table.
+   * 
+   * The filename will be used as the PDF filename, and the file will be
+   * saved with a ".pdf" extension. If the filename is longer than 31
+   * characters, it will be truncated.
+   * 
+   * @param columns An array of column headers.
+   * @param data The array of user data to be exported.
+   * @param filename The filename for the exported PDF.
+   */
+  exportUsersToPDF(columns: any[], data: any[], filename: string): void {
+    const doc = new jsPDF();
+
+    autoTable(doc, {
+      head: [columns],
+      body: data.map(value =>
+        [
+          value['Name'],
+          value['Username'],
+          value['Email'],
+          value['Financial Institution'],
+          value['Role'],
+          value['Status'],
+        ]
+      )
+    })
+
+    doc.save(`${filename}.pdf`)
+  }
+
   /**
    * Export an array of credit data to a PDF file.
    * 

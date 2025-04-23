@@ -14,6 +14,7 @@ import { TagModule } from 'primeng/tag';
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
 import { UsersRoutingModule } from './users-routing.module';
+import { MenuModule } from 'primeng/menu';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { UsersRoutingModule } from './users-routing.module';
     MessagesModule,
     SelectButtonModule,
     AutoCompleteModule,
+    MenuModule,
   ]
 })
 export class UsersModule { }
