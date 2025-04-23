@@ -33,95 +33,198 @@
 <!-- Card Demographic -->
 
 <div class="mb-3 fadein animation-duration-1000">
-    <p-fieldset legend="Demographic" [toggleable]="true">
-        <div class="grid">
-            @if (demoData.beneficiary.toLowerCase() === 'company') {
-            <div class="col-3">
-                <h6>Name</h6>
-                <h6>TIN Nº</h6>
-                <h6>Beneficiary</h6>
-                <h6>Date of Birth</h6>
-                <h6>City</h6>
-                <h6>Address</h6>
-                <h6>Telephone</h6>
-            </div>
-            } @else {
-            <div class="col-3">
-                <h6>Name</h6>
-                <h6>Electoral Nº</h6>
-                <h6>Beneficiary</h6>
-                <h6>Date of Birth</h6>
-                <h6>Gender</h6>
-                <h6>Marital Status</h6>
-                <h6>Spouse name</h6>
-                <h6>City</h6>
-                <h6>Address</h6>
-                <h6>Employment History</h6>
-                <h6>Telephone</h6>
-            </div>
-            }
-            <div class="col-6">
-                @if (demoData.beneficiary.toLowerCase() === 'company') {
-                <h6>{{demoData.fullName}}</h6>
-                <h6>{{demoData.idNumber}}</h6>
-                <h6>
-                    {{demoData.beneficiary}}
-                </h6>
-                <h6>
-                    {{demoData.birthDate |date:'dd MMM yyyy'}}
-                </h6>
-                <h6>
-                    {{demoData.city.name}}
-                </h6>
-                <h6>
-                    {{demoData.address}}
-                </h6>
-                <h6>
-                    {{demoData.phoneNumber}}
-                </h6>
+    <div class="grid">
 
-                } @else {
-                <h6>{{demoData.fullName}}</h6>
-                <h6>{{demoData.idNumber}}</h6>
-                <h6>
-                    {{demoData.beneficiary}}
-                </h6>
-                <h6>
-                    {{demoData.birthDate |date:'dd MMM yyyy'}}
-                </h6>
-                <h6>
-                    {{demoData.gender}}
-                </h6>
-                <h6>
-                    {{demoData.maritalStatus.name}}
-                </h6>
-                <h6>
-                    @if (demoData.spouseName) {
-                    {{demoData.spouseName}}
-                    }@else {
-                    N/A
+        <div class="col-12 md:col-6">
+            <p-fieldset legend="Demographic" [toggleable]="true">
+                <div class="grid">
+                    @if (demoData.beneficiary.toLowerCase() === 'company') {
+                    <div class="col-5">
+                        <h6>Name</h6>
+                        <h6>TIN Nº</h6>
+                        <h6>Beneficiary</h6>
+                        <h6>Date of Birth</h6>
+                        <h6>City</h6>
+                        <h6>Address</h6>
+                        <h6>Telephone</h6>
+                    </div>
+                    } @else {
+                    <div class="col-5">
+                        <h6>Name</h6>
+                        <h6>Electoral Nº</h6>
+                        <h6>Beneficiary</h6>
+                        <h6>Date of Birth</h6>
+                        <h6>Gender</h6>
+                        <h6>Marital Status</h6>
+                        <h6>Spouse name</h6>
+                        <h6>City</h6>
+                        <h6>Address</h6>
+                        <h6>Employment History</h6>
+                        <h6>Telephone</h6>
+                    </div>
                     }
-                </h6>
-                <h6>
-                    {{demoData.city.name}}
-                </h6>
-                <h6>
-                    {{demoData.address}}
-                </h6>
-                <h6>
-                    {{demoData.employmentHistory}}
-                </h6>
-                <h6>
-                    {{demoData.phoneNumber}}
-                </h6>
-                }
-            </div>
+                    <div class="col-6">
+                        @if (demoData.beneficiary.toLowerCase() === 'company') {
+                        <h6>{{demoData.fullName}}</h6>
+                        <h6>{{demoData.idNumber}}</h6>
+                        <h6>
+                            {{demoData.beneficiary}}
+                        </h6>
+                        <h6>
+                            {{demoData.birthDate |date:'dd MMM yyyy'}}
+                        </h6>
+                        <h6>
+                            {{demoData.city.name}}
+                        </h6>
+                        <h6>
+                            {{demoData.address}}
+                        </h6>
+                        <h6>
+                            {{demoData.phoneNumber}}
+                        </h6>
+
+                        } @else {
+                        <h6>{{demoData.fullName}}</h6>
+                        <h6>{{demoData.idNumber}}</h6>
+                        <h6>
+                            {{demoData.beneficiary}}
+                        </h6>
+                        <h6>
+                            {{demoData.birthDate |date:'dd MMM yyyy'}}
+                        </h6>
+                        <h6>
+                            {{demoData.gender}}
+                        </h6>
+                        <h6>
+                            {{demoData.maritalStatus.name}}
+                        </h6>
+                        <h6>
+                            @if (demoData.spouseName) {
+                            {{demoData.spouseName}}
+                            }@else {
+                            N/A
+                            }
+                        </h6>
+                        <h6>
+                            {{demoData.city.name}}
+                        </h6>
+                        <h6>
+                            {{demoData.address}}
+                        </h6>
+                        <h6>
+                            {{demoData.employmentHistory}}
+                        </h6>
+                        <h6>
+                            {{demoData.phoneNumber}}
+                        </h6>
+                        }
+                    </div>
+                </div>
+            </p-fieldset>
         </div>
-    </p-fieldset>
+
+
+        <div class="col-12 md:col-6">
+            @if (demoData.credits.length > 0) {
+            <p-fieldset legend="Latest Credit" [toggleable]="true">
+                <ul class="list-decimal">
+                    <li>
+                        <div class="grid">
+                            <div class="col-5">
+                                <h6>Grantor</h6>
+                                <h6>Date Account Opened</h6>
+                                <h6>Due Date</h6>
+                                <h6>Original Balance</h6>
+                                <h6>Monthly Payment</h6>
+                                <h6>
+                                    Last Payment (Date)
+                                </h6>
+                                <h6>
+                                    Balance
+                                </h6>
+                                <h6>
+                                    Sector
+                                </h6>
+                                <h6>
+                                    Manner of Payment
+                                </h6>
+                                <h6>Security (Collateral)</h6>
+                                <h6>Description of Collateral</h6>
+                                <h6>Asset Classification</h6>
+                            </div>
+                            <div class="col-6">
+                                <h6>{{latestCredit.grantor.name}}</h6>
+                                <h6>
+                                    {{latestCredit.accountCreationDate |date:'dd MMM yyyy'}}
+                                </h6>
+                                <h6>
+                                    {{latestCredit.dueDate |date:'dd MMM yyyy'}}
+                                </h6>
+                                <h6>
+                                    {{latestCredit.originalBalance |currency}}
+                                </h6>
+                                <h6>
+                                    {{latestCredit.monthlyPayment |currency}}
+                                </h6>
+                                <h6>
+                                    {{latestCredit.lastPaymentDate |date:'dd MMM yyyy'}}
+                                </h6>
+                                <h6>
+                                    {{latestCredit.balance |currency}}
+                                </h6>
+                                <h6>
+                                    {{latestCredit.sector.name}}
+                                </h6>
+                                <h6>
+                                    {{latestCredit.mannerOfPayment.name}}
+                                </h6>
+                                <h6>
+                                    {{latestCredit.security.name}}
+                                </h6>
+                                <h6>
+                                    {{latestCredit.descriptionSecurity}}
+                                </h6>
+                                <h6>
+                                    {{latestCredit.assetClass.name}}
+                                </h6>
+                            </div>
+                        </div>
+                        @if(latestCredit.guarantee) {
+                        <p-fieldset legend="Guarantee" [toggleable]="true">
+                            <div class="grid">
+                                <div class="col-5">
+                                    <h6>Name</h6>
+                                    <h6>Electoral Nº</h6>
+                                    <h6>Date of Birth</h6>
+                                    <h6>City</h6>
+                                    <h6>Employment History</h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>{{latestCredit.guarantee.fullName}}</h6>
+                                    <h6>{{latestCredit.guarantee.electoralNumber}}</h6>
+                                    <h6>
+                                        {{latestCredit.guarantee.birthDate |date:'dd MMM yyyy'}}
+                                    </h6>
+                                    <h6>
+                                        {{latestCredit.guarantee.city.name}}
+                                    </h6>
+                                    <h6>
+                                        {{latestCredit.guarantee.employmentHistory}}
+                                    </h6>
+                                </div>
+                            </div>
+                        </p-fieldset>
+                        }
+                    </li>
+                </ul>
+            </p-fieldset>
+            }
+        </div>
+    </div>
 </div>
 
 @if (demoData.credits.length > 0) {
-<p-fieldset legend="Credits" [toggleable]="true">
+<p-fieldset legend="Historical Credits" [toggleable]="true">
     <ul class="list-decimal">
         @for (item of demoData.credits; track item.id) {
         <li>

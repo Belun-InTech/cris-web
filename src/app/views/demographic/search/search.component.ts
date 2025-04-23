@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Demographic } from 'src/app/core/models/data';
+import { Credit, Demographic } from 'src/app/core/models/data';
 import { DemoCreditService } from 'src/app/core/services/demo-credit.service';
 import { normalizeId } from 'src/app/core/utils/global-types';
 
@@ -16,6 +16,7 @@ export class SearchComponent {
   dataIsFetching = false;
   demoData: Demographic;
   demoList: Demographic[];
+  latestCredit: Credit;
 
   selectedDemo!: any;
 
@@ -38,6 +39,11 @@ export class SearchComponent {
           this.demoData = response;
           this.demoList.push(this.demoData);
           this.dataIsFetching = false;
+
+          // Get Latest Credit
+          if (this.demoData.credits.length > 0) {
+            this.latestCredit = this.demoData.credits[this.demoData.credits.length - 1];
+          }
         },
         error: err => {
           this.dataIsFetching = false;
