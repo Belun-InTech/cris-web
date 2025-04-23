@@ -8,8 +8,8 @@
         <div class="col-12 md:col-9 md:flex md:justify-content-end">
             <div>
                 <p-floatLabel>
-                    <p-calendar formControlName="rangeDateTime" selectionMode="range" dateFormat="dd/mm/yy" inputId="rangeDateTime"
-                        class="w-full" />
+                    <p-calendar formControlName="rangeDateTime" selectionMode="range" dateFormat="dd/mm/yy"
+                        inputId="rangeDateTime" class="w-full" />
                     <label for="rangeDateTime">Filter by Range Date</label>
                 </p-floatLabel>
             </div>
@@ -17,7 +17,7 @@
     </div>
     <div class="grid">
         <div class="col-12">
-            <p-table [value]="data" [tableStyle]="{'min-width': '50rem'}">
+            <p-table [value]="data" [scrollable]="true" scrollHeight="calc(100vh - 200px)" [rowHover]="true">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
                         <th>Timestamp</th>
