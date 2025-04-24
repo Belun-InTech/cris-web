@@ -17,6 +17,7 @@ export class SearchComponent {
   demoData: Demographic;
   demoList: Demographic[];
   latestCredit: Credit;
+  unique: string;
 
   selectedDemo!: any;
 
@@ -27,6 +28,7 @@ export class SearchComponent {
     this.demoData = undefined;
     this.demoList = [];
     this.searchFormControl.setValidators([Validators.required, Validators.minLength(1)]);
+    this.unique = new Date().getMilliseconds().toString();
   }
 
 

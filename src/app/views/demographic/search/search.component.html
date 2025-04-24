@@ -9,8 +9,8 @@
     <div class="grid">
         <div class="col-12">
             <p-floatLabel>
-                <input pInputText id="search" [formControl]="searchFormControl" class="w-full"
-                    placeholder="ID Number or TIN Number" />
+                <input name="search_{{unique}}" pInputText id="search" [formControl]="searchFormControl" class="w-full"
+                    placeholder="ID Number or TIN Number" autocomplete="off" />
                 <label for="search">Search</label>
             </p-floatLabel>
 
