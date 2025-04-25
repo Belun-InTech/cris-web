@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { interval, startWith, Subscription } from 'rxjs';
 import { Dashboard } from 'src/app/core/models/data';
 
 @Component({
@@ -12,11 +13,17 @@ export class DashboardComponent {
     beneficiaryData: any;
     monthlyCreditData: any;
     monthlyInstitutionBalanceData: any;
+    activeUsersData: any[] = [];
+    elapsedTime: string = '';
+    now: number = Date.now();
+    private subscription!: Subscription;
+
 
     constructor(
         private route: ActivatedRoute,
     ) {
         this.data = this.route.snapshot.data['dashboardResolve'];
+        this.activeUsersData = this.data.activeUsers;
 
         this.genderData = [
             {
@@ -57,6 +64,27 @@ export class DashboardComponent {
         }
     }
 
+    ngOnInit(): void {
+        this.subscription = interval(1000)
+            .pipe(startWith(0))
+            .subscribe(() => {
+                this.now = Date.now();
+            });
+
+    }
+
+    ngOnDestroy(): void {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+    }
+
+    /**
+     * Maps the Dashboard's monthlyInstitutionBalanceList to series data for the chart.
+     * @param data The Dashboard data.
+     * @returns An array of objects in the form: {name: string, data: number[]}
+     *          where name is the name of the bank and data is the array of 12 balance values, one for each month.
+     */
     mapMonthlyFinancialInstitutionBalance(data: Dashboard): any {
 
         // 1. Ensure all 12 months are represented.
@@ -77,6 +105,26 @@ export class DashboardComponent {
             });
             return { name: bank, data: bankData };
         });
+    }
+
+    /**
+     * Computes the elapsed time between the given ISO-formatted date string and the current time,
+     * and formats it as HH:MM:SS.
+     *
+     * @param isoString The ISO-formatted date string.
+     * @returns The elapsed time, formatted as HH:MM:SS.
+     */
+    getElapsedTimeFromISO(isoString: string): string {
+        const start = new Date(isoString).getTime();
+        const diffInSeconds = Math.floor((this.now - start) / 1000);
+
+        const hours = Math.floor(diffInSeconds / 3600);
+        const minutes = Math.floor((diffInSeconds % 3600) / 60);
+        const seconds = diffInSeconds % 60;
+
+        return [hours, minutes, seconds]
+            .map(unit => unit.toString().padStart(2, '0'))
+            .join(':');
     }
 }
 

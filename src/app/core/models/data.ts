@@ -184,7 +184,8 @@ export interface Dashboard {
     totalDemographicFemale: number;
     totalDemographicIndividual: number;
     totalDemographicCompany: number;
-    totalLoginUsers: number;
+    totalUsers: number;
+    activeUsers:  any[];
     monthlyCreditCountList: MonthlyCreditCount[];
     monthlyInstitutionBalanceList: MonthlyInstitutionBalance[];
 }

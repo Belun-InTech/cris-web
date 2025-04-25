@@ -30,6 +30,7 @@ import { FinancialBarChartComponent } from './financial-bar-chart/financial-bar-
         CalendarModule,
         DropdownModule,
         HighchartsChartModule,
+        TableModule,
     ],
     declarations: [
         DashboardComponent,
