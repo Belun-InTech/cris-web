@@ -27,18 +27,18 @@ export class BarChartComponent {
     this.chartOptions = {
       chart: {
         type: 'column',
-        backgroundColor: '#202d3b',
+        backgroundColor: '#D3C7AD',
       },
       title: {
         text: this.title,
         style: {
-          color: '#FFFFFF', // sets the title color to red
+          color: '#212529', // sets the title color to red
         }
       },
       legend: {
         // Define default style for each legend item.
         itemStyle: {
-          color: '#FFFFFF',  // Text color for the legend
+          color: '#212529',  // Text color for the legend
           fontWeight: 'bold',
           fontSize: '14px'
         },
@@ -55,7 +55,7 @@ export class BarChartComponent {
         },
         labels: {
           style: {
-            color: '#FFFFFF', // sets the title color to red
+            color: '#212529', // sets the title color to red
           }
         }
       },
@@ -66,7 +66,7 @@ export class BarChartComponent {
         },
         labels: {
           style: {
-            color: '#FFFFFF', // sets the title color to red
+            color: '#212529', // sets the title color to red
           }
         }
       },

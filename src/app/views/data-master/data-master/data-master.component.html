@@ -36,7 +36,7 @@
                 </p-floatLabel> -->
         <!-- </div> -->
         <div class="col-7">
-            <p-button label="New" [outlined]="true" icon="pi pi-plus" (click)="openDialogNewData(type)" />
+            <p-button label="New" severity="warning" icon="pi pi-plus" (click)="openDialogNewData(type)" />
         </div>
     </div>
     <p-messages />
@@ -64,7 +64,7 @@
                         }
                         <td>
                             <p-button (click)="openDialogEditData(item, rowIndex)" icon="pi pi-pencil" class="mr-2"
-                                [rounded]="true" [outlined]="true" severity="success" />
+                                [rounded]="true" severity="warning" />
                             <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" /> -->
                         </td>
                     </tr>
@@ -102,11 +102,11 @@
         <div class="flex justify-content-end gap-2 mt-3">
             <p-button label="Cancel" severity="secondary" (onClick)="closeDialog()" />
             @if (isNew) {
-            <p-button label="Save" [loading]="buttonLoading" icon="pi pi-save" [disabled]="!dataForm.valid"
+            <p-button severity="warning" label="Save" [loading]="buttonLoading" icon="pi pi-save" [disabled]="!dataForm.valid"
                 (onClick)="saveData(dataForm)" />
             }@else {
-            <p-button label="Update" icon="pi pi-sync" [disabled]="!dataForm.valid" [loading]="buttonLoading"
-                (click)="updateData(dataForm)" [raised]="true" severity="warning" />
+            <p-button severity="warning" label="Update" icon="pi pi-sync" [disabled]="!dataForm.valid" [loading]="buttonLoading"
+                (click)="updateData(dataForm)" [raised]="true" />
             }
         </div>
     </form>

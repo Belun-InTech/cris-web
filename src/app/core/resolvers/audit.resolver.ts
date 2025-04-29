@@ -10,7 +10,8 @@ export const getAllActivities: ResolveFn<any> = () => {
     const auditService = inject(AuditService);
     const role = authService.currentRole;
     const username = authService.currentUserValue.username;
-
+    console.log(role);
+    
     if (role === Role.admin) {
         return auditService.getAllActions();
     } else {

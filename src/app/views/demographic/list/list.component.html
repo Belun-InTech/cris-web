@@ -10,12 +10,14 @@
             </div>
             <div class="col-12 md:col-3">
                 <p-menu #menu [model]="items" [popup]="true" />
-                <p-button severity="info" [disabled]="demoData.length === 0" (onClick)="menu.toggle($event)" icon="pi pi-file-export" label="Export" />
+                <p-button severity="info" [disabled]="demoData.length === 0" (onClick)="menu.toggle($event)"
+                    icon="pi pi-file-export" label="Export" />
             </div>
         </div>
         <div class="grid">
             <div class="col-12">
-                <p-table #demo [value]="demoData" [loading]="dataIsFetching" [scrollable]="true" scrollHeight="calc(100vh - 200px)" [rowHover]="true">
+                <p-table #demo [value]="demoData" [loading]="dataIsFetching" [scrollable]="true"
+                    scrollHeight="calc(100vh - 200px)" [rowHover]="true">
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th>
@@ -43,9 +45,9 @@
                             </td>
                             <td>
                                 @if (item.idNumber) {
-                                    {{item.idNumber}}
+                                {{item.idNumber}}
                                 }@else {
-                                    {{item.tinNumber}}
+                                {{item.tinNumber}}
                                 }
                             </td>
                             <td>
@@ -58,8 +60,8 @@
                                 {{item.phoneNumber}}
                             </td>
                             <td>
-                                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
-                                    severity="success" (click)="routeToDetailPage(item.idNumber, item.beneficiary)" />
+                                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" severity="warning"
+                                    (click)="routeToDetailPage(item.idNumber, item.beneficiary)" />
                                 <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" /> -->
                             </td>
                         </tr>

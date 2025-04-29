@@ -44,10 +44,16 @@ export class ActivitiesComponent {
   }
 
   getAuditData(startDateTime: Date, endDateTime: Date) {
+    console.log(this.currentRole);
+    
     endDateTime.setHours(23, 59, 59, 0);
     if (this.currentRole === Role.admin) {
       this.auditService.getAllActions(startDateTime, endDateTime).subscribe({
-        next: res => this.data = res
+        next: res => {
+          this.data = res
+          console.log(this.data);
+          
+        }
       });
     } else {
       this.auditService.getActionsByUsername(this.username, startDateTime, endDateTime).subscribe({

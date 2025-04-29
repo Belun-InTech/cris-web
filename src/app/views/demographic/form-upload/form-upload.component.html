@@ -21,7 +21,7 @@
                                     <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
                                         <div class="flex gap-2">
                                             <p-button (onClick)="choose($event, chooseCallback)" icon="pi pi-file-excel"
-                                                [rounded]="true" [outlined]="true" />
+                                                [severity]="'warning'" [rounded]="true" [outlined]="true" />
                                         </div>
                                     </div>
                                 </ng-template>
@@ -79,7 +79,7 @@
                                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
                                 [globalFilterFields]="['fullName', 'idNumber']">
                                 <ng-template pTemplate="caption">
-                                    <div class="grid">
+                                    <!-- <div class="grid">
                                         <div class="col-6">
                                             <p-floatLabel>
                                                 <input pInputText id="search" class="w-full"
@@ -87,12 +87,12 @@
                                                 <label for="search">Search</label>
                                             </p-floatLabel>
                                         </div>
-                                        <!-- <div class="col-6">
+                                        <div class="col-6">
                                             <p-button label="Scan for Duplicates" icon="pi pi-search"
                                                 [disabled]="jsonData.length === 0" [loading]="isScanning"
                                                 (click)="checkJsonData(jsonData)" [raised]="true" severity="warning" />
-                                        </div> -->
-                                    </div>
+                                        </div>
+                                    </div> -->
                                 </ng-template>
                                 <ng-template pTemplate="header">
                                     <tr>
@@ -137,8 +137,8 @@
                         </p-accordionTab>
                     </p-accordion>
                     <div class="flex pt-4 justify-content-end">
-                        <p-button [disabled]="jsonData.length === 0 || !isAttributesValid" label="Next"
-                            icon="pi pi-arrow-right" iconPos="right" (click)="nextCallback.emit()" />
+                        <p-button severity="warning" [disabled]="jsonData.length === 0 || !isAttributesValid"
+                            label="Next" icon="pi pi-arrow-right" iconPos="right" (click)="nextCallback.emit()" />
                     </div>
                 </div>
             </div>
@@ -213,7 +213,7 @@
                                                     [outlined]="true" severity="success"
                                                     [routerLink]="['/demographics', item.id]" /> -->
                                                 <p-button (click)="deleteJsonData(item)" icon="pi pi-trash"
-                                                    severity="danger" [rounded]="true" [outlined]="true" />
+                                                    severity="danger" [rounded]="true" />
                                             </td>
                                         </tr>
                                     </ng-template>
@@ -315,9 +315,9 @@
                 </p-tabView>
             </div>
             <div class="flex pt-4 justify-content-between">
-                <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
-                <p-button [disabled]="!allowSubmit()" [loading]="isSubmitting" label="Save" icon="pi pi-save"
-                    (click)="saveDemographicData(jsonData)" />
+                <p-button severity="warning" label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+                <p-button severity="warning" [disabled]="!allowSubmit()" [loading]="isSubmitting" label="Save"
+                    icon="pi pi-save" (click)="saveDemographicData(jsonData)" />
             </div>
         </ng-template>
     </p-stepperPanel>

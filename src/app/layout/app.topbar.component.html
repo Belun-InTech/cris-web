@@ -1,4 +1,4 @@
-<div class="layout-topbar">
+<div #header class="layout-topbar">
     <a class="layout-topbar-logo" routerLink="">
         <!-- <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg"
             alt="logo"> -->
@@ -14,7 +14,7 @@
             <i class="pi pi-user"></i>
             <span>Profile</span>
         </button>
-        <p-menu #menu [model]="items" [popup]="true"></p-menu>
+        <p-menu #menu [model]="items" [popup]="true" [appendTo]="'body'"></p-menu>
     </div>
 
     <!-- <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}"> -->

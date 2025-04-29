@@ -129,6 +129,7 @@ export class FormUploadComponent {
           summary: `Error: `,
           detail: 'Beneficiary is required.',
         });
+        this.isAttributesValid = false;
         return null;
       } else {
         this.validateDemographicAttributes(newRow, index);

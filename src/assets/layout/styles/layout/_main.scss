@@ -10,7 +10,10 @@ html {
 body {
     font-family: var(--font-family);
     color: var(--text-color);
-    background-color: var(--surface-ground);
+    // background-color: var(--surface-ground);
+    background: url('/assets/layout/images/fundo_bctl.png') no-repeat center center fixed;
+    background-size: cover;
+    background-color: #F6F4EB;
     margin: 0;
     padding: 0;
     min-height: 100%;

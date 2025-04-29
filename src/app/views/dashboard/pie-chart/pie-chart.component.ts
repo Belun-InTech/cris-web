@@ -31,22 +31,22 @@ export class PieChartComponent {
       title: {
         text: this.title,
         style: {
-          color: '#FFFFFF',
+          color: '#212529',
         }
       },
       chart: {
-        backgroundColor: '#202d3b',
+        backgroundColor: '#D3C7AD',
       },
       legend: {
         // Define default style for each legend item.
         itemStyle: {
-          color: '#FFFFFF',  // Text color for the legend
+          color: '#212529',  // Text color for the legend
           fontWeight: 'bold',
           fontSize: '14px'
         },
         // Define style when hovering over a legend item.
         itemHoverStyle: {
-          color: '#FFCC00'
+          color: '#968350'
         }
       },
       plotOptions: {
