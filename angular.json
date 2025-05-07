@@ -26,13 +26,13 @@
                         "tsConfig": "tsconfig.app.json",
                         "inlineStyleLanguage": "scss",
                         "assets": [
-                          "src/favicon.ico",
-                          "src/assets",
-                          "src/manifest.webmanifest",
-                          "src/_redirects"
+                            "src/favicon.ico",
+                            "src/assets",
+                            "src/manifest.webmanifest",
+                            "src/_redirects"
                         ],
                         "styles": [
-                          "src/styles.scss"
+                            "src/styles.scss"
                         ],
                         "scripts": [],
                         "serviceWorker": true,
@@ -40,8 +40,7 @@
                     },
                     "configurations": {
                         "production": {
-                            "budgets": [
-                                {
+                            "budgets": [{
                                     "type": "initial",
                                     "maximumWarning": "1mb",
                                     "maximumError": "5mb"
@@ -63,13 +62,17 @@
                             "namedChunks": true
                         },
                         "staging": {
-                            "fileReplacements": [
-                              {
+                            "fileReplacements": [{
                                 "replace": "src/environments/environment.ts",
                                 "with": "src/environments/environment.staging.ts"
-                              }
-                            ]
-                          }
+                            }]
+                        },
+                        "testing": {
+                            "fileReplacements": [{
+                                "replace": "src/environments/environment.ts",
+                                "with": "src/environments/environment.testing.ts"
+                            }]
+                        }
                     },
                     "defaultConfiguration": "production"
                 },
@@ -102,13 +105,13 @@
                         "karmaConfig": "karma.conf.js",
                         "inlineStyleLanguage": "scss",
                         "assets": [
-                          "src/favicon.ico",
-                          "src/assets",
-                          "src/manifest.webmanifest"
+                            "src/favicon.ico",
+                            "src/assets",
+                            "src/manifest.webmanifest"
                         ],
                         "styles": [
-                          "@angular/material/prebuilt-themes/indigo-pink.css",
-                          "src/styles.scss"
+                            "@angular/material/prebuilt-themes/indigo-pink.css",
+                            "src/styles.scss"
                         ],
                         "scripts": []
                     }

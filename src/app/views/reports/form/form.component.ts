@@ -92,7 +92,6 @@ export class FormComponent {
           this.reportForm.get('username').reset();
           this.userService.getByFinancialInstitutionId(value.id).subscribe({
             next: response => {
-              console.log(response);
               this.userList = response;
             }
           })
