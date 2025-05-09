@@ -35,6 +35,7 @@ export class FormComponent {
     { name: Status.disabled, value: Status.disabled }
   ];
   filteredLdapUsers: any[];
+  bctlFinancialInstitution: FinancialInstitution;
 
 
   constructor(
@@ -51,6 +52,7 @@ export class FormComponent {
       email: ['', [Validators.required, Validators.email]],
       status: [Status.active],
       role: ['', [Validators.required]],
+      financialInstitution: ['', [Validators.required]],
       internal: [true]
     });
 
@@ -76,8 +78,9 @@ export class FormComponent {
 
     this.roleListExternal = this.mapToIdAndName(this.route.snapshot.data['roleList']._embedded.roles).filter(values => values.name === 'ROLE_CLIENT');
 
-    this.financialInstitutionList = this.mapToIdAndName(this.route.snapshot.data['financialInstitutionList']._embedded.financialInstitutions).filter(values => values.name.toLowerCase() !== 'BCTL');
+    this.financialInstitutionList = this.mapToIdAndName(this.route.snapshot.data['financialInstitutionList']._embedded.financialInstitutions).filter(values => values.name.toLowerCase() !== 'bctl');
 
+    this.bctlFinancialInstitution = this.route.snapshot.data['financialInstitutionList']._embedded.financialInstitutions.find(value => value.name.toLowerCase() === 'bctl');
 
     this.userData = this.route.snapshot.data['userData'];
 
@@ -126,6 +129,7 @@ export class FormComponent {
       lastName: this.splitFullName(event.value.fullName).lastName,
       username: event.value.username,
       email: event.value.email,
+      financialInstitution: this.bctlFinancialInstitution,
     }
     this.userInternalForm.patchValue(user);
   }
