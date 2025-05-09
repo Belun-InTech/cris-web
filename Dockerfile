@@ -1,9 +1,29 @@
-FROM nginx:stable-alpine3.17 AS ngi
+# Stage 1: Build the Angular application
+FROM node:22-alpine AS builder
 
-# NOTE: This path may change according to your project's output folder
-COPY  /dist/supervizaun-web /usr/share/nginx/html
-COPY /nginx.conf  /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# the app will be using Port 80 while running
+COPY package*.json ./
+
+# Install jq to parse package.json for Angular CLI version
+RUN apk add --no-cache jq
+
+# Extract the Angular CLI version from package.json and install it
+RUN npm install -g @angular/cli@$(jq -r '.devDependencies["@angular/cli"]' package.json)
+
+RUN npm ci
+
+COPY . .
+RUN ng build
+
+# Stage 2: Serve the application with Nginx
+FROM nginx:1.27.5-alpine-slim
+
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY --from=builder /app/dist/cris-web /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]
