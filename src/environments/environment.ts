@@ -3,9 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  url: 'http://localhost:8081',
-  apiUrl: 'http://localhost:8081/api/v1',
+  production: true,
+  url: 'http://api-cris.bancocentral.tl',
+  apiUrl: 'http://api-cris.bancocentral.tl/api/v1',
 };
 
 /*
