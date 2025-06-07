@@ -167,6 +167,7 @@ export interface LogFilter {
 
 interface MonthlyCreditCount {
     month: number;
+    financialInstitution: string;
     count: number;
 }
 
