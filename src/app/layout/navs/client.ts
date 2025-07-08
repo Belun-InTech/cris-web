@@ -49,12 +49,12 @@ export const clientNavs: MenuItem[] = [
             },
         ]
     },
-    {
-        label: 'Audit Logs',
-        icon: 'pi pi-fw pi-file',
-        items: [
-            { label: 'Activities Log', icon: 'bi bi-fw bi-activity', routerLink: ['/audit/activities'] },
-            { label: 'Authentication Log', icon: 'bi bi-fw bi-fingerprint', routerLink: ['/audit/authentication'] }
-        ]
-    }
+    // {
+    //     label: 'Audit Logs',
+    //     icon: 'pi pi-fw pi-file',
+    //     items: [
+    //         { label: 'Activities Log', icon: 'bi bi-fw bi-activity', routerLink: ['/audit/activities'] },
+    //         { label: 'Authentication Log', icon: 'bi bi-fw bi-fingerprint', routerLink: ['/audit/authentication'] }
+    //     ]
+    // }
 ];
