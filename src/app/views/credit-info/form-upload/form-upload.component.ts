@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
+import { forkJoin } from 'rxjs';
 import { CreditExcel } from 'src/app/core/models/data';
 import { City, CreditClassification, Institution, MannerPayment, Sector, TypeCollateral } from 'src/app/core/models/data-master';
 import { AuthenticationService } from 'src/app/core/services';
@@ -381,6 +382,7 @@ export class FormUploadComponent {
    * Gets the duplicate records based on the Last Payment Date and Balance from the given data.
    * @param data The array of CreditExcel objects to check for duplicates.
    * @returns An array of CreditExcel objects that are duplicates.
+   * @deprecated Replaced by checking in the backend
    */
   getDuplicateDateBalanceRecords(data: CreditExcel[]): CreditExcel[] {
     const seen = new Map<string, Map<string, { item: CreditExcel, moved: boolean }>>();
@@ -423,11 +425,16 @@ export class FormUploadComponent {
     this.messageService.clear();
     this.isScanning = true;
 
-    this.duplicatesDateLastPaymentAndBalance = this.getDuplicateDateBalanceRecords(data);
+    const checkMissingServices = this.service.checkMissings(data);
+    const checkDuplicatesDateLastPaymentAndBalance = this.service.checkDuplicateLastPaymentDateAndBalance(data);
 
-    this.service.checkMissings(data).subscribe({
-      next: response => {
-        this.notFoundData = response;
+    forkJoin([checkMissingServices, checkDuplicatesDateLastPaymentAndBalance]).subscribe({
+      next: ([response1, response2]) => {
+        console.log(response1);
+        console.log(response2);
+
+        this.notFoundData = response1;
+        this.duplicatesDateLastPaymentAndBalance = response2.allDuplicates;
         this.showMissingMessages();
         this.showDuplicateMessages();
       },

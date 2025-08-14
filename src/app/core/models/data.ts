@@ -76,6 +76,12 @@ export interface Credit {
     guarantee: Guarantee;
 }
 
+export interface CreditExcelResponse {
+    payloadDuplicates: CreditExcel[];
+    databaseDuplicates: CreditExcel[];
+    allDuplicates: CreditExcel[];
+}
+
 export interface CreditPage {
     id: number;
     idNumber: string;
@@ -186,7 +192,7 @@ export interface Dashboard {
     totalDemographicIndividual: number;
     totalDemographicCompany: number;
     totalUsers: number;
-    activeUsers:  any[];
+    activeUsers: any[];
     monthlyCreditCountList: MonthlyCreditCount[];
     monthlyInstitutionBalanceList: MonthlyInstitutionBalance[];
 }

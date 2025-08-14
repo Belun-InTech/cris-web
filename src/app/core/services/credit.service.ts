@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EMPTY, expand, Observable, reduce, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Credit } from '../models/data';
+import { Credit, CreditExcelResponse } from '../models/data';
 import { normalizeId } from '../utils/global-types';
 
 @Injectable({
@@ -50,6 +50,10 @@ export class CreditService {
 
   checkMissings(data: any[]): Observable<Credit[]> {
     return this.http.post<Credit[]>(`${this.apiUrl}/missing-check`, data).pipe(take(1));
+  }
+
+  checkDuplicateLastPaymentDateAndBalance(data: any[]): Observable<CreditExcelResponse> {
+    return this.http.post<CreditExcelResponse>(`${this.apiUrl}/duplicate-check`, data).pipe(take(1));
   }
 
   getAll(size: number = 50, initialPage: number = 0): Observable<any[]> {
