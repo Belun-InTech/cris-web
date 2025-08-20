@@ -163,7 +163,12 @@ export class FormUploadComponent {
   validateDemographicAttributes(row: DemographicExcel, index: number): void {
     let errors: string[] = [];
 
-    if (!row.idNumber || row.idNumber.toString().length < 1) {
+    const allowedBeneficiaries = ['Individual', 'Company'];
+    const allowedGenders = ['Male', 'Female'];
+    const allowedMaritalStatuses = ['Single', 'Married', 'Divorced'];
+
+    // Basic field checks
+    if (!row.idNumber || row.idNumber.toString().trim().length < 1) {
       errors.push("ID Number is required.");
     }
     if (!row.fullName) {
@@ -172,7 +177,7 @@ export class FormUploadComponent {
     if (!row.birthDate) {
       errors.push("Birth Date is required.");
     }
-    if (!row.city.name) {
+    if (!row.city?.name) {
       errors.push("City is required.");
     }
     if (!row.address) {
@@ -182,12 +187,18 @@ export class FormUploadComponent {
       errors.push("Phone Number is required.");
     }
 
-    if (row.beneficiary.toLowerCase() === BeneficiaryType.individual.toLowerCase()) {
-      if (!row.gender) {
-        errors.push("Gender is required.");
+    // Beneficiary validation
+    if (!row.beneficiary || !allowedBeneficiaries.includes(row.beneficiary)) {
+      errors.push("Beneficiary must be 'Individual' or 'Company'.");
+    }
+
+    // Additional checks for individual beneficiaries
+    if (row.beneficiary?.toUpperCase() === 'INDIVIDUAL') {
+      if (!row.gender || !allowedGenders.includes(row.gender)) {
+        errors.push("Gender must be 'Male' or 'Female'.");
       }
-      if (!row.maritalStatus) {
-        errors.push("Marital Status is required.");
+      if (!row.maritalStatus || !allowedMaritalStatuses.includes(row.maritalStatus.name)) {
+        errors.push("Marital Status must be 'Single', 'Married' or 'Divorced'.");
       }
       if (!row.employmentHistory) {
         errors.push("Employment History is required.");
@@ -204,7 +215,6 @@ export class FormUploadComponent {
       this.isAttributesValid = false;
     }
   }
-
   /**
    * Maps data from the database to the given DemographicExcel object based on city,
    * employment history, and marital status names. If the corresponding database entries
@@ -223,6 +233,7 @@ export class FormUploadComponent {
     if (obj.beneficiary.toLowerCase() === BeneficiaryType.individual.toLowerCase()) {
       if (obj.maritalStatus) {
         const maritalStatus = this.maritalStatusList.find((maritalStatus) => maritalStatus.name.toLowerCase() === obj.maritalStatus.name.toLowerCase());
+        console.log(maritalStatus);
         if (maritalStatus === undefined) {
           errors.push("Marital Status is not found.");
         } else {
