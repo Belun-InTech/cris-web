@@ -7,7 +7,7 @@ import { User } from 'src/app/core/models';
 import { CreditFilter, DemographicFilter, Log, LogFilter } from 'src/app/core/models/data';
 import { City, CreditClassification, FinancialInstitution, Sector } from 'src/app/core/models/data-master';
 import { FileExportService, ReportService, UserService } from 'src/app/core/services';
-import { beneficiaryTypeOpts, genderOpts, operatorOpts, tipuRelatoriuList, yearsList } from 'src/app/core/utils/global-types';
+import { genderOpts, operatorOpts, tipuRelatoriuList, yearsList } from 'src/app/core/utils/global-types';
 
 @Component({
   selector: 'app-form',
@@ -34,7 +34,7 @@ export class FormComponent {
   financialInstitutionList: FinancialInstitution[] = [];
   sectorList: Sector[] = [];
   genderList: any[] = genderOpts;
-  beneficiaryList: any[] = beneficiaryTypeOpts;
+  beneficiaryList: any[] = [];
   operatorList: any[] = operatorOpts;
   userList: User[] = [];
   columnsAsset = ['NameCreditGrantor', 'AssetClass', 'ElectNo', 'Name', 'Beneficiary', 'DOB', 'Gender', 'City', 'DateAcctOpened', 'DueDate', 'OrgBalance', 'MonthlyPaymt', 'DateLastPaymt', 'Balance', 'CreditBySector', 'MannerOfPaymt', 'Security', 'DescOfCollaterlal'];
@@ -57,7 +57,7 @@ export class FormComponent {
       assetClassId: [null],
       grantorId: [null],
       lastPaymentrangeDate: [null],
-      demographicBeneficiary: [null],
+      demographicBeneficiaryId: [null],
       demographicCityId: [null],
       demographicGender: [null],
       sectorId: [null],
@@ -76,6 +76,7 @@ export class FormComponent {
     this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
     this.sectorList = this.route.snapshot.data['sectorListResolve']._embedded.sectors;
     this.assetClassificationList = this.route.snapshot.data[`creditClassificationListResolve`]._embedded['creditClassifications'];
+    this.beneficiaryList = this.mapToIdAndName(this.route.snapshot.data['beneficiaryListResolve']._embedded.beneficiaries);
   }
 
   ngOnInit(): void {
@@ -125,8 +126,10 @@ export class FormComponent {
 
     switch (this.selectedTipuRelatoriu.code) {
       case 'demo':
+        console.log(form.value);
+        
         this.demoFilter = {
-          beneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary : null,
+          beneficiaryId: form.value.demographicBeneficiaryId ? form.value.demographicBeneficiaryId.id : null,
           financialInstitutionId: form.value.grantorId ? form.value.grantorId.id : null,
           gender: form.value.demographicGender ? form.value.demographicGender.value : null,
           cityId: form.value.demographicCityId ? form.value.demographicCityId.id : null,
@@ -147,7 +150,7 @@ export class FormComponent {
           assetClassId: form.value.assetClassId ? form.value.assetClassId.id : null,
           lastPaymentDateFrom: form.value.lastPaymentrangeDate ? formatDate(new Date(form.value.lastPaymentrangeDate[0]), 'yyyy-MM-dd', 'en-US') : null,
           lastPaymentDateTo: form.value.lastPaymentrangeDate ? formatDate(new Date(form.value.lastPaymentrangeDate[1]), 'yyyy-MM-dd', 'en-US') : null,
-          demographicBeneficiary: form.value.demographicBeneficiary ? form.value.demographicBeneficiary : null,
+          demographicBeneficiaryId: form.value.demographicBeneficiaryId ? form.value.demographicBeneficiaryId.id : null,
           demographicCityId: form.value.demographicCityId ? form.value.demographicCityId.id : null,
           demographicGender: form.value.demographicGender ? form.value.demographicGender.value : null,
           sectorId: form.value.sectorId ? form.value.sectorId.id : null,
@@ -168,7 +171,7 @@ export class FormComponent {
           financialInstitutionId: form.value.grantorId ? form.value.grantorId.id : null,
           fromDate: form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[0] : null,
           toDate: null,
-          username: form.value.username? form.value.username.username: null
+          username: form.value.username ? form.value.username.username : null
         }
         const toDate: Date = form.value.lastPaymentrangeDate ? form.value.lastPaymentrangeDate[1] : null;
         if (toDate) {
@@ -464,7 +467,7 @@ export class FormComponent {
     // Map the data to custom columns.
     mappedData = this.dataReports.map(item => ({
       "Name": item.fullName,
-      "Beneficiary": item.beneficiary,
+      "Beneficiary": item.beneficiary.name,
       "ElectNo": item.idNumber,
       "DOB": item.birthDate,
       "Gender": item.gender,

@@ -430,8 +430,6 @@ export class FormUploadComponent {
 
     forkJoin([checkMissingServices, checkDuplicatesDateLastPaymentAndBalance]).subscribe({
       next: ([response1, response2]) => {
-        console.log(response1);
-        console.log(response2);
 
         this.notFoundData = response1;
         this.duplicatesDateLastPaymentAndBalance = response2.allDuplicates;

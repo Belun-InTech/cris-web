@@ -225,4 +225,12 @@ export class DataMasterService {
 
   //endregion Searching Fees
 
+  //region Beneficiary
+
+  getListBeneficiary(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/beneficiaries`).pipe(take(1));
+  }
+
+  //endregion Beneficiary
+
 }

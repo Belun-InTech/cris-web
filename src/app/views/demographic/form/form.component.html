@@ -6,15 +6,13 @@
             </h4>
             <p-messages />
 
-            <div class="grid">
-                <div class="col-6">
-                    <p-selectButton [options]="beneficiaryTypeList" [formControl]="entityType" optionLabel="name"
-                        optionValue="value" />
-                </div>
-            </div>
 
-            @if (entityType.value === individual) {
-            <form [formGroup]="personForm">
+            <form [formGroup]="demographicForm">
+                <p-floatLabel>
+                    <p-dropdown inputId="float-label" [options]="beneficiaryTypeList" formControlName="beneficiary"
+                        optionLabel="name" [showClear]="true" />
+                    <label for="float-label">Select a Beneficiary type</label>
+                </p-floatLabel>
                 <p-floatLabel>
                     <input pInputText id="fullName" formControlName="fullName" class="w-full" />
                     <label for="fullName">Full Name</label>
@@ -27,12 +25,6 @@
                     <input pInputText id="idNumber" formControlName="idNumber" class="w-full" />
                     <label for="idNumber">ID Number</label>
                 </p-floatLabel>
-                @if (personForm.controls['idNumber'].errors?.['pattern']) {
-                <div class="text-red-400">
-                    <small class="text-red-200">No Symbols or spaces allowed in the TIN Number.</small>
-                </div>
-                }
-
                 <p-floatLabel>
                     <p-calendar inputId="birthDate" formControlName="birthDate" class="w-full" dateFormat="dd/mm/yy"
                         placeholder="dd/mm/yyyy" />
@@ -72,18 +64,18 @@
             <p-messages />
             <div class="mt-5">
                 @if (isNew) {
-                <p-button label="Save" icon="pi pi-save" [disabled]="!personForm.valid" [loading]="loading"
-                    (click)="save(personForm)" [raised]="true" severity="warning" />
+                <p-button label="Save" icon="pi pi-save" [disabled]="!demographicForm.valid" [loading]="loading"
+                    (click)="save(demographicForm)" [raised]="true" severity="warning" />
                 }@else {
-                <p-button label="Update" icon="pi pi-sync" [disabled]="!personForm.valid" [loading]="loading"
-                    (click)="update(personForm)" [raised]="true" severity="warning" />
+                <p-button label="Update" icon="pi pi-sync" [disabled]="!demographicForm.valid" [loading]="loading"
+                    (click)="update(demographicForm)" [raised]="true" severity="warning" />
                 }
                 <p-button label="Cancel" [routerLink]="['/demographics']" routerLinkActive="router-link-active"
                     icon="pi pi-times" [raised]="true" severity="secondary" class="ml-3" />
             </div>
-            }
+            <!-- } -->
 
-            @if (entityType.value === company) {
+            <!-- @if (entityType.value === company) {
             <form [formGroup]="businessForm">
                 <p-floatLabel>
                     <input pInputText id="fullName" formControlName="fullName" class="w-full" />
@@ -131,7 +123,7 @@
                 <p-button label="Cancel" [routerLink]="['/demographics']" routerLinkActive="router-link-active"
                     icon="pi pi-times" [raised]="true" severity="secondary" class="ml-3" />
             </div>
-            }
+            } -->
         </div>
     </div>
 </div>

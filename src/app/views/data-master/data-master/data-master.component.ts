@@ -38,6 +38,15 @@ export class DataMasterComponent {
   setDataMaster(type: string) {
     this.type = type;
     switch (type) {
+      case 'beneficiaries':
+        this.dataList = this.route.snapshot.data['beneficiaryListResolve']._embedded.beneficiaries;
+        this.cols = [
+          { field: 'name', header: 'Name' },
+        ];
+        this.dataForm = this._fb.group({
+          name: ['', [Validators.required, Validators.minLength(1)]],
+        });
+        break;
       case 'financial-institutions':
         this.dataList = this.route.snapshot.data['financialInstitutionListResolve']._embedded.financialInstitutions;
         this.cols = [

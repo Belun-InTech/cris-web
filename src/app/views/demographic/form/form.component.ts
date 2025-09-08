@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { City, Institution, MaritalStatus } from 'src/app/core/models/data-master';
-import { BeneficiaryType } from 'src/app/core/models/enum';
+import { City, MaritalStatus } from 'src/app/core/models/data-master';
 import { DemographicService } from 'src/app/core/services';
-import { beneficiaryTypeOpts, genderOpts } from 'src/app/core/utils/global-types';
+import { genderOpts } from 'src/app/core/utils/global-types';
 
 @Component({
   selector: 'app-form',
@@ -15,14 +14,11 @@ import { beneficiaryTypeOpts, genderOpts } from 'src/app/core/utils/global-types
 })
 export class FormComponent {
   entityType: FormControl = new FormControl();
-  personForm: FormGroup;
-  businessForm: FormGroup;
+  demographicForm: FormGroup;
   loading = false;
   isNew = true;
   demoData: any;
-  beneficiaryTypeList = beneficiaryTypeOpts;
-  individual = BeneficiaryType.individual.toLowerCase();
-  company = BeneficiaryType.company.toLowerCase();
+  beneficiaryTypeList: any[] = [];
   genderOpts: any[] = genderOpts;
   selectedGender: any;
   cityList: City[] = [];
@@ -36,36 +32,26 @@ export class FormComponent {
     private route: ActivatedRoute
   ) {
 
-    this.personForm = this._fb.group({
-      id: [''],
-      beneficiary: [BeneficiaryType.individual.toUpperCase()],
-      idNumber: ['', [Validators.required, Validators.minLength(1), Validators.pattern(/^[A-Za-z0-9]+$/)]],
-      fullName: ['', [Validators.required, Validators.minLength(3)]],
-      gender: ['', Validators.required],
-      address: ['', [Validators.required, Validators.minLength(3)]],
-      birthDate: ['', Validators.required],
-      city: [undefined, Validators.required],
-      maritalStatus: [undefined, Validators.required],
-      spouseName: [''],
-      employmentHistory: [undefined],
-      phoneNumber: ['', [Validators.required, , Validators.minLength(3)]],
-    });
-
-    this.businessForm = this._fb.group({
-      id: [''],
-      beneficiary: [BeneficiaryType.company.toUpperCase()],
-      idNumber: ['', [Validators.required, Validators.minLength(1), Validators.pattern(/^[A-Za-z0-9]+$/)]],
-      fullName: ['', [Validators.required, Validators.minLength(3)]],
-      address: ['', Validators.required],
-      birthDate: ['', Validators.required],
-      city: [undefined, Validators.required],
-      phoneNumber: ['', [Validators.required, Validators.minLength(3)]],
+    this.demographicForm = this._fb.group({
+      id: [null],
+      beneficiary: [null],
+      idNumber: [null, [Validators.required, Validators.minLength(1), Validators.pattern(/^[A-Za-z0-9]+$/)]],
+      fullName: [null, [Validators.required, Validators.minLength(3)]],
+      gender: [null],
+      address: [null, [Validators.required, Validators.minLength(3)]],
+      birthDate: [null, Validators.required],
+      city: [null, Validators.required],
+      maritalStatus: [null],
+      spouseName: [null],
+      employmentHistory: [null],
+      phoneNumber: [null, [Validators.required, , Validators.minLength(3)]],
     });
 
     this.demoData = this.route.snapshot.data['demoData'];
 
     this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
     this.maritalStatusList = this.mapToIdAndName(this.route.snapshot.data['maritalStatusListResolve']._embedded.maritalStatus);
+    this.beneficiaryTypeList = this.mapToIdAndName(this.route.snapshot.data['beneficiaryListResolve']._embedded.beneficiaries);
 
     if (this.demoData) {
       this.mapFormData(this.demoData);
@@ -83,8 +69,7 @@ export class FormComponent {
   ngOnInit() {
     if (!this.isNew) {
       this.entityType.valueChanges.subscribe(value => {
-        this.personForm.patchValue(this.demoData);
-        this.businessForm.patchValue(this.demoData);
+        this.demographicForm.patchValue(this.demoData);
       });
     }
   }
@@ -101,21 +86,21 @@ export class FormComponent {
       name: form.city.name,
     }
 
+    form.beneficiary = {
+      id: form.beneficiary.id,
+      name: form.beneficiary.name,
+    }
+
+    form.maritalStatus = {
+      id: form.maritalStatus.id,
+      name: form.maritalStatus.name,
+    }
+
     const birthDate = new Date(form.birthDate);
 
-    if (form.beneficiary.toLowerCase() === BeneficiaryType.company.toLowerCase()) {
-      this.entityType.setValue(BeneficiaryType.company.toLowerCase());
-      this.businessForm.patchValue(form);
-      this.businessForm.get('birthDate')?.setValue(birthDate);
-    } else {
-      form.maritalStatus = {
-        id: form.maritalStatus.id,
-        name: form.maritalStatus.name,
-      }
-      this.entityType.setValue(BeneficiaryType.individual.toLowerCase());
-      this.personForm.patchValue(form);
-      this.personForm.get('birthDate')?.setValue(birthDate);
-    }
+    this.demographicForm.patchValue(form);
+    this.demographicForm.get('birthDate')?.setValue(birthDate);
+
   }
 
 
@@ -135,8 +120,6 @@ export class FormComponent {
     if (form.valid) {
       let formData = form.value;
 
-      formData.beneficiary = this.entityType.value;
-
       // Convert birthDate to 'yyyy-MM-dd' format
       formData.birthDate = new Date(formData.birthDate).toISOString().split('T')[0]; // Extracts 'yyyy-MM-dd'
 
@@ -149,8 +132,7 @@ export class FormComponent {
           this.setNotification(false, null, error);
         },
         complete: () => {
-          this.personForm.reset();
-          this.businessForm.reset();
+          this.demographicForm.reset();
           this.loading = false;
           setTimeout(() => {
             this.router.navigate(['/demographics']);

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormComponent } from './form/form.component';
-import { getCityResolver, getCreditClassificationListResolver, getFinancialInstitutionListResolver, getSectorListResolver } from 'src/app/core/resolvers/data-master.resolver';
+import { getBeneficiaryListResolver, getCityResolver, getCreditClassificationListResolver, getFinancialInstitutionListResolver, getSectorListResolver } from 'src/app/core/resolvers/data-master.resolver';
 
 const routes: Routes = [
   {
@@ -12,6 +12,7 @@ const routes: Routes = [
       financialInstitutionListResolve: getFinancialInstitutionListResolver,
       sectorListResolve: getSectorListResolver,
       creditClassificationListResolve: getCreditClassificationListResolver,
+      beneficiaryListResolve: getBeneficiaryListResolver
     }
   }
 ];

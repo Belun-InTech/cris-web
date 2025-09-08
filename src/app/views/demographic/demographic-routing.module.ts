@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Role } from 'src/app/core/models/enum';
-import { getCityResolver, getMaritalStatusResolver } from 'src/app/core/resolvers/data-master.resolver';
+import { getBeneficiaryListResolver, getCityResolver, getMaritalStatusResolver } from 'src/app/core/resolvers/data-master.resolver';
 import { getDemographicByIdResolver, getPageDemographicResolver } from 'src/app/core/resolvers/demographic.resolver';
 import { canActivateByRole, canActivateQueryParams } from 'src/app/core/security/route.guard';
 import { FormUploadComponent } from './form-upload/form-upload.component';
@@ -26,6 +26,7 @@ const routes: Routes = [
     resolve: {
       citiesListResolve: getCityResolver,
       maritalStatusListResolve: getMaritalStatusResolver,
+      beneficiaryListResolve: getBeneficiaryListResolver
     },
   },
   {
@@ -43,6 +44,7 @@ const routes: Routes = [
       demoData: getDemographicByIdResolver,
       citiesListResolve: getCityResolver,
       maritalStatusListResolve: getMaritalStatusResolver,
+      beneficiaryListResolve: getBeneficiaryListResolver
     }
   }
 ];

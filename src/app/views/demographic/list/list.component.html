@@ -39,7 +39,11 @@
                             <td>
                                 {{item.fullName}}
                             </td>
-                            <td>{{item.beneficiary |titlecase}}</td>
+                            @if (item.beneficiary) {
+                            <td>{{item.beneficiary.name |titlecase}}</td>
+                            }@else {
+                            <td> {{item.beneficiaryName}} </td>
+                            }
                             <td>
                                 {{item.gender |titlecase}}
                             </td>
@@ -50,9 +54,13 @@
                                 {{item.tinNumber}}
                                 }
                             </td>
+                            @if (item.city) {
                             <td>
-                                {{item.address}} - {{item.cityName}}
+                                {{item.address}} - {{item.city.name}}
                             </td>
+                            }@else {
+                            <td> {{item.cityName}} </td>
+                            }
                             <td>
                                 {{item.birthDate |date:'dd MMM yyyy'}}
                             </td>

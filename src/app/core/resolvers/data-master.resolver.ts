@@ -47,3 +47,5 @@ export const getSearchingFeesResolver: ResolveFn<any> = () => {
     const service = inject(DataMasterService);
     return service.getFirstSearchingFees();
 }
+
+export const getBeneficiaryListResolver: ResolveFn<any> = () => inject(DataMasterService).getListBeneficiary();

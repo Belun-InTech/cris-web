@@ -1,6 +1,13 @@
+import { BeneficiaryType } from "./enum";
+
 export interface Role {
     id: number;
     name: string;
+}
+
+export interface Beneficiary {
+    id: number;
+    name: BeneficiaryType;
 }
 
 export interface FinancialInstitution {

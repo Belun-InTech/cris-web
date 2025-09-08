@@ -26,31 +26,22 @@ export class DashboardComponent {
         this.activeUsersData = this.data.activeUsers;
 
         if (this.data) {
-             this.genderData = [
-            {
-                name: 'Female',
-                y: this.data.totalDemographicFemale,
-                color: '#EF959D'
-            },
-            {
-                name: 'Male',
-                y: this.data.totalDemographicMale,
-                color: '#034078'
-            }
-        ];
+            this.genderData = [
+                {
+                    name: 'Female',
+                    y: this.data.totalDemographicFemale,
+                    color: '#EF959D'
+                },
+                {
+                    name: 'Male',
+                    y: this.data.totalDemographicMale,
+                    color: '#034078'
+                }
+            ];
 
-        this.beneficiaryData = [
-            {
-                name: 'Company',
-                y: this.data.totalDemographicCompany,
-                color: '#EDAE49'
-            },
-            {
-                name: 'Individual',
-                y: this.data.totalDemographicIndividual,
-                color: '#00798C'
-            }
-        ];
+            this.beneficiaryData = this.data.beneficiaryCountList.map(item => {
+                return { name: item.beneficiaryName, y: item.count };
+            });
             this.monthlyCreditData = this.mapMonthlyFinancialInstitutionCreditCount(this.data);
             this.monthlyInstitutionBalanceData = this.mapMonthlyFinancialInstitutionBalance(this.data);
         }

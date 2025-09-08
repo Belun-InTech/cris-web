@@ -165,7 +165,7 @@ export class FormUploadComponent {
 
     const allowedBeneficiaries = ['Individual', 'Company'];
     const allowedGenders = ['Male', 'Female'];
-    const allowedMaritalStatuses = ['Single', 'Married', 'Divorced'];
+    const allowedMaritalStatuses = this.maritalStatusList.map(status => status.name);
 
     // Basic field checks
     if (!row.idNumber || row.idNumber.toString().trim().length < 1) {
@@ -197,8 +197,13 @@ export class FormUploadComponent {
       if (!row.gender || !allowedGenders.includes(row.gender)) {
         errors.push("Gender must be 'Male' or 'Female'.");
       }
-      if (!row.maritalStatus || !allowedMaritalStatuses.includes(row.maritalStatus.name)) {
-        errors.push("Marital Status must be 'Single', 'Married' or 'Divorced'.");
+      if (!row.maritalStatus || !row.maritalStatus.name) {
+        errors.push("Marital Status is required.");
+      }
+      if (row.maritalStatus && row.maritalStatus.name) {
+        if (!allowedMaritalStatuses.includes(row.maritalStatus.name)) {
+          errors.push("Marital Status must be 'Single', 'Married' or 'Divorced'.");
+        }
       }
       if (!row.employmentHistory) {
         errors.push("Employment History is required.");
@@ -228,12 +233,11 @@ export class FormUploadComponent {
   mappingDataFromDB(obj: DemographicExcel, index: number) {
     let errors: string[] = [];
 
-    const city = this.cityList.find((city) => city.name.toLowerCase() === obj.city.name.toLowerCase());
+    const city = obj.city.name ? this.cityList.find((city) => city.name.toLowerCase() === obj.city.name.toLowerCase()) : undefined;
 
     if (obj.beneficiary.toLowerCase() === BeneficiaryType.individual.toLowerCase()) {
-      if (obj.maritalStatus) {
+      if (obj.maritalStatus && obj.maritalStatus.name) {
         const maritalStatus = this.maritalStatusList.find((maritalStatus) => maritalStatus.name.toLowerCase() === obj.maritalStatus.name.toLowerCase());
-        console.log(maritalStatus);
         if (maritalStatus === undefined) {
           errors.push("Marital Status is not found.");
         } else {

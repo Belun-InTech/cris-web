@@ -1,4 +1,4 @@
-import { City, CreditClassification, FinancialInstitution, Institution, MannerPayment, MaritalStatus, Sector, TypeCollateral } from "./data-master";
+import { Beneficiary, City, CreditClassification, FinancialInstitution, Institution, MannerPayment, MaritalStatus, Sector, TypeCollateral } from "./data-master";
 import { BeneficiaryType, Gender, MathOperator } from "./enum";
 import { User } from "./user";
 
@@ -6,7 +6,7 @@ export interface Demographic {
     id: number;
     fullName: string;
     idNumber: string;
-    beneficiary: BeneficiaryType;
+    beneficiary: Beneficiary;
     birthDate: any;
     gender: Gender;
     maritalStatus: MaritalStatus;
@@ -150,7 +150,7 @@ export interface CreditFilter {
     sectorId: number;
     assetClassId: number;
     demographicGender: Gender;
-    demographicBeneficiary: BeneficiaryType;
+    demographicBeneficiaryId: number;
     demographicCityId: number;
     originalBalance: number;
     mathOperator: MathOperator;
@@ -158,7 +158,7 @@ export interface CreditFilter {
 }
 
 export interface DemographicFilter {
-    beneficiary: BeneficiaryType;
+    beneficiaryId: number;
     financialInstitutionId: number;
     gender: string;
     cityId: number;
@@ -181,6 +181,12 @@ interface MonthlyInstitutionBalance {
     month: number;
     financialInstitution: string;
     totalOriginalBalance: number;
+    Balance: number;
+}
+
+interface BeneficiaryCount {
+    beneficiaryName: string;
+    count: number;
 }
 
 export interface Dashboard {
@@ -195,4 +201,5 @@ export interface Dashboard {
     activeUsers: any[];
     monthlyCreditCountList: MonthlyCreditCount[];
     monthlyInstitutionBalanceList: MonthlyInstitutionBalance[];
+    beneficiaryCountList: BeneficiaryCount[];
 }

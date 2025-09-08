@@ -62,7 +62,7 @@
             @case ('credit') {
             <div class="col-12 md:col-3">
                 <div class="p-fluid">
-                    <p-dropdown formControlName="demographicBeneficiary" [options]="beneficiaryList" [showClear]="true"
+                    <p-dropdown formControlName="demographicBeneficiaryId" [options]="beneficiaryList" [showClear]="true"
                         placeholder="Select a Beneficiary" class="pb-2">
                         <ng-template let-item pTemplate="selectedItem">
                             {{ item.name }}
@@ -147,7 +147,7 @@
             <div class="col-12 md:col-3">
                 @if (selectedTipuRelatoriu.code !== 'credit') {
                 <div class="p-fluid">
-                    <p-dropdown formControlName="demographicBeneficiary" [options]="beneficiaryList" [showClear]="true"
+                    <p-dropdown formControlName="demographicBeneficiaryId" [options]="beneficiaryList" [showClear]="true"
                         placeholder="Select a Beneficiary" class="pb-2">
                         <ng-template let-item pTemplate="selectedItem">
                             {{ item.name }}
@@ -241,7 +241,11 @@
                         <td>
                             {{item.demographic.fullName}}
                         </td>
-                        <td>{{item.demographic.beneficiary |titlecase}}</td>
+                        @if (item.demographic.beneficiary) {
+                        <td>{{item.demographic.beneficiary.name |titlecase}}</td>
+                        }@else {
+                        <td></td>
+                        }
                         <td>
                             {{item.demographic.birthDate |date:'dd MMM yyyy'}}
                         </td>
@@ -311,7 +315,11 @@
                         <td>
                             {{item.demographic.fullName}}
                         </td>
-                        <td>{{item.demographic.beneficiary |titlecase}}</td>
+                        @if (item.demographic.beneficiary) {
+                        <td>{{item.demographic.beneficiary.name |titlecase}}</td>
+                        }@else {
+                        <td></td>
+                        }
                         <td>
                             {{item.demographic.birthDate |date:'dd MMM yyyy'}}
                         </td>
@@ -376,7 +384,11 @@
                         <td>
                             {{item.demographic.fullName}}
                         </td>
-                        <td>{{item.demographic.beneficiary |titlecase}}</td>
+                        @if (item.demographic.beneficiary) {
+                        <td>{{item.demographic.beneficiary.name |titlecase}}</td>
+                        }@else {
+                        <td></td>
+                        }
                         <td>
                             {{item.demographic.birthDate |date:'dd MMM yyyy'}}
                         </td>
@@ -457,7 +469,11 @@
                         <td>
                             {{item.fullName}}
                         </td>
-                        <td>{{item.beneficiary |titlecase}}</td>
+                        @if (item.beneficiary) {
+                        <td>{{item.beneficiary.name |titlecase}}</td>
+                        }@else {
+                        <td></td>
+                        }
                         <td>
                             @if (item.idNumber) {
                             {{item.idNumber}}

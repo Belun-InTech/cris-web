@@ -81,7 +81,8 @@
 <p-dialog header="{{isNew?'New':'Edit'}} {{type|titlecase}}" [modal]="true" [position]="'top'" [(visible)]="showDialog"
     [style]="{ 'min-width': '30rem' }">
     <form [formGroup]="dataForm">
-        @if (type === 'financial-institutions' || type === 'sectors' || type === 'type-collaterals' || type ===
+        @if (type === 'beneficiaries' ||type === 'financial-institutions' || type === 'sectors' || type ===
+        'type-collaterals' || type ===
         'credit-classifications' || type === 'cities' || type === 'marital-status' || type === 'manners')
         {
         <input formControlName="name" id="name" type="text" placeholder="Name" pInputText class="mb-2">
@@ -102,11 +103,11 @@
         <div class="flex justify-content-end gap-2 mt-3">
             <p-button label="Cancel" severity="secondary" (onClick)="closeDialog()" />
             @if (isNew) {
-            <p-button severity="warning" label="Save" [loading]="buttonLoading" icon="pi pi-save" [disabled]="!dataForm.valid"
-                (onClick)="saveData(dataForm)" />
+            <p-button severity="warning" label="Save" [loading]="buttonLoading" icon="pi pi-save"
+                [disabled]="!dataForm.valid" (onClick)="saveData(dataForm)" />
             }@else {
-            <p-button severity="warning" label="Update" icon="pi pi-sync" [disabled]="!dataForm.valid" [loading]="buttonLoading"
-                (click)="updateData(dataForm)" [raised]="true" />
+            <p-button severity="warning" label="Update" icon="pi pi-sync" [disabled]="!dataForm.valid"
+                [loading]="buttonLoading" (click)="updateData(dataForm)" [raised]="true" />
             }
         </div>
     </form>
