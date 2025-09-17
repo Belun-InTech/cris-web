@@ -52,14 +52,10 @@
                     <div class="col-5">
                         <h6>Name</h6>
                         <h6>Electoral Nº/TIN Nº</h6>
-                        @if (demoData.beneficiary) {
                         <h6>Beneficiary</h6>
-                        }
                         <h6>Date of Birth</h6>
                         <h6>Gender</h6>
-                        @if (demoData.maritalStatus) {
                         <h6>Marital Status</h6>
-                        }
                         <h6>Spouse name</h6>
                         <h6>City</h6>
                         <h6>Address</h6>
@@ -98,12 +94,24 @@
                         <h6>
                             {{demoData.birthDate |date:'dd MMM yyyy'}}
                         </h6>
+                        @if (demoData.gender) {
                         <h6>
                             {{demoData.gender |titlecase}}
                         </h6>
+                        }@else {
+                        <h6>
+                            N/A
+                        </h6>
+                        }
+
+
                         @if (demoData.maritalStatus) {
                         <h6>
                             {{demoData.maritalStatus.name}}
+                        </h6>
+                        }@else {
+                        <h6>
+                            N/A
                         </h6>
                         }
                         <h6>
@@ -119,9 +127,15 @@
                         <h6>
                             {{demoData.address}}
                         </h6>
+                        @if (demoData.employmentHistory) {
                         <h6>
                             {{demoData.employmentHistory}}
                         </h6>
+                        }@else {
+                        <h6>
+                            N/A
+                        </h6>
+                        }
                         <h6>
                             {{demoData.phoneNumber}}
                         </h6>

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { City, MaritalStatus } from 'src/app/core/models/data-master';
+import { BeneficiaryType } from 'src/app/core/models/enum';
 import { DemographicService } from 'src/app/core/services';
 import { genderOpts } from 'src/app/core/utils/global-types';
 
@@ -86,21 +87,23 @@ export class FormComponent {
       name: form.city.name,
     }
 
-    form.beneficiary = {
-      id: form.beneficiary.id,
-      name: form.beneficiary.name,
+    if (form.beneficiary.name === BeneficiaryType.individual) {
+      form.beneficiary = {
+        id: form.beneficiary.id,
+        name: form.beneficiary.name,
+      }
+
+      form.maritalStatus = {
+        id: form.maritalStatus.id,
+        name: form.maritalStatus.name,
+      }
     }
 
-    form.maritalStatus = {
-      id: form.maritalStatus.id,
-      name: form.maritalStatus.name,
-    }
 
     const birthDate = new Date(form.birthDate);
 
     this.demographicForm.patchValue(form);
     this.demographicForm.get('birthDate')?.setValue(birthDate);
-
   }
 
 
