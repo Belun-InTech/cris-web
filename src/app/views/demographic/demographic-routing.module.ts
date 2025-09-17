@@ -35,6 +35,7 @@ const routes: Routes = [
     resolve: {
       citiesListResolve: getCityResolver,
       maritalStatusListResolve: getMaritalStatusResolver,
+      beneficiaryListResolve: getBeneficiaryListResolver
     },
   },
   {

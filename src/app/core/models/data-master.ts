@@ -7,7 +7,7 @@ export interface Role {
 
 export interface Beneficiary {
     id: number;
-    name: BeneficiaryType;
+    name: BeneficiaryType | string;
 }
 
 export interface FinancialInstitution {

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { DemographicExcel } from 'src/app/core/models/data';
-import { City, MaritalStatus } from 'src/app/core/models/data-master';
+import { Beneficiary, City, MaritalStatus } from 'src/app/core/models/data-master';
 import { BeneficiaryType } from 'src/app/core/models/enum';
 import { DemographicService } from 'src/app/core/services';
 import { read, utils, writeFile } from "xlsx";
@@ -24,6 +24,7 @@ export class FormUploadComponent {
   isAttributesValid = true;
   cityList: City[] = [];
   maritalStatusList: MaritalStatus[] = [];
+  beneficiaryList: Beneficiary[] = [];
 
   disabledTab = true;
   isJsonDataChecked = false;
@@ -46,6 +47,7 @@ export class FormUploadComponent {
 
     this.cityList = this.mapToIdAndName(this.route.snapshot.data['citiesListResolve']._embedded.cities);
     this.maritalStatusList = this.mapToIdAndName(this.route.snapshot.data['maritalStatusListResolve']._embedded.maritalStatus);
+    this.beneficiaryList = this.mapToIdAndName(this.route.snapshot.data['beneficiaryListResolve']._embedded.beneficiaries);
   }
 
   /**
@@ -104,7 +106,10 @@ export class FormUploadComponent {
           id: undefined,
           fullName: row['Name'],
           idNumber: row['ElectNo'],
-          beneficiary: row['Beneficiary'],
+          beneficiary: {
+            id: undefined,
+            name: row['Beneficiary']
+          },
           birthDate: row['DOB'],
           gender: row['Gender'],
           maritalStatus: {
@@ -142,7 +147,7 @@ export class FormUploadComponent {
           newRow.gender = newRow.gender.toLowerCase();
         }
 
-        if (newRow.beneficiary.toLowerCase() === BeneficiaryType.company.toLowerCase()) {
+        if (newRow.beneficiary.name.toLowerCase() === BeneficiaryType.company.toLowerCase()) {
           newRow.maritalStatus = null;
         }
 
@@ -188,12 +193,12 @@ export class FormUploadComponent {
     }
 
     // Beneficiary validation
-    if (!row.beneficiary || !allowedBeneficiaries.includes(row.beneficiary)) {
+    if (!row.beneficiary || !allowedBeneficiaries.includes(row.beneficiary.name)) {
       errors.push("Beneficiary must be 'Individual' or 'Company'.");
     }
 
     // Additional checks for individual beneficiaries
-    if (row.beneficiary?.toUpperCase() === 'INDIVIDUAL') {
+    if (row.beneficiary?.name.toUpperCase() === 'INDIVIDUAL') {
       if (!row.gender || !allowedGenders.includes(row.gender)) {
         errors.push("Gender must be 'Male' or 'Female'.");
       }
@@ -234,8 +239,15 @@ export class FormUploadComponent {
     let errors: string[] = [];
 
     const city = obj.city.name ? this.cityList.find((city) => city.name.toLowerCase() === obj.city.name.toLowerCase()) : undefined;
+    const beneficiary = obj.beneficiary.name ? this.beneficiaryList.find(item => item.name.toLowerCase() === obj.beneficiary.name.toLowerCase()) : undefined;
 
-    if (obj.beneficiary.toLowerCase() === BeneficiaryType.individual.toLowerCase()) {
+    if (!beneficiary) {
+      errors.push("Beneficiary is not found.");
+    } else {
+      obj.beneficiary.id = beneficiary.id;
+    }
+
+    if (obj.beneficiary.name.toLowerCase() === BeneficiaryType.individual.toLowerCase()) {
       if (obj.maritalStatus && obj.maritalStatus.name) {
         const maritalStatus = this.maritalStatusList.find((maritalStatus) => maritalStatus.name.toLowerCase() === obj.maritalStatus.name.toLowerCase());
         if (maritalStatus === undefined) {

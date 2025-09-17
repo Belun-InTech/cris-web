@@ -37,7 +37,7 @@ export interface DemographicExcel {
     id: number;
     fullName: string;
     idNumber: string;
-    beneficiary: BeneficiaryType | string;
+    beneficiary: Beneficiary;
     birthDate: string;
     gender: Gender | string;
     maritalStatus: MaritalStatus;
