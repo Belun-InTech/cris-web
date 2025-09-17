@@ -44,7 +44,7 @@ export class SearchComponent {
 
           // Get Latest Credit
           if (this.demoData.credits.length > 0) {
-            this.latestCredit = this.demoData.credits[this.demoData.credits.length - 1];
+            this.latestCredit = this.demoData.credits[0];
           }
         },
         error: err => {
