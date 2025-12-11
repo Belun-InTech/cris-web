@@ -12,6 +12,8 @@ import { SearchComponent } from './views/demographic/search/search.component';
 import { FaqComponent } from './views/faq/faq.component';
 import { LoginComponent } from './views/login/login.component';
 import { OtpComponent } from './views/otp/otp.component';
+import { ForgotPasswordComponent } from './views/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './views/auth/reset-password/reset-password.component';
 
 @NgModule({
     imports: [
@@ -32,6 +34,14 @@ import { OtpComponent } from './views/otp/otp.component';
                 resolve: {
                     tokenResolve: getTokenActivationResolver
                 }
+            },
+            {
+                path: 'forgot-password',
+                component: ForgotPasswordComponent,
+            },
+            {
+                path: 'reset-password',
+                component: ResetPasswordComponent
             },
             {
                 path: '',

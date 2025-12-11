@@ -53,6 +53,14 @@ export class AuthenticationService {
     return this.http.put<User>(`${this.apiUrl}/otp/${username}`, { username });
   }
 
+  sendForgotPasswordEmail(email: string): Observable<any> {
+    return this.http.post<User>(`${this.apiUrl}/forgot-password?email=${email}`, { email });
+  }
+
+  resetPassword(data: any): Observable<any> {
+    return this.http.post<User>(`${this.apiUrl}/reset-password`, data);
+  }
+
   /**
    * Logs out the currently authenticated user by sending a POST request to the server
    * with the existing authentication token in the headers. If no token is found, an

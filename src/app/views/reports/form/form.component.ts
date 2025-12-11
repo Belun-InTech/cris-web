@@ -126,8 +126,6 @@ export class FormComponent {
 
     switch (this.selectedTipuRelatoriu.code) {
       case 'demo':
-        console.log(form.value);
-        
         this.demoFilter = {
           beneficiaryId: form.value.demographicBeneficiaryId ? form.value.demographicBeneficiaryId.id : null,
           financialInstitutionId: form.value.grantorId ? form.value.grantorId.id : null,

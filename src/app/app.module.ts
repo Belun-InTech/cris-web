@@ -21,13 +21,14 @@ import { AppComponent } from './app.component';
 import { HttpErrorInterceptor } from './core/security/http-error.interceptor';
 import { AppLayoutModule } from './layout/app.layout.module';
 import { ActivationComponent } from './views/activation/activation.component';
+import { ForgotPasswordComponent } from './views/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './views/auth/reset-password/reset-password.component';
 import { ConfigurationComponent } from './views/configuration/configuration.component';
 import { FaqComponent } from './views/faq/faq.component';
 import { LoginComponent } from './views/login/login.component';
 import { OtpComponent } from './views/otp/otp.component';
-
 @NgModule({
-  declarations: [AppComponent, LoginComponent, FaqComponent, ActivationComponent, OtpComponent, ConfigurationComponent],
+  declarations: [AppComponent, LoginComponent, FaqComponent, ActivationComponent, OtpComponent, ConfigurationComponent, ForgotPasswordComponent, ResetPasswordComponent],
   imports: [
     AppRoutingModule,
     AppLayoutModule,
@@ -51,6 +52,7 @@ import { OtpComponent } from './views/otp/otp.component';
     ToastModule,
     BrowserAnimationsModule,
     NgxSpinnerModule,
+    PasswordModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
