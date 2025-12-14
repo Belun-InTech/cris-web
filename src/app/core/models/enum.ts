@@ -14,6 +14,16 @@ export enum Role {
     client = 'ROLE_CLIENT'
 }
 
+export enum Permission {
+    MENU_DASHBOARD_ACCESS = 'MENU_DASHBOARD_ACCESS',
+    MENU_DEMOGRAPHIC_SEARCH = 'MENU_DEMOGRAPHIC_SEARCH',
+    MENU_DEMOGRAPHIC_NEW = 'MENU_DEMOGRAPHIC_NEW',
+    MENU_CREDIT_NEW = 'MENU_CREDIT_NEW',
+    MENU_USERS_MANAGE = 'MENU_USERS_MANAGE',
+    MENU_DATA_MASTER_MANAGE = 'MENU_DATA_MASTER_MANAGE',
+    MENU_AUDIT_LOGS_ACCESS = 'MENU_AUDIT_LOGS_ACCESS',
+}
+
 export enum Status {
     active = 'active',
     pending = 'pending',

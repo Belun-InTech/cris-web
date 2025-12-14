@@ -6,6 +6,14 @@ input {
     width: 100% !important;
 }
 
+:host ::ng-deep .p-multiselect {
+    width: 100% !important;
+
+    .p-multiselect-label-container {
+        width: 100%;
+    }
+}
+
 :host ::ng-deep .p-autocomplete {
     width: 100% !important;
 

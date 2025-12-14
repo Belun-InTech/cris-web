@@ -30,6 +30,10 @@ export class DataMasterService {
     return this.http.put<any>(`${this.apiUrl}/${type}/${id}`, form).pipe(take(1));
   }
 
+  getPermissions(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/permissions`).pipe(take(1));
+  }
+
   //#region Bank 
   /**
    * Retrieves a list of all banks.

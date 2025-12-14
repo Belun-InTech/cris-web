@@ -2,6 +2,10 @@ import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
 import { DataMasterService } from "../services";
 
+export const getPermissionsResolver: ResolveFn<any> = () => {
+    const service = inject(DataMasterService);
+    return service.getPermissions();
+}
 
 export const getFinancialInstitutionListResolver: ResolveFn<any> = () => {
     const service = inject(DataMasterService);

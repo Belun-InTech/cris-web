@@ -7,14 +7,16 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
 import { MessagesModule } from 'primeng/messages';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
 import { UsersRoutingModule } from './users-routing.module';
-import { MenuModule } from 'primeng/menu';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { MenuModule } from 'primeng/menu';
     SelectButtonModule,
     AutoCompleteModule,
     MenuModule,
+    MultiSelectModule,
+    ToastModule,
   ]
 })
 export class UsersModule { }

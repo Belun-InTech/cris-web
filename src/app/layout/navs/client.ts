@@ -1,4 +1,5 @@
 import { MenuItem } from "primeng/api";
+import { Permission } from "src/app/core/models/enum";
 
 
 export const clientNavs: MenuItem[] = [
@@ -8,7 +9,8 @@ export const clientNavs: MenuItem[] = [
             {
                 label: 'Search',
                 icon: 'bi bi-fw bi-search',
-                routerLink: ['/search']
+                routerLink: ['/search'],
+                requiredPermission: Permission.MENU_DEMOGRAPHIC_SEARCH
             },
         ]
     },
@@ -22,12 +24,14 @@ export const clientNavs: MenuItem[] = [
                     {
                         label: 'New (Form)',
                         icon: 'bi bi-fw bi-person-add',
-                        routerLink: ['/demographics/new']
+                        routerLink: ['/demographics/new'],
+                        requiredPermission: Permission.MENU_DEMOGRAPHIC_NEW
                     },
                     {
                         label: 'New (Excel Template)',
                         icon: 'bi bi-fw bi-file-earmark-arrow-up',
-                        routerLink: ['/demographics/upload']
+                        routerLink: ['/demographics/upload'],
+                        requiredPermission: Permission.MENU_DEMOGRAPHIC_NEW
                     }
                 ]
             },
@@ -38,12 +42,14 @@ export const clientNavs: MenuItem[] = [
                     {
                         label: 'New (Form)',
                         icon: 'bi bi-fw bi-plus-lg',
-                        routerLink: ['/credit-informations/new']
+                        routerLink: ['/credit-informations/new'],
+                        requiredPermission: Permission.MENU_CREDIT_NEW
                     },
                     {
                         label: 'New (Excel Template)',
                         icon: 'bi bi-fw bi-file-earmark-arrow-up',
-                        routerLink: ['/credit-informations/upload']
+                        routerLink: ['/credit-informations/upload'],
+                        requiredPermission: Permission.MENU_CREDIT_NEW
                     }
                 ]
             },

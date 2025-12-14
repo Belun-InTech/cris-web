@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { getFinancialInstitutionListResolver } from 'src/app/core/resolvers/data-master.resolver';
+import { getFinancialInstitutionListResolver, getPermissionsResolver } from 'src/app/core/resolvers/data-master.resolver';
 import { getRoleListResolver } from 'src/app/core/resolvers/role.resolver';
 import { getPageUserResolver, getUserByUsernameResolver } from 'src/app/core/resolvers/utilizador.resolver';
 import { FormComponent } from './form/form.component';
@@ -21,6 +21,7 @@ const routes: Routes = [
     resolve: {
       roleList: getRoleListResolver,
       financialInstitutionList: getFinancialInstitutionListResolver,
+      permissionList: getPermissionsResolver,
     }
   },
   {
@@ -30,6 +31,7 @@ const routes: Routes = [
       roleList: getRoleListResolver,
       userData: getUserByUsernameResolver,
       financialInstitutionList: getFinancialInstitutionListResolver,
+      permissionList: getPermissionsResolver,
     }
   }
 ];

@@ -10,17 +10,11 @@
                     }
                 </div>
             </div>
-            <div class="grid">
-                <div class="col-12">
-                    <p-messages />
-                </div>
-            </div>
-
             <!-- @if (isNew) { -->
             <div class="grid">
                 <div class="col-6">
-                    <p-selectButton [options]="accountTypOpts" [formControl]="selectedAccountType"
-                        optionLabel="name" optionValue="value" />
+                    <p-selectButton [options]="accountTypOpts" [formControl]="selectedAccountType" optionLabel="name"
+                        optionValue="value" />
                 </div>
             </div>
             <!-- } -->
@@ -117,6 +111,15 @@
                     </div>
                 </div>
 
+                <h5>Financial Institution</h5>
+                <div class="grid">
+                    <div class="col-6">
+                        <p-dropdown [options]="financialInstitutionList" formControlName="financialInstitution"
+                            optionLabel="name" display="chip" class="w-full" placeholder="Select a Institution"
+                            [showClear]="true" />
+                    </div>
+                </div>
+
                 <h5>Access</h5>
                 <div class="grid">
                     <div class="col-6">
@@ -125,13 +128,15 @@
                     </div>
                 </div>
 
-                <h5>Financial Institution</h5>
+                <h5>Permissions</h5>
                 <div class="grid">
                     <div class="col-6">
-                        <p-dropdown [options]="financialInstitutionList" formControlName="financialInstitution" optionLabel="name"
-                            class="w-full" placeholder="Select a Institution" [showClear]="true" />
+                        <p-multiSelect [options]="permissionList" formControlName="permissionIds" optionLabel="name"
+                            optionValue="id" class="w-full" placeholder="Choose Permissions" [showHeader]="false"
+                            [filter]="false" [showClear]="true" />
                     </div>
                 </div>
+
                 @if(!isNew){
                 <div class="grid">
                     <div class="col-6">
@@ -168,3 +173,4 @@
         </div>
     </div>
 </div>
+<p-toast position="bottom-right" key="br" />

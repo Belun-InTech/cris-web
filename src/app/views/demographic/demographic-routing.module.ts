@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Role } from 'src/app/core/models/enum';
+import { Permission, Role } from 'src/app/core/models/enum';
 import { getBeneficiaryListResolver, getCityResolver, getMaritalStatusResolver } from 'src/app/core/resolvers/data-master.resolver';
 import { getDemographicByIdResolver, getPageDemographicResolver } from 'src/app/core/resolvers/demographic.resolver';
 import { canActivateByRole, canActivateQueryParams } from 'src/app/core/security/route.guard';
 import { FormUploadComponent } from './form-upload/form-upload.component';
 import { FormComponent } from './form/form.component';
 import { ListComponent } from './list/list.component';
+import { canActivateByPermission } from 'src/app/core/security/permission.guard';
 
 const routes: Routes = [
   {
@@ -28,6 +29,8 @@ const routes: Routes = [
       maritalStatusListResolve: getMaritalStatusResolver,
       beneficiaryListResolve: getBeneficiaryListResolver
     },
+    canActivate: [canActivateByPermission],
+    data: { requiredPermission: Permission.MENU_DEMOGRAPHIC_NEW }
   },
   {
     path: 'upload',
@@ -37,6 +40,8 @@ const routes: Routes = [
       maritalStatusListResolve: getMaritalStatusResolver,
       beneficiaryListResolve: getBeneficiaryListResolver
     },
+    canActivate: [canActivateByPermission],
+    data: { requiredPermission: Permission.MENU_DEMOGRAPHIC_NEW },
   },
   {
     path: ':id',

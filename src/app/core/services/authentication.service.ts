@@ -11,6 +11,7 @@ export class AuthenticationService {
   protected apiUrl = `${environment.apiUrl}/users`;
   private userKey = 'user';
   private jwtKey = 'token';
+  private permsCache: Set<string> | null = null; // Cache decoded permissions to avoid repeated parsing
 
   constructor(
     private http: HttpClient,
@@ -74,6 +75,7 @@ export class AuthenticationService {
     const token = this.getToken;
     localStorage.removeItem(this.userKey);
     localStorage.removeItem(this.jwtKey);
+    this.permsCache = null; // Clear cached permissions on logout
     return this.http.post<any>(`${this.apiUrl}/logout`, token);
   }
 
@@ -89,6 +91,47 @@ export class AuthenticationService {
     localStorage.clear();
     localStorage.setItem(this.userKey, JSON.stringify(authResult));
     localStorage.setItem(this.jwtKey, authResult.token);
+  }
+
+  hasPermission(permission: string): boolean {
+    if (!permission) return true;
+    const perms = this.getPermissions();
+    return perms.has(permission);
+  }
+
+  hasAnyPermission(required: string[]): boolean {
+    if (!required || required.length === 0) return true;
+    const perms = this.getPermissions();
+    return required.some(p => perms.has(p));
+  }
+
+  private getPermissions(): Set<string> {
+    if (this.permsCache) return this.permsCache;
+    const token = this.getToken;
+    const payload = this.decodeJwt(token);
+    const perms: string[] = Array.isArray(payload?.perms) ? payload.perms : [];
+    console.log(perms);
+    
+    this.permsCache = new Set(perms);
+    return this.permsCache;
+  }
+
+  private decodeJwt(token: string | null): any {
+    try {
+      if (!token) return null;
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+      const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const json = decodeURIComponent(
+        atob(payload)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(json);
+    } catch {
+      return null;
+    }
   }
 
   get currentUserValue(): any {

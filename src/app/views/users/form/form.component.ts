@@ -21,6 +21,7 @@ export class FormComponent {
   roleListExternal: Role[];
   financialInstitutionList: FinancialInstitution[];
   selectedFinancialInstitutionInternal: any;
+  permissionList: any[];
   loading = false;
   userData: User;
   isNew = false;
@@ -67,6 +68,7 @@ export class FormComponent {
       status: [Status.pending],
       role: ['', [Validators.required]],
       financialInstitution: ['', [Validators.required]],
+      permissionIds: [null],
       internal: [false]
     },
       {
@@ -77,6 +79,8 @@ export class FormComponent {
     this.roleListInternal = this.mapToIdAndName(this.route.snapshot.data['roleList']._embedded.roles).filter(values => values.name !== 'ROLE_CLIENT');
 
     this.roleListExternal = this.mapToIdAndName(this.route.snapshot.data['roleList']._embedded.roles).filter(values => values.name === 'ROLE_CLIENT');
+
+    this.permissionList = this.mapToIdAndNameAndDescription(this.route.snapshot.data['permissionList']._embedded.permissions);
 
     this.financialInstitutionList = this.mapToIdAndName(this.route.snapshot.data['financialInstitutionList']._embedded.financialInstitutions).filter(values => values.name.toLowerCase() !== 'bctl');
 
@@ -114,6 +118,8 @@ export class FormComponent {
       next: value => {
         if (value === Account.external) {
           this.userExternalForm.get('role').setValue(this.roleListExternal.find(value => value.name === 'ROLE_CLIENT'));
+          this.userExternalForm.get('permissionIds').setValidators([Validators.required]);
+          this.userExternalForm.updateValueAndValidity();
         }
       }
     });
@@ -227,11 +233,11 @@ export class FormComponent {
    */
   setNotification(isSuccess: boolean, user?: User, error?: any) {
     if (this.isNew) {
-      isSuccess ? this.messageService.add({ severity: 'success', summary: 'User Registered Successfully!', detail: `The user ${user.firstName} ${user.lastName} has been registered and an email verification link has been sent to ${user.email}.` }) :
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: error });
+      isSuccess ? this.messageService.add({ key: 'br', life: 3000, severity: 'success', summary: 'User Registered Successfully!', detail: `The user ${user.firstName} ${user.lastName} has been registered and an email verification link has been sent to ${user.email}.` }) :
+        this.messageService.add({ key: 'br', life: 3000, severity: 'error', summary: 'Error', detail: error });
     } else {
-      isSuccess ? this.messageService.add({ severity: 'success', summary: 'User Updated Successfully!', detail: `The user ${user.firstName} ${user.lastName} informations has been updated` }) :
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: error });
+      isSuccess ? this.messageService.add({ key: 'br', life: 3000, severity: 'success', summary: 'User Updated Successfully!', detail: `The user ${user.firstName} ${user.lastName} informations has been updated` }) :
+        this.messageService.add({ key: 'br', life: 3000, severity: 'error', summary: 'Error', detail: error });
     }
 
   }
@@ -248,6 +254,16 @@ export class FormComponent {
       return {
         id: item.id,
         name: item.name
+      };
+    });
+  }
+
+  private mapToIdAndNameAndDescription(array: any[]): { id: number, name: string, description: string }[] {
+    return array.map(item => {
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description
       };
     });
   }

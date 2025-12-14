@@ -40,6 +40,7 @@ export class LoginComponent {
    * @param form The form data containing the username and password.
    */
   login(form: FormGroup): void {
+    this.messageService.clear();
     this.loading = true;
     this.authService.authServer(form.value).subscribe({
       next: response => {

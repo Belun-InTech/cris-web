@@ -1772,7 +1772,7 @@
 
     .p-multiselect .p-multiselect-trigger {
         background: transparent;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--primary-color-text);
         width: 2.357rem;
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
@@ -1799,7 +1799,7 @@
     }
 
     .p-multiselect-clearable .p-multiselect-clear-icon {
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--primary-color-text);
         right: 2.357rem;
     }
 
@@ -1827,7 +1827,7 @@
 
     .p-multiselect-panel .p-multiselect-header .p-multiselect-filter-container .p-multiselect-filter-icon {
         right: 0.5rem;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--primary-color-text);
     }
 
     .p-multiselect-panel .p-multiselect-header .p-checkbox {
@@ -1838,7 +1838,7 @@
         margin-left: 0.5rem;
         width: 2rem;
         height: 2rem;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--primary-color-text);
         border: 0 none;
         background: transparent;
         border-radius: 50%;

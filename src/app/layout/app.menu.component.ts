@@ -18,12 +18,28 @@ export class AppMenuComponent implements OnInit {
     setting: MenuItem[] = [];
 
     constructor(public layoutService: LayoutService, private authService: AuthenticationService) {
+
+    }
+
+    ngOnInit() {
         this.setMenuByUserRole(
             this.authService.currentRole
         );
+
+        this.model = this.applyPermissionVisibility(this.model);
+
+        this.setting = [
+            {
+                label: 'Settings',
+                items: [
+                    { label: 'Profile', icon: 'pi pi-fw pi-user', routerLink: ['/profile'] },
+                    { label: 'Logout', icon: 'pi pi-fw pi-sign-out', command: () => this.authService.logout() }
+                ]
+            },
+        ]
     }
 
-    setMenuByUserRole(role: string): void {
+    private setMenuByUserRole(role: string): void {
         switch (role) {
             case Role.admin:
                 this.model = adminNavs;
@@ -37,15 +53,32 @@ export class AppMenuComponent implements OnInit {
         }
     }
 
-    ngOnInit() {
-        this.setting = [
-            {
-                label: 'Settings',
-                items: [
-                    { label: 'Profile', icon: 'pi pi-fw pi-user', routerLink: ['/profile'] },
-                    { label: 'Logout', icon: 'pi pi-fw pi-sign-out', command: () => this.authService.logout() }
-                ]
-            },
-        ]
+    /**
+     * Recursively sets item.visible based on requiredPermission metadata.
+     * Keeps group containers but hides leaf actions if not permitted.
+     */
+    private applyPermissionVisibility(items: MenuItem[]): MenuItem[] {
+        const markVisible = (item: any): any => {
+            const required = item.requiredPermission as string | string[] | undefined;
+            const allowed =
+                !required
+                    ? true
+                    : Array.isArray(required)
+                        ? this.authService.hasAnyPermission(required)
+                        : this.authService.hasPermission(required);
+
+            // For leaf nodes
+            if (!item.items || item.items.length === 0) {
+                return { ...item, visible: allowed };
+            }
+
+            // For groups with children: evaluate children, keep parent visible if any child visible
+            const children = (item.items as MenuItem[]).map(markVisible);
+            const anyChildVisible = children.some((c: any) => c.visible !== false);
+            return { ...item, items: children, visible: anyChildVisible };
+        };
+
+        return items.map(markVisible);
     }
+
 }
