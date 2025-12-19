@@ -51,7 +51,7 @@ export class FormComponent {
       lastName: ['', [Validators.required]],
       username: ['', [Validators.required, Validators.minLength(4)]],
       email: ['', [Validators.required, Validators.email]],
-      status: [Status.active],
+      status: [Status.active, [Validators.required]],
       role: ['', [Validators.required]],
       financialInstitution: ['', [Validators.required]],
       internal: [true]
@@ -65,7 +65,7 @@ export class FormComponent {
       email: ['', [Validators.required, Validators.email]],
       password: [''],
       confirmPassword: [''],
-      status: [Status.pending],
+      status: [Status.pending, [Validators.required]],
       role: ['', [Validators.required]],
       financialInstitution: ['', [Validators.required]],
       permissionIds: [null],
