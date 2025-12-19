@@ -9,8 +9,9 @@
 
             <form [formGroup]="demographicForm">
                 <p-floatLabel>
-                    <p-dropdown inputId="float-label" [options]="beneficiaryTypeList" formControlName="beneficiary"
-                        optionLabel="name" [showClear]="true" />
+                    <p-dropdown inputId="float-label" (onChange)="beneficiaryChanges($event)"
+                        [options]="beneficiaryTypeList" formControlName="beneficiary" optionLabel="name"
+                        [showClear]="true" />
                     <label for="float-label">Select a Beneficiary type</label>
                 </p-floatLabel>
                 <p-floatLabel>

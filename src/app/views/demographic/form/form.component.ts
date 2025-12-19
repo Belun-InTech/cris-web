@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { DropdownChangeEvent } from 'primeng/dropdown';
 import { City, MaritalStatus } from 'src/app/core/models/data-master';
 import { BeneficiaryType } from 'src/app/core/models/enum';
 import { DemographicService } from 'src/app/core/services';
@@ -73,6 +74,31 @@ export class FormComponent {
         this.demographicForm.patchValue(this.demoData);
       });
     }
+  }
+
+  /**
+   * Handles changes to the beneficiary dropdown selection.
+   * If the selected beneficiary type is 'individual', the gender field is set as required.
+   * Otherwise, the gender field validators are cleared and the value is reset to null.
+   * @param event The dropdown change event containing the selected beneficiary value.
+   */
+  beneficiaryChanges(event: any): void {
+    const beneficiary = event?.value;
+    if (!beneficiary?.name || typeof beneficiary.name !== 'string') return;
+
+    const genderControl = this.demographicForm.get('gender');
+    if (!genderControl) return;
+
+    const isIndividual = beneficiary.name.toLowerCase() === BeneficiaryType.individual.toLowerCase();
+
+    if (isIndividual) {
+      genderControl.setValidators(Validators.required);
+    } else {
+      genderControl.clearValidators();
+      genderControl.setValue(null);
+    }
+
+    genderControl.updateValueAndValidity();
   }
 
   /**
