@@ -4,8 +4,8 @@
 
 export const environment = {
   production: true,
-  url: 'http://api-cris.bancocentral.tl',
-  apiUrl: 'http://api-cris.bancocentral.tl/api/v1',
+  url: 'https://api-cris.bancocentral.tl',
+  apiUrl: 'https://api-cris.bancocentral.tl/api/v1',
 };
 
 /*
