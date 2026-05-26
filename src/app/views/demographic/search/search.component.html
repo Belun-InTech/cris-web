@@ -29,6 +29,9 @@
         <div class="col-12">
             <p-button severity="info" (onClick)="exportDemographicAndCredit(demoData)" icon="pi pi-download"
                 label="Download" />
+            <p-button severity="danger" (onClick)="downloadPdfReport()" icon="pi pi-file-pdf"
+                label="Download PDF" [loading]="pdfIsDownloading" class="ml-3" />
+            
         </div>
     </div>
     }

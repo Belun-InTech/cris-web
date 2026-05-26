@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Credit, Demographic } from 'src/app/core/models/data';
 import { DemoCreditService } from 'src/app/core/services/demo-credit.service';
+import { DemographicService } from 'src/app/core/services/demographic.service';
 import { normalizeId } from 'src/app/core/utils/global-types';
 import { utils, writeFile } from "xlsx";
 
@@ -22,9 +23,12 @@ export class SearchComponent {
 
   selectedDemo!: any;
 
+  pdfIsDownloading = false;
+
   constructor(
     private messageService: MessageService,
     private service: DemoCreditService,
+    private demographicService: DemographicService,
   ) { }
 
   ngOnInit(): void {
@@ -64,6 +68,26 @@ export class SearchComponent {
     this.searchFormControl.reset();
     this.demoList = [];
     this.demoData = undefined;
+  }
+
+  downloadPdfReport(): void {
+    this.pdfIsDownloading = true;
+    const idNumber = normalizeId(this.searchFormControl.value);
+    this.demographicService.getDemographicReport(idNumber).subscribe({
+      next: (blob: Blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `demographic-${idNumber}.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
+        this.pdfIsDownloading = false;
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to download PDF report.' });
+        this.pdfIsDownloading = false;
+      }
+    });
   }
 
   exportDemographicAndCredit(demo: any) {

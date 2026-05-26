@@ -157,4 +157,8 @@ export class DemographicService {
   checkDuplicates(data: any[]): Observable<any[]> {
     return this.http.post<any>(`${this.apiUrl}/duplicate-check`, data).pipe(take(1));
   }
+
+  getDemographicReport(idNumber: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${normalizeId(idNumber)}/pdf`, { responseType: 'blob' }).pipe(take(1));
+  }
 }
