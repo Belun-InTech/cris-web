@@ -30,6 +30,7 @@ export class FormUploadComponent {
   descriptionSecurity: string;
   creditClassificationList: CreditClassification[] = [];
   cityList: City[] = [];
+  maxFileSize = 11 * 1024 * 1024; // 11 MB
 
   disabledTab = true;
   isJsonDataChecked = false;

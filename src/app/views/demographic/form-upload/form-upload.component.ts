@@ -33,6 +33,7 @@ export class FormUploadComponent {
   duplicatesDataFile = [];
   isScanning = false;
   isSubmitting = false;
+  maxFileSize = 11 * 1024 * 1024; // 11 MB
 
 
   constructor(
