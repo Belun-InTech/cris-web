@@ -17,7 +17,7 @@ COPY . .
 RUN ng build
 
 # Stage 2: Serve the application with Nginx
-FROM nginx:1.27.5-alpine-slim
+FROM nginx:1.30.2-alpine-slim
 
 RUN rm -rf /usr/share/nginx/html/*
 
