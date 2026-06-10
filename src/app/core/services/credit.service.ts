@@ -23,12 +23,12 @@ export class CreditService {
     return this.http.post<Credit>(this.apiUrl, form).pipe(take(1));
   }
 
-  saveAll(formList: any[]): Observable<Credit[]> {
+  saveAll(formList: any[]): Observable<any> {
     const form = {
       credits: formList,
       credit: null
     }
-    return this.http.post<Credit[]>(this.apiUrl, form).pipe(take(1));
+    return this.http.post<any>(this.apiUrl, form).pipe(take(1));
   }
 
   getPagination(page = 0, size = 50): Observable<any> {
