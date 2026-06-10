@@ -4,7 +4,7 @@ import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { DemographicExcel } from 'src/app/core/models/data';
 import { Beneficiary, City, MaritalStatus } from 'src/app/core/models/data-master';
 import { BeneficiaryType } from 'src/app/core/models/enum';
-import { DemographicService } from 'src/app/core/services';
+import { DemographicService, FileExportService } from 'src/app/core/services';
 import { read, utils, writeFile } from "xlsx";
 
 @Component({
@@ -40,6 +40,7 @@ export class FormUploadComponent {
     private config: PrimeNGConfig,
     private messageService: MessageService,
     private demographicService: DemographicService,
+    private fileExportService: FileExportService,
     private router: Router,
     private route: ActivatedRoute,
   ) {
@@ -319,6 +320,9 @@ export class FormUploadComponent {
       next: response => {
         this.duplicatesData = response;
         this.showDuplicateMessages();
+        if (this.duplicatesData.length > 0) {
+          this.exportDuplicatesToExcel();
+        }
       },
       error: err => {
         this.isScanning = false;
@@ -353,6 +357,27 @@ export class FormUploadComponent {
     }
 
     return duplicates;
+  }
+
+  /**
+   * Exports the database-matching duplicate records to an Excel file.
+   *
+   * Flattens each duplicate's nested objects (beneficiary, city) into the same
+   * columns shown in the review table so the sheet is human-readable.
+   */
+  private exportDuplicatesToExcel(): void {
+    const rows = this.duplicatesData.map((item: any) => ({
+      'Name': item.fullName,
+      'Electoral Nº/Taxpayer ID (TIN)': item.idNumber,
+      'Beneficiary': item.beneficiary?.name,
+      'Date of Birth': item.birthDate,
+      'Gender': item.gender,
+      'City - Address': `${item.address} - ${item.city?.name ?? ''}`,
+      'Employment History': item.employmentHistory,
+      'Telephone Nº': item.phoneNumber,
+    }));
+
+    this.fileExportService.exportToExcel(rows, 'Demographic_Duplicates');
   }
 
 
