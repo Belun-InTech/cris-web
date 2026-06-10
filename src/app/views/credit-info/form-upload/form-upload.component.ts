@@ -4,7 +4,7 @@ import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import { CreditExcel } from 'src/app/core/models/data';
 import { City, CreditClassification, Institution, MannerPayment, Sector, TypeCollateral } from 'src/app/core/models/data-master';
-import { AuthenticationService } from 'src/app/core/services';
+import { AuthenticationService, FileExportService } from 'src/app/core/services';
 import { CreditService } from 'src/app/core/services/credit.service';
 import { read, utils, writeFile } from "xlsx";
 
@@ -47,6 +47,7 @@ export class FormUploadComponent {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthenticationService,
+    private fileExportService: FileExportService,
   ) {
     this.columnsExcel = ['NameCreditGrantor', 'ElectNo', 'DateAcctOpened', 'DueDate', 'OrgBal', 'MonthlyPaymt', 'DateLastPaymt', 'Balance', 'CreditbySector', 'MannerofPaymt', 'Security', 'DescofCollateral', 'AssetClass', 'Guarantee Name', 'ElectNo (Guarantee)', 'DOB (Guarantee)', 'City (Guarantee)', 'EmpHist (Guarantee)'];
     this.columns = ['Credit Grantor', 'ID Number / TIN', 'Due Cate', 'Monthly Payment', 'Last Payment (Date)', 'Balance'];
@@ -436,6 +437,9 @@ export class FormUploadComponent {
         this.duplicatesDateLastPaymentAndBalance = response2.allDuplicates;
         this.showMissingMessages();
         this.showDuplicateMessages();
+        if (this.duplicatesDateLastPaymentAndBalance.length > 0) {
+          this.exportDuplicatesToExcel();
+        }
       },
       error: err => {
         this.isScanning = false;
@@ -445,6 +449,37 @@ export class FormUploadComponent {
         this.isScanning = false;
       }
     });
+  }
+
+  /**
+   * Exports the duplicate (LastPaymentDate + Balance) records to an Excel file.
+   *
+   * Flattens each record's nested objects (grantor, sector, guarantee, ...) into
+   * the same columns shown in the review table so the sheet is human-readable.
+   */
+  private exportDuplicatesToExcel(): void {
+    const rows = this.duplicatesDateLastPaymentAndBalance.map((item: any) => ({
+      'NameCreditGrantor': item.grantor?.name,
+      'ElectNo': item.idNumber,
+      'DateAcctOpened': item.accountCreationDate,
+      'DueDate': item.dueDate,
+      'OrgBal': item.originalBalance,
+      'MonthlyPaymt': item.monthlyPayment,
+      'DateLastPaymt': item.lastPaymentDate,
+      'Balance': item.balance,
+      'CreditbySector': item.sector?.name,
+      'MannerofPaymt': item.mannerOfPayment?.name,
+      'Security': item.security?.name,
+      'DescofCollateral': item.descriptionSecurity ?? 'N/A',
+      'AssetClass': item.assetClass?.name,
+      'Guarantee Name': item.guarantee?.fullName,
+      'ElectNo (Guarantee)': item.guarantee?.electoralNumber,
+      'DOB (Guarantee)': item.guarantee?.birthDate,
+      'City (Guarantee)': item.guarantee?.city?.name,
+      'EmpHist (Guarantee)': item.guarantee?.employmentHistory,
+    }));
+
+    this.fileExportService.exportToExcel(rows, 'CreditInfo_Duplicates');
   }
 
   /**
