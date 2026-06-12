@@ -322,6 +322,7 @@ export class FormUploadComponent {
         this.showDuplicateMessages();
         if (this.duplicatesData.length > 0) {
           this.exportDuplicatesToExcel();
+          this.exportCleanDataToExcel();
         }
       },
       error: err => {
@@ -360,13 +361,11 @@ export class FormUploadComponent {
   }
 
   /**
-   * Exports the database-matching duplicate records to an Excel file.
-   *
-   * Flattens each duplicate's nested objects (beneficiary, city) into the same
-   * columns shown in the review table so the sheet is human-readable.
+   * Flattens demographic records (nested beneficiary/city) into the same columns
+   * shown in the review table, so both the duplicate and clean sheets match.
    */
-  private exportDuplicatesToExcel(): void {
-    const rows = this.duplicatesData.map((item: any) => ({
+  private toDemographicRows(items: any[]) {
+    return items.map((item: any) => ({
       'Name': item.fullName,
       'Electoral Nº/Taxpayer ID (TIN)': item.idNumber,
       'Beneficiary': item.beneficiary?.name,
@@ -376,8 +375,33 @@ export class FormUploadComponent {
       'Employment History': item.employmentHistory,
       'Telephone Nº': item.phoneNumber,
     }));
+  }
 
-    this.fileExportService.exportToExcel(rows, 'Demographic_Duplicates');
+  /** Strips leading zeros, mirroring the backend's idNumber normalization. */
+  private normalizeId(value: any): string {
+    return (value ?? '').toString().replace(/^0+(?!$)/, '');
+  }
+
+  /**
+   * Exports the duplicate records (matched in the DB or repeated in the file)
+   * to an Excel file.
+   */
+  private exportDuplicatesToExcel(): void {
+    this.fileExportService.exportToExcel(this.toDemographicRows(this.duplicatesData), 'Demographic_Duplicates');
+  }
+
+  /**
+   * Exports the clean records — every uploaded row that was NOT flagged as a
+   * duplicate (neither a DB match nor a repeat within the file) — so the user
+   * can re-upload the safe subset. Records are matched by normalized idNumber.
+   */
+  private exportCleanDataToExcel(): void {
+    const duplicateIds = new Set<string>(
+      [...this.duplicatesData, ...this.duplicatesDataFile].map((d: any) => this.normalizeId(d.idNumber))
+    );
+
+    const clean = this.jsonData.filter((d: any) => !duplicateIds.has(this.normalizeId(d.idNumber)));
+    this.fileExportService.exportToExcel(this.toDemographicRows(clean), 'Demographic_Clean');
   }
 
 

@@ -439,6 +439,7 @@ export class FormUploadComponent {
         this.showDuplicateMessages();
         if (this.duplicatesDateLastPaymentAndBalance.length > 0) {
           this.exportDuplicatesToExcel();
+          this.exportCleanDataToExcel();
         }
       },
       error: err => {
@@ -452,13 +453,11 @@ export class FormUploadComponent {
   }
 
   /**
-   * Exports the duplicate (LastPaymentDate + Balance) records to an Excel file.
-   *
-   * Flattens each record's nested objects (grantor, sector, guarantee, ...) into
-   * the same columns shown in the review table so the sheet is human-readable.
+   * Flattens credit records (nested grantor/sector/guarantee/...) into the same
+   * columns shown in the review table, so both the duplicate and clean sheets match.
    */
-  private exportDuplicatesToExcel(): void {
-    const rows = this.duplicatesDateLastPaymentAndBalance.map((item: any) => ({
+  private toCreditRows(items: any[]) {
+    return items.map((item: any) => ({
       'NameCreditGrantor': item.grantor?.name,
       'ElectNo': item.idNumber,
       'DateAcctOpened': item.accountCreationDate,
@@ -478,8 +477,39 @@ export class FormUploadComponent {
       'City (Guarantee)': item.guarantee?.city?.name,
       'EmpHist (Guarantee)': item.guarantee?.employmentHistory,
     }));
+  }
 
-    this.fileExportService.exportToExcel(rows, 'CreditInfo_Duplicates');
+  /**
+   * Composite dedup key (grantor | normalized idNumber | lastPaymentDate | balance),
+   * matching the server's duplicate criteria. Built identically for the flagged
+   * records and the uploaded rows so they line up regardless of leading zeros or
+   * balance scale.
+   */
+  private creditDupeKey(item: any): string {
+    const grantor = item.grantor?.id ?? item.grantor?.name ?? '';
+    const id = (item.idNumber ?? '').toString().replace(/^0+(?!$)/, '');
+    return `${grantor}|${id}|${item.lastPaymentDate}|${Number(item.balance)}`;
+  }
+
+  /**
+   * Exports the duplicate (LastPaymentDate + Balance) records to an Excel file.
+   */
+  private exportDuplicatesToExcel(): void {
+    this.fileExportService.exportToExcel(this.toCreditRows(this.duplicatesDateLastPaymentAndBalance), 'CreditInfo_Duplicates');
+  }
+
+  /**
+   * Exports the clean records — every uploaded row that was NOT flagged as a
+   * duplicate — so the user can re-upload the safe subset. Records are matched
+   * by the composite dedup key.
+   */
+  private exportCleanDataToExcel(): void {
+    const duplicateKeys = new Set<string>(
+      this.duplicatesDateLastPaymentAndBalance.map((d: any) => this.creditDupeKey(d))
+    );
+
+    const clean = this.jsonData.filter((d: any) => !duplicateKeys.has(this.creditDupeKey(d)));
+    this.fileExportService.exportToExcel(this.toCreditRows(clean), 'CreditInfo_Clean');
   }
 
   /**
